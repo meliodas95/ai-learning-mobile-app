@@ -9,36 +9,15 @@ import { useSentences } from '@/src/api/hooks/useSentences';
 import { useLearningStore } from '@/src/store/learningStore';
 import { LessonTabBar } from '@/src/components/LessonTabBar';
 import { LearnTab } from '@/src/api/types';
+import { ListeningPlayer } from '@/src/features/listening/ListeningPlayer';
+import { WordList } from '@/src/features/vocabulary/WordList';
+import { ExerciseView } from '@/src/features/exercise/ExerciseView';
 
-// Placeholder components - will be replaced by feature implementations
-function ListeningPlaceholder() {
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Listening Mode</Text>
-    </View>
-  );
-}
-
+// Placeholder component - will be replaced by feature implementation
 function SpeakingPlaceholder() {
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <Text>Speaking Mode</Text>
-    </View>
-  );
-}
-
-function WordPlaceholder() {
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Vocabulary Mode</Text>
-    </View>
-  );
-}
-
-function ExercisePlaceholder() {
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Exercise Mode</Text>
     </View>
   );
 }
@@ -111,15 +90,15 @@ export default function LessonScreen() {
   const renderActiveTab = () => {
     switch (activeTab) {
       case LearnTab.LISTEN:
-        return <ListeningPlaceholder />;
+        return <ListeningPlayer />;
       case LearnTab.SPEAKING:
         return <SpeakingPlaceholder />;
       case LearnTab.WORD:
-        return <WordPlaceholder />;
+        return <WordList />;
       case LearnTab.EXERCISE:
-        return <ExercisePlaceholder />;
+        return <ExerciseView />;
       default:
-        return <ListeningPlaceholder />;
+        return <ListeningPlayer />;
     }
   };
 
