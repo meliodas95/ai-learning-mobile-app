@@ -220,22 +220,3 @@ export interface ConversationGroup {
   characterName: string;
   sentences: SentenceEntity[];
 }
-
-export function groupSentencesByCharacter(sentences: SentenceEntity[]): ConversationGroup[] {
-  const groups: ConversationGroup[] = [];
-  let currentGroup: ConversationGroup | null = null;
-
-  for (const sentence of sentences) {
-    if (!currentGroup || currentGroup.characterId !== sentence.character_id) {
-      currentGroup = {
-        characterId: sentence.character_id,
-        characterName: sentence.character_name ?? 'Unknown',
-        sentences: [],
-      };
-      groups.push(currentGroup);
-    }
-    currentGroup.sentences.push(sentence);
-  }
-
-  return groups;
-}

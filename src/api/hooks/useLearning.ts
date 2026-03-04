@@ -15,7 +15,7 @@ interface EndListenParams {
 }
 
 interface EndSpeakParams {
-  file: Blob;
+  fileUri: string;
   template: string;
   transcript: string;
   score: number;
@@ -29,15 +29,13 @@ interface EndSpeakParams {
 
 export function useStartParagraphMutation() {
   return useMutation({
-    mutationFn: (params: StartParagraphParams) =>
-      apiClient.post(Endpoints.START_PARAGRAPH, params),
+    mutationFn: (params: StartParagraphParams) => apiClient.post(Endpoints.START_PARAGRAPH, params),
   });
 }
 
 export function useEndListenMutation() {
   return useMutation({
-    mutationFn: (params: EndListenParams) =>
-      apiClient.post(Endpoints.END_LISTEN, params),
+    mutationFn: (params: EndListenParams) => apiClient.post(Endpoints.END_LISTEN, params),
   });
 }
 
@@ -47,7 +45,12 @@ export function useEndSpeakMutation() {
   return useMutation({
     mutationFn: (params: EndSpeakParams) => {
       const formData = new FormData();
-      formData.append('file', params.file as unknown as Blob);
+      // React Native FormData accepts URI-based file objects
+      formData.append('file', {
+        uri: params.fileUri,
+        type: 'audio/m4a',
+        name: 'recording.m4a',
+      } as unknown as Blob);
       formData.append('template', params.template);
       formData.append('transcript', params.transcript);
       formData.append('score', String(params.score));
@@ -62,11 +65,10 @@ export function useEndSpeakMutation() {
         formData.append('action', String(params.action));
       }
 
-      return apiClient.post<unknown, { data: { sentenceScore: SentenceScoreEntity; member_token: number } }>(
-        Endpoints.END_SPEAK,
-        formData,
-        { headers: { 'Content-Type': 'multipart/form-data' } },
-      );
+      return apiClient.post<
+        unknown,
+        { data: { sentenceScore: SentenceScoreEntity; member_token: number } }
+      >(Endpoints.END_SPEAK, formData, { headers: { 'Content-Type': 'multipart/form-data' } });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['balance'] });
@@ -90,7 +92,6 @@ export function useTranslateMutation() {
 
 export function useDictionaryMutation() {
   return useMutation({
-    mutationFn: (params: { word: string }) =>
-      apiClient.post(Endpoints.DICTIONARY, params),
+    mutationFn: (params: { word: string }) => apiClient.post(Endpoints.DICTIONARY, params),
   });
 }

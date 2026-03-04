@@ -31,16 +31,26 @@ export function ExerciseView() {
   if (totalQuestions === 0) {
     return (
       <View style={styles.emptyContainer}>
-        <MaterialCommunityIcons name="clipboard-text-outline" size={48} color={theme.colors.outline} />
+        <MaterialCommunityIcons
+          name="clipboard-text-outline"
+          size={48}
+          color={theme.colors.outline}
+        />
         <Text variant="bodyMedium" style={{ color: theme.colors.onSurfaceVariant, marginTop: 12 }}>
-          No exercises available for this lesson
+          {t('learn.noExercises')}
         </Text>
       </View>
     );
   }
 
   if (isFinished) {
-    return <ExerciseResult correctCount={correctCount} totalQuestions={totalQuestions} onRestart={restart} />;
+    return (
+      <ExerciseResult
+        correctCount={correctCount}
+        totalQuestions={totalQuestions}
+        onRestart={restart}
+      />
+    );
   }
 
   if (!currentQuestion) return null;

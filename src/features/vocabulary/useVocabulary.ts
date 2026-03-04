@@ -30,15 +30,18 @@ export function useVocabulary(): UseVocabularyReturn {
 
   const currentWord = words[currentWordIndex] ?? '';
 
-  const lookupWord = useCallback(async (word: string) => {
-    try {
-      const result = await dictionaryMutation.mutateAsync({ word });
-      const dictData = result as { data?: { words?: DictionaryWord[] } };
-      setDefinition(dictData?.data?.words?.[0] ?? null);
-    } catch {
-      setDefinition(null);
-    }
-  }, [dictionaryMutation]);
+  const lookupWord = useCallback(
+    async (word: string) => {
+      try {
+        const result = await dictionaryMutation.mutateAsync({ word });
+        const dictData = result as { data?: { words?: DictionaryWord[] } };
+        setDefinition(dictData?.data?.words?.[0] ?? null);
+      } catch {
+        setDefinition(null);
+      }
+    },
+    [dictionaryMutation],
+  );
 
   const nextWord = useCallback(() => {
     if (currentWordIndex < words.length - 1) {

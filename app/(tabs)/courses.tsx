@@ -14,29 +14,42 @@ export default function CoursesScreen() {
   const { data: courses, refetch, isRefetching, isLoading } = useCourses();
   const [search, setSearch] = useState('');
 
-  const filtered = courses?.filter((c) =>
-    c.title.toLowerCase().includes(search.toLowerCase()) ||
-    c.title_vi?.toLowerCase().includes(search.toLowerCase())
+  const filtered = courses?.filter(
+    (c) =>
+      c.title.toLowerCase().includes(search.toLowerCase()) ||
+      c.title_vi?.toLowerCase().includes(search.toLowerCase()),
   );
 
-  const renderCourse = useCallback(({ item }: { item: CourseEntity }) => (
-    <Card
-      style={[styles.card, { backgroundColor: theme.colors.surface }]}
-      onPress={() => router.push(`/course/${item.id}`)}
-    >
-      <Card.Content style={styles.cardContent}>
-        <View style={{ flex: 1 }}>
-          <Text variant="titleSmall" style={{ color: theme.colors.onSurface }}>{item.title}</Text>
-          {item.title_vi && (
-            <Text variant="bodySmall" style={{ color: theme.colors.onSurfaceVariant, marginTop: 4 }}>
-              {item.title_vi}
+  const renderCourse = useCallback(
+    ({ item }: { item: CourseEntity }) => (
+      <Card
+        style={[styles.card, { backgroundColor: theme.colors.surface }]}
+        onPress={() => router.push(`/course/${item.id}`)}
+      >
+        <Card.Content style={styles.cardContent}>
+          <View style={{ flex: 1 }}>
+            <Text variant="titleSmall" style={{ color: theme.colors.onSurface }}>
+              {item.title}
             </Text>
-          )}
-        </View>
-        <MaterialCommunityIcons name="chevron-right" size={24} color={theme.colors.onSurfaceVariant} />
-      </Card.Content>
-    </Card>
-  ), [theme]);
+            {item.title_vi && (
+              <Text
+                variant="bodySmall"
+                style={{ color: theme.colors.onSurfaceVariant, marginTop: 4 }}
+              >
+                {item.title_vi}
+              </Text>
+            )}
+          </View>
+          <MaterialCommunityIcons
+            name="chevron-right"
+            size={24}
+            color={theme.colors.onSurfaceVariant}
+          />
+        </Card.Content>
+      </Card>
+    ),
+    [theme],
+  );
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background }]}>
@@ -62,7 +75,10 @@ export default function CoursesScreen() {
           !isLoading ? (
             <View style={styles.empty}>
               <MaterialCommunityIcons name="book-search" size={48} color={theme.colors.outline} />
-              <Text variant="bodyMedium" style={{ color: theme.colors.onSurfaceVariant, marginTop: 12 }}>
+              <Text
+                variant="bodyMedium"
+                style={{ color: theme.colors.onSurfaceVariant, marginTop: 12 }}
+              >
                 {t('common.noResults')}
               </Text>
             </View>

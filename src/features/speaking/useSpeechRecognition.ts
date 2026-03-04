@@ -1,6 +1,8 @@
 import { useCallback, useRef, useState, useEffect } from 'react';
-import Voice, { SpeechResultsEvent, SpeechErrorEvent } from '@react-native-voice/voice';
+import type { SpeechResultsEvent, SpeechErrorEvent } from '@react-native-voice/voice';
+import Voice from '@react-native-voice/voice';
 import { Audio } from 'expo-av';
+import { logger } from '@/src/utils/logger';
 
 interface UseSpeechRecognitionReturn {
   isRecording: boolean;
@@ -32,7 +34,7 @@ export function useSpeechRecognition(): UseSpeechRecognitionReturn {
     };
 
     Voice.onSpeechError = (e: SpeechErrorEvent) => {
-      console.warn('Speech recognition error:', e.error);
+      logger.warn('Speech recognition error:', e.error);
     };
 
     return () => {
@@ -71,7 +73,7 @@ export function useSpeechRecognition(): UseSpeechRecognitionReturn {
 
       setIsRecording(true);
     } catch (error) {
-      console.warn('Failed to start recording:', error);
+      logger.warn('Failed to start recording:', error);
     }
   }, []);
 
@@ -105,7 +107,7 @@ export function useSpeechRecognition(): UseSpeechRecognitionReturn {
         transcript: transcriptRef.current || transcript,
       };
     } catch (error) {
-      console.warn('Failed to stop recording:', error);
+      logger.warn('Failed to stop recording:', error);
       setIsRecording(false);
       return null;
     }
@@ -128,7 +130,7 @@ export function useSpeechRecognition(): UseSpeechRecognitionReturn {
       setTranscript('');
       setRecordingDuration(0);
     } catch (error) {
-      console.warn('Failed to cancel recording:', error);
+      logger.warn('Failed to cancel recording:', error);
       setIsRecording(false);
     }
   }, []);

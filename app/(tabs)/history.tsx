@@ -27,7 +27,10 @@ export default function HistoryScreen() {
             {item.paragraph_title ?? `Lesson #${item.paragraph_id}`}
           </Text>
           {item.course_title && (
-            <Text variant="bodySmall" style={{ color: theme.colors.onSurfaceVariant, marginTop: 2 }}>
+            <Text
+              variant="bodySmall"
+              style={{ color: theme.colors.onSurfaceVariant, marginTop: 2 }}
+            >
               {item.course_title}
             </Text>
           )}
@@ -35,9 +38,12 @@ export default function HistoryScreen() {
             {formatRelativeTime(item.created_at, locale)}
           </Text>
         </View>
-        {item.score != null && (
+        {item.score !== null && item.score !== undefined && (
           <View style={styles.scoreContainer}>
-            <Text variant="titleMedium" style={{ color: getScoreHex(item.score), fontWeight: '700' }}>
+            <Text
+              variant="titleMedium"
+              style={{ color: getScoreHex(item.score), fontWeight: '700' }}
+            >
               {item.score}
             </Text>
           </View>
@@ -62,7 +68,10 @@ export default function HistoryScreen() {
           !isLoading ? (
             <View style={styles.empty}>
               <MaterialCommunityIcons name="history" size={48} color={theme.colors.outline} />
-              <Text variant="bodyMedium" style={{ color: theme.colors.onSurfaceVariant, marginTop: 12 }}>
+              <Text
+                variant="bodyMedium"
+                style={{ color: theme.colors.onSurfaceVariant, marginTop: 12 }}
+              >
                 {t('common.noResults')}
               </Text>
             </View>

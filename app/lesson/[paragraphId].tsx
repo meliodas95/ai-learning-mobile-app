@@ -20,9 +20,13 @@ export default function LessonScreen() {
   const { paragraphId } = useLocalSearchParams<{ paragraphId: string }>();
   const numId = paragraphId ? Number(paragraphId) : undefined;
 
-  const { data: paragraphData, isLoading: loadingParagraph, error: paragraphError } = useParagraphDetail(numId);
+  const {
+    data: paragraphData,
+    isLoading: loadingParagraph,
+    error: paragraphError,
+  } = useParagraphDetail(numId);
   const { data: sentenceData, isLoading: loadingSentences } = useSentences(
-    numId ? { paragraph_id: numId, type: 'listen' } : undefined
+    numId ? { paragraph_id: numId, type: 'listen' } : undefined,
   );
 
   const activeTab = useLearningStore((s) => s.activeTab);
@@ -45,7 +49,9 @@ export default function LessonScreen() {
 
   // Cleanup on unmount
   useEffect(() => {
-    return () => { reset(); };
+    return () => {
+      reset();
+    };
   }, [reset]);
 
   const isLoading = loadingParagraph || loadingSentences;
@@ -58,7 +64,10 @@ export default function LessonScreen() {
       <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background }]}>
         <View style={styles.loading}>
           <ActivityIndicator size="large" color={theme.colors.primary} />
-          <Text variant="bodyMedium" style={{ color: theme.colors.onSurfaceVariant, marginTop: 16 }}>
+          <Text
+            variant="bodyMedium"
+            style={{ color: theme.colors.onSurfaceVariant, marginTop: 16 }}
+          >
             {t('common.loading')}
           </Text>
         </View>
@@ -99,7 +108,11 @@ export default function LessonScreen() {
       {/* Header */}
       <View style={styles.header}>
         <IconButton icon="arrow-left" onPress={() => router.back()} />
-        <Text variant="titleMedium" style={{ color: theme.colors.onSurface, flex: 1 }} numberOfLines={1}>
+        <Text
+          variant="titleMedium"
+          style={{ color: theme.colors.onSurface, flex: 1 }}
+          numberOfLines={1}
+        >
           {paragraph.title}
         </Text>
       </View>
@@ -108,9 +121,7 @@ export default function LessonScreen() {
       <LessonTabBar hasKeywords={hasKeywords} hasExercise={hasExercise} />
 
       {/* Active Tab Content */}
-      <View style={styles.content}>
-        {renderActiveTab()}
-      </View>
+      <View style={styles.content}>{renderActiveTab()}</View>
     </SafeAreaView>
   );
 }

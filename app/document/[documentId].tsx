@@ -12,34 +12,51 @@ export default function DocumentDetailScreen() {
   const theme = useTheme();
   const { t } = useTranslation();
   const { documentId } = useLocalSearchParams<{ documentId: string }>();
-  const { data: paragraphs, isLoading } = useParagraphs(documentId ? Number(documentId) : undefined);
+  const { data: paragraphs, isLoading } = useParagraphs(
+    documentId ? Number(documentId) : undefined,
+  );
 
-  const renderParagraph = useCallback(({ item }: { item: ParagraphEntity }) => (
-    <Card
-      style={[styles.card, { backgroundColor: theme.colors.surface }]}
-      onPress={() => router.push(`/lesson/${item.id}`)}
-    >
-      <Card.Content>
-        <View style={styles.cardRow}>
-          <View style={{ flex: 1 }}>
-            <Text variant="titleSmall" style={{ color: theme.colors.onSurface }}>{item.title}</Text>
-            {item.description && (
-              <Text variant="bodySmall" style={{ color: theme.colors.onSurfaceVariant, marginTop: 4 }} numberOfLines={2}>
-                {item.description}
+  const renderParagraph = useCallback(
+    ({ item }: { item: ParagraphEntity }) => (
+      <Card
+        style={[styles.card, { backgroundColor: theme.colors.surface }]}
+        onPress={() => router.push(`/lesson/${item.id}`)}
+      >
+        <Card.Content>
+          <View style={styles.cardRow}>
+            <View style={{ flex: 1 }}>
+              <Text variant="titleSmall" style={{ color: theme.colors.onSurface }}>
+                {item.title}
               </Text>
+              {item.description && (
+                <Text
+                  variant="bodySmall"
+                  style={{ color: theme.colors.onSurfaceVariant, marginTop: 4 }}
+                  numberOfLines={2}
+                >
+                  {item.description}
+                </Text>
+              )}
+            </View>
+            <MaterialCommunityIcons
+              name="chevron-right"
+              size={24}
+              color={theme.colors.onSurfaceVariant}
+            />
+          </View>
+          <View style={styles.chipRow}>
+            <Chip compact textStyle={{ fontSize: 11 }} style={styles.chip}>
+              {item.type}
+            </Chip>
+            {item.is_favourite && (
+              <MaterialCommunityIcons name="heart" size={16} color={theme.colors.error} />
             )}
           </View>
-          <MaterialCommunityIcons name="chevron-right" size={24} color={theme.colors.onSurfaceVariant} />
-        </View>
-        <View style={styles.chipRow}>
-          <Chip compact textStyle={{ fontSize: 11 }} style={styles.chip}>{item.type}</Chip>
-          {item.is_favourite && (
-            <MaterialCommunityIcons name="heart" size={16} color={theme.colors.error} />
-          )}
-        </View>
-      </Card.Content>
-    </Card>
-  ), [theme]);
+        </Card.Content>
+      </Card>
+    ),
+    [theme],
+  );
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background }]}>

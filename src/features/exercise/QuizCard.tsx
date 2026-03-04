@@ -2,6 +2,7 @@ import { View, StyleSheet, Pressable } from 'react-native';
 import { Text, Card, Button, useTheme } from 'react-native-paper';
 import { useTranslation } from 'react-i18next';
 import type { ExerciseQuestion, ExerciseAnswer } from '@/src/api/types';
+import { colors } from '@/src/theme/colors';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 
 interface QuizCardProps {
@@ -33,10 +34,10 @@ export function QuizCard({
       return { borderColor: theme.colors.outline, backgroundColor: theme.colors.surface };
     }
     if (answer.is_correct) {
-      return { borderColor: '#43A047', backgroundColor: '#E8F5E9' };
+      return { borderColor: colors.success, backgroundColor: '#E8F5E9' };
     }
     if (selectedAnswer?.id === answer.id && !answer.is_correct) {
-      return { borderColor: '#E53935', backgroundColor: '#FFEBEE' };
+      return { borderColor: colors.error, backgroundColor: '#FFEBEE' };
     }
     return { borderColor: theme.colors.outline, backgroundColor: theme.colors.surface };
   };
@@ -44,7 +45,10 @@ export function QuizCard({
   return (
     <View style={styles.container}>
       {/* Progress */}
-      <Text variant="labelMedium" style={[styles.progress, { color: theme.colors.onSurfaceVariant }]}>
+      <Text
+        variant="labelMedium"
+        style={[styles.progress, { color: theme.colors.onSurfaceVariant }]}
+      >
         {t('learn.questionOf', { current: questionIndex + 1, total: totalQuestions })}
       </Text>
 
@@ -62,12 +66,16 @@ export function QuizCard({
         {answers.map((answer) => {
           const answerStyle = getAnswerStyle(answer);
           return (
-            <Pressable
-              key={answer.id}
-              onPress={() => onSelectAnswer(answer)}
-              disabled={isAnswered}
-            >
-              <View style={[styles.answerCard, { borderColor: answerStyle.borderColor, backgroundColor: answerStyle.backgroundColor }]}>
+            <Pressable key={answer.id} onPress={() => onSelectAnswer(answer)} disabled={isAnswered}>
+              <View
+                style={[
+                  styles.answerCard,
+                  {
+                    borderColor: answerStyle.borderColor,
+                    backgroundColor: answerStyle.backgroundColor,
+                  },
+                ]}
+              >
                 <Text variant="bodyMedium" style={{ color: theme.colors.onSurface, flex: 1 }}>
                   {answer.content}
                 </Text>
@@ -86,7 +94,10 @@ export function QuizCard({
       {/* Feedback */}
       {isAnswered && (
         <View style={styles.feedback}>
-          <Text variant="titleSmall" style={{ color: selectedAnswer?.is_correct ? '#43A047' : '#E53935' }}>
+          <Text
+            variant="titleSmall"
+            style={{ color: selectedAnswer?.is_correct ? colors.success : colors.error }}
+          >
             {selectedAnswer?.is_correct ? t('learn.correct') : t('learn.incorrect')}
           </Text>
           <Button mode="contained" onPress={onNext} style={styles.nextButton}>

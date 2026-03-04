@@ -26,7 +26,7 @@ export default function OtpScreen() {
     try {
       const result = await memberLogin.mutateAsync({ token, password: otp });
       await setAuth(result);
-      router.replace('/(tabs)');
+      // AuthGuard handles navigation after auth state change
     } catch {
       // Error handled by mutation state
     }
@@ -38,7 +38,10 @@ export default function OtpScreen() {
         <Text variant="headlineSmall" style={[styles.title, { color: theme.colors.primary }]}>
           Enter OTP
         </Text>
-        <Text variant="bodyMedium" style={{ color: theme.colors.onSurfaceVariant, textAlign: 'center', marginBottom: 32 }}>
+        <Text
+          variant="bodyMedium"
+          style={{ color: theme.colors.onSurfaceVariant, textAlign: 'center', marginBottom: 32 }}
+        >
           Enter the verification code sent to your device
         </Text>
 
@@ -67,11 +70,7 @@ export default function OtpScreen() {
           Verify
         </Button>
 
-        <Button
-          mode="text"
-          onPress={() => router.back()}
-          style={styles.backButton}
-        >
+        <Button mode="text" onPress={() => router.back()} style={styles.backButton}>
           Back to Login
         </Button>
       </View>

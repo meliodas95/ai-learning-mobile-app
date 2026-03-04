@@ -11,7 +11,11 @@ interface SentenceHighlightProps {
   totalSentences: number;
 }
 
-export function SentenceHighlight({ sentence, sentenceIndex, totalSentences }: SentenceHighlightProps) {
+export function SentenceHighlight({
+  sentence,
+  sentenceIndex,
+  totalSentences,
+}: SentenceHighlightProps) {
   const theme = useTheme();
   const { t } = useTranslation();
   const showTranslation = useSettingsStore((s) => s.showTranslation);
@@ -19,7 +23,10 @@ export function SentenceHighlight({ sentence, sentenceIndex, totalSentences }: S
   if (!sentence) {
     return (
       <View style={[styles.container, { backgroundColor: theme.colors.surfaceVariant }]}>
-        <Text variant="bodyMedium" style={{ color: theme.colors.onSurfaceVariant, textAlign: 'center' }}>
+        <Text
+          variant="bodyMedium"
+          style={{ color: theme.colors.onSurfaceVariant, textAlign: 'center' }}
+        >
           ...
         </Text>
       </View>
@@ -45,13 +52,19 @@ export function SentenceHighlight({ sentence, sentenceIndex, totalSentences }: S
 
       {/* Translation */}
       {showTranslation && sentence.translation?.translate_google && (
-        <Text variant="bodySmall" style={[styles.translation, { color: theme.colors.onSurfaceVariant }]}>
+        <Text
+          variant="bodySmall"
+          style={[styles.translation, { color: theme.colors.onSurfaceVariant }]}
+        >
           {sentence.translation.translate_google}
         </Text>
       )}
 
       {/* Progress */}
-      <Text variant="labelSmall" style={[styles.progress, { color: theme.colors.onSurfaceVariant }]}>
+      <Text
+        variant="labelSmall"
+        style={[styles.progress, { color: theme.colors.onSurfaceVariant }]}
+      >
         {t('learn.sentenceOf', { current: sentenceIndex + 1, total: totalSentences })}
       </Text>
     </View>

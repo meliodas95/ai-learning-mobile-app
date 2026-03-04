@@ -31,7 +31,7 @@ export function ExerciseResult({ correctCount, totalQuestions, onRestart }: Exer
       </View>
 
       <Text variant="titleMedium" style={{ color: theme.colors.onSurface, marginTop: 12 }}>
-        {correctCount} / {totalQuestions} correct
+        {correctCount} / {totalQuestions} {t('learn.correctCount', { count: correctCount })}
       </Text>
 
       <Button mode="contained" onPress={onRestart} style={styles.button}>

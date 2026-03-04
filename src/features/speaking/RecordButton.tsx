@@ -53,18 +53,11 @@ export function RecordButton({
           { backgroundColor: isRecording ? theme.colors.error : theme.colors.primary },
         ]}
       >
-        <MaterialCommunityIcons
-          name={isRecording ? 'stop' : 'microphone'}
-          size={32}
-          color="#FFF"
-        />
+        <MaterialCommunityIcons name={isRecording ? 'stop' : 'microphone'} size={32} color="#FFF" />
       </Pressable>
 
       {!isRecording && (
-        <Text
-          variant="bodySmall"
-          style={{ color: theme.colors.onSurfaceVariant, marginTop: 8 }}
-        >
+        <Text variant="bodySmall" style={{ color: theme.colors.onSurfaceVariant, marginTop: 8 }}>
           {t('learn.tapToRecord')}
         </Text>
       )}

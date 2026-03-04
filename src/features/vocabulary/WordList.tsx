@@ -22,19 +22,19 @@ export function WordList() {
     lookupWord,
   } = useVocabulary();
 
-  // Lookup first word on mount
+  // Lookup word when it changes
   useEffect(() => {
     if (currentWord) {
       lookupWord(currentWord);
     }
-  }, []);
+  }, [currentWord, lookupWord]);
 
   if (words.length === 0) {
     return (
       <View style={styles.emptyContainer}>
         <MaterialCommunityIcons name="book-open-variant" size={48} color={theme.colors.outline} />
         <Text variant="bodyMedium" style={{ color: theme.colors.onSurfaceVariant, marginTop: 12 }}>
-          No vocabulary for this lesson
+          {t('learn.noVocabulary')}
         </Text>
       </View>
     );
@@ -65,7 +65,10 @@ export function WordList() {
             key={i}
             style={[
               styles.dot,
-              { backgroundColor: i === currentWordIndex ? theme.colors.primary : theme.colors.outline },
+              {
+                backgroundColor:
+                  i === currentWordIndex ? theme.colors.primary : theme.colors.outline,
+              },
             ]}
           />
         ))}
@@ -82,11 +85,7 @@ export function WordList() {
         <Text variant="labelMedium" style={{ color: theme.colors.onSurfaceVariant }}>
           {currentWordIndex + 1} / {words.length}
         </Text>
-        <IconButton
-          icon="chevron-right"
-          size={32}
-          onPress={nextWord}
-        />
+        <IconButton icon="chevron-right" size={32} onPress={nextWord} />
       </View>
     </View>
   );
@@ -98,5 +97,10 @@ const styles = StyleSheet.create({
   cardContainer: { flex: 1, justifyContent: 'center' },
   dots: { flexDirection: 'row', justifyContent: 'center', gap: 6, paddingVertical: 16 },
   dot: { width: 8, height: 8, borderRadius: 4 },
-  navigation: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', paddingBottom: 16 },
+  navigation: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingBottom: 16,
+  },
 });

@@ -70,7 +70,7 @@ export function SpeakingPlayer() {
   }
 
   // Scored state
-  if (state === SpeakingState.SCORED && currentSentence && score != null) {
+  if (state === SpeakingState.SCORED && currentSentence && score !== null && score !== undefined) {
     return (
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <ScoreDisplay
@@ -109,10 +109,7 @@ export function SpeakingPlayer() {
         {currentSentence?.character_name && (
           <View style={styles.characterRow}>
             <MaterialCommunityIcons name="account" size={16} color={theme.colors.primary} />
-            <Text
-              variant="labelMedium"
-              style={{ color: theme.colors.primary, marginLeft: 4 }}
-            >
+            <Text variant="labelMedium" style={{ color: theme.colors.primary, marginLeft: 4 }}>
               {currentSentence.character_name}
             </Text>
           </View>
@@ -130,7 +127,7 @@ export function SpeakingPlayer() {
         <View style={styles.listeningIndicator}>
           <MaterialCommunityIcons name="volume-high" size={24} color={theme.colors.primary} />
           <Text variant="bodyMedium" style={{ color: theme.colors.primary, marginLeft: 8 }}>
-            Listening...
+            {t('learn.listening')}
           </Text>
         </View>
       )}

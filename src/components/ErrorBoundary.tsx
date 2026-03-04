@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Text, Button } from 'react-native-paper';
+import { colors } from '@/src/theme/colors';
 
 interface Props {
   children: React.ReactNode;
@@ -29,7 +30,9 @@ export class ErrorBoundary extends React.Component<Props, State> {
     if (this.state.hasError) {
       return (
         <View style={styles.container}>
-          <Text variant="titleMedium" style={styles.title}>Something went wrong</Text>
+          <Text variant="titleMedium" style={styles.title}>
+            Something went wrong
+          </Text>
           <Text variant="bodySmall" style={styles.error}>
             {this.state.error?.message}
           </Text>
@@ -45,7 +48,7 @@ export class ErrorBoundary extends React.Component<Props, State> {
 
 const styles = StyleSheet.create({
   container: { flex: 1, justifyContent: 'center', alignItems: 'center', padding: 24 },
-  title: { marginBottom: 8, color: '#E53935' },
-  error: { color: '#6B7280', marginBottom: 24, textAlign: 'center' },
+  title: { marginBottom: 8, color: colors.error },
+  error: { color: colors.onSurfaceVariant, marginBottom: 24, textAlign: 'center' },
   button: { borderRadius: 12 },
 });

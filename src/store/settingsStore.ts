@@ -1,7 +1,7 @@
 import { create } from 'zustand';
-import { MMKV } from 'react-native-mmkv';
+import { createMMKV } from 'react-native-mmkv';
 
-const storage = new MMKV();
+const storage = createMMKV({ id: 'settings' });
 
 interface SettingsState {
   locale: 'vi' | 'en';

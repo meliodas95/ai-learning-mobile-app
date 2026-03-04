@@ -34,20 +34,23 @@ export function useExercise(questions: ExerciseQuestion[]): UseExerciseReturn {
   const [correctCount, setCorrectCount] = useState(0);
   const [isFinished, setIsFinished] = useState(false);
   const [shuffledAnswers, setShuffledAnswers] = useState<ExerciseAnswer[]>(() =>
-    questions[0] ? shuffleArray(questions[0].answers) : []
+    questions[0] ? shuffleArray(questions[0].answers) : [],
   );
 
   const currentQuestion = questions[currentQuestionIndex];
   const isCorrect = selectedAnswer?.is_correct ?? false;
 
-  const selectAnswer = useCallback((answer: ExerciseAnswer) => {
-    if (isAnswered) return;
-    setSelectedAnswer(answer);
-    setIsAnswered(true);
-    if (answer.is_correct) {
-      setCorrectCount((c) => c + 1);
-    }
-  }, [isAnswered]);
+  const selectAnswer = useCallback(
+    (answer: ExerciseAnswer) => {
+      if (isAnswered) return;
+      setSelectedAnswer(answer);
+      setIsAnswered(true);
+      if (answer.is_correct) {
+        setCorrectCount((c) => c + 1);
+      }
+    },
+    [isAnswered],
+  );
 
   const nextQuestion = useCallback(() => {
     const nextIdx = currentQuestionIndex + 1;

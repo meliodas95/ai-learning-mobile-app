@@ -10,16 +10,29 @@ interface EmptyStateProps {
   onAction?: () => void;
 }
 
-export function EmptyState({ icon = 'alert-circle-outline', title, subtitle, actionLabel, onAction }: EmptyStateProps) {
+export function EmptyState({
+  icon = 'alert-circle-outline',
+  title,
+  subtitle,
+  actionLabel,
+  onAction,
+}: EmptyStateProps) {
   const theme = useTheme();
   return (
     <View style={styles.container}>
-      <MaterialCommunityIcons name={icon as any} size={56} color={theme.colors.outline} />
+      <MaterialCommunityIcons
+        name={icon as keyof typeof MaterialCommunityIcons.glyphMap}
+        size={56}
+        color={theme.colors.outline}
+      />
       <Text variant="titleMedium" style={[styles.title, { color: theme.colors.onSurface }]}>
         {title}
       </Text>
       {subtitle && (
-        <Text variant="bodyMedium" style={[styles.subtitle, { color: theme.colors.onSurfaceVariant }]}>
+        <Text
+          variant="bodyMedium"
+          style={[styles.subtitle, { color: theme.colors.onSurfaceVariant }]}
+        >
           {subtitle}
         </Text>
       )}

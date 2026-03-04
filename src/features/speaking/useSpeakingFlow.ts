@@ -90,39 +90,45 @@ export function useSpeakingFlow(): UseSpeakingFlowReturn {
     }
   }, [speakingState, stopAndScore]);
 
-  const playAudio = useCallback(async (url: string) => {
-    try {
-      if (soundRef.current) {
-        await soundRef.current.unloadAsync();
-      }
-      const { sound } = await Audio.Sound.createAsync({ uri: url });
-      soundRef.current = sound;
-      await sound.playAsync();
-      sound.setOnPlaybackStatusUpdate((status) => {
-        if (status.isLoaded && status.didJustFinish) {
-          setSpeakingState(SpeakingState.COUNTDOWN);
+  const playAudio = useCallback(
+    async (url: string) => {
+      try {
+        if (soundRef.current) {
+          await soundRef.current.unloadAsync();
         }
-      });
-    } catch {
-      // If audio fails, go straight to countdown
-      setSpeakingState(SpeakingState.COUNTDOWN);
-    }
-  }, [setSpeakingState]);
+        const { sound } = await Audio.Sound.createAsync({ uri: url });
+        soundRef.current = sound;
+        await sound.playAsync();
+        sound.setOnPlaybackStatusUpdate((status) => {
+          if (status.isLoaded && status.didJustFinish) {
+            setSpeakingState(SpeakingState.COUNTDOWN);
+          }
+        });
+      } catch {
+        // If audio fails, go straight to countdown
+        setSpeakingState(SpeakingState.COUNTDOWN);
+      }
+    },
+    [setSpeakingState],
+  );
 
-  const determineNextState = useCallback((sentence: SentenceEntity | undefined) => {
-    if (!sentence || !activeCharacter) {
-      setSpeakingState(SpeakingState.COUNTDOWN);
-      return;
-    }
-    // If the sentence belongs to another character, play their audio first
-    if (sentence.character_id !== activeCharacter.id && sentence.audios?.[0]?.url) {
-      setSpeakingState(SpeakingState.LISTENING);
-      playAudio(sentence.audios[0].url);
-    } else {
-      // User's turn - go to countdown
-      setSpeakingState(SpeakingState.COUNTDOWN);
-    }
-  }, [activeCharacter, setSpeakingState, playAudio]);
+  const determineNextState = useCallback(
+    (sentence: SentenceEntity | undefined) => {
+      if (!sentence || !activeCharacter) {
+        setSpeakingState(SpeakingState.COUNTDOWN);
+        return;
+      }
+      // If the sentence belongs to another character, play their audio first
+      if (sentence.character_id !== activeCharacter.id && sentence.audios?.[0]?.url) {
+        setSpeakingState(SpeakingState.LISTENING);
+        playAudio(sentence.audios[0].url);
+      } else {
+        // User's turn - go to countdown
+        setSpeakingState(SpeakingState.COUNTDOWN);
+      }
+    },
+    [activeCharacter, setSpeakingState, playAudio],
+  );
 
   const startLesson = useCallback(() => {
     setCurrentSentenceIndex(0);
@@ -144,7 +150,14 @@ export function useSpeakingFlow(): UseSpeakingFlowReturn {
     setCurrentSentenceIndex(nextIdx);
     setCurrentScore(null);
     determineNextState(sentences[nextIdx]);
-  }, [currentSentenceIndex, sentences, setCurrentSentenceIndex, setCurrentScore, setSpeakingState, determineNextState]);
+  }, [
+    currentSentenceIndex,
+    sentences,
+    setCurrentSentenceIndex,
+    setCurrentScore,
+    setSpeakingState,
+    determineNextState,
+  ]);
 
   const prevSentence = useCallback(() => {
     if (currentSentenceIndex > 0) {
@@ -153,7 +166,13 @@ export function useSpeakingFlow(): UseSpeakingFlowReturn {
       setCurrentScore(null);
       determineNextState(sentences[prevIdx]);
     }
-  }, [currentSentenceIndex, sentences, setCurrentSentenceIndex, setCurrentScore, determineNextState]);
+  }, [
+    currentSentenceIndex,
+    sentences,
+    setCurrentSentenceIndex,
+    setCurrentScore,
+    determineNextState,
+  ]);
 
   const restartLesson = useCallback(() => {
     speech.cancelRecording();

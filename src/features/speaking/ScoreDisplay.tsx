@@ -12,13 +12,7 @@ interface ScoreDisplayProps {
   onRetry: () => void;
 }
 
-export function ScoreDisplay({
-  score,
-  template,
-  transcript,
-  onNext,
-  onRetry,
-}: ScoreDisplayProps) {
+export function ScoreDisplay({ score, template, transcript, onNext, onRetry }: ScoreDisplayProps) {
   const theme = useTheme();
   const { t } = useTranslation();
   const scoreColor = getScoreHex(score);
@@ -42,11 +36,8 @@ export function ScoreDisplay({
       <View style={[styles.comparison, { backgroundColor: theme.colors.surfaceVariant }]}>
         <View style={styles.comparisonRow}>
           <MaterialCommunityIcons name="text" size={16} color={theme.colors.primary} />
-          <Text
-            variant="bodySmall"
-            style={{ color: theme.colors.onSurfaceVariant, marginLeft: 4 }}
-          >
-            Expected:
+          <Text variant="bodySmall" style={{ color: theme.colors.onSurfaceVariant, marginLeft: 4 }}>
+            {t('learn.expected')}
           </Text>
         </View>
         <Text variant="bodyMedium" style={{ color: theme.colors.onSurface }}>
@@ -54,15 +45,12 @@ export function ScoreDisplay({
         </Text>
         <View style={[styles.comparisonRow, { marginTop: 12 }]}>
           <MaterialCommunityIcons name="microphone" size={16} color={theme.colors.secondary} />
-          <Text
-            variant="bodySmall"
-            style={{ color: theme.colors.onSurfaceVariant, marginLeft: 4 }}
-          >
-            You said:
+          <Text variant="bodySmall" style={{ color: theme.colors.onSurfaceVariant, marginLeft: 4 }}>
+            {t('learn.youSaid')}
           </Text>
         </View>
         <Text variant="bodyMedium" style={{ color: theme.colors.onSurface }}>
-          {transcript || '(no speech detected)'}
+          {transcript || t('learn.noSpeechDetected')}
         </Text>
       </View>
 

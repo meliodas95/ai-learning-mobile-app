@@ -18,9 +18,7 @@ export function setTokenGetter(getter: () => string | null) {
 // Request interceptor: inject auth token
 apiClient.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    const isLoginEndpoint =
-      config.url === Endpoints.LOGIN ||
-      config.url === Endpoints.LOGIN_MEMBER;
+    const isLoginEndpoint = config.url === Endpoints.LOGIN || config.url === Endpoints.LOGIN_MEMBER;
 
     if (!isLoginEndpoint && getAccessToken) {
       const token = getAccessToken();
@@ -33,10 +31,16 @@ apiClient.interceptors.request.use(
   (error) => Promise.reject(error),
 );
 
-// Response interceptor: extract data
+// Response interceptor: extract data + handle 401
 apiClient.interceptors.response.use(
   (response) => response.data,
   (error: AxiosError) => {
+    if (error.response?.status === 401) {
+      // Dynamic import to avoid circular dependency
+      import('@/src/store/authStore').then(({ useAuthStore }) => {
+        useAuthStore.getState().logout();
+      });
+    }
     return Promise.reject(error.response ?? error);
   },
 );

@@ -1,7 +1,12 @@
 import { useQuery } from '@tanstack/react-query';
 import apiClient from '../client';
 import { Endpoints } from '../endpoints';
-import type { CourseEntity, DocumentEntity, ParagraphEntity, ParagraphDetailResponse } from '../types';
+import type {
+  CourseEntity,
+  DocumentEntity,
+  ParagraphEntity,
+  ParagraphDetailResponse,
+} from '../types';
 
 export function useCourses() {
   return useQuery({

@@ -14,23 +14,39 @@ export default function CourseDetailScreen() {
   const { courseId } = useLocalSearchParams<{ courseId: string }>();
   const { data: documents, isLoading } = useDocuments(courseId ? Number(courseId) : undefined);
 
-  const renderDocument = useCallback(({ item }: { item: DocumentEntity }) => (
-    <Card
-      style={[styles.card, { backgroundColor: theme.colors.surface }]}
-      onPress={() => router.push(`/document/${item.id}`)}
-    >
-      <Card.Content style={styles.cardContent}>
-        <MaterialCommunityIcons name="file-document-outline" size={24} color={theme.colors.primary} />
-        <View style={{ flex: 1, marginLeft: 12 }}>
-          <Text variant="titleSmall" style={{ color: theme.colors.onSurface }}>{item.title}</Text>
-          <Text variant="bodySmall" style={{ color: theme.colors.onSurfaceVariant, marginTop: 2 }}>
-            {item.paragraphs?.length ?? 0} {t('courses.paragraphs').toLowerCase()}
-          </Text>
-        </View>
-        <MaterialCommunityIcons name="chevron-right" size={24} color={theme.colors.onSurfaceVariant} />
-      </Card.Content>
-    </Card>
-  ), [theme, t]);
+  const renderDocument = useCallback(
+    ({ item }: { item: DocumentEntity }) => (
+      <Card
+        style={[styles.card, { backgroundColor: theme.colors.surface }]}
+        onPress={() => router.push(`/document/${item.id}`)}
+      >
+        <Card.Content style={styles.cardContent}>
+          <MaterialCommunityIcons
+            name="file-document-outline"
+            size={24}
+            color={theme.colors.primary}
+          />
+          <View style={{ flex: 1, marginLeft: 12 }}>
+            <Text variant="titleSmall" style={{ color: theme.colors.onSurface }}>
+              {item.title}
+            </Text>
+            <Text
+              variant="bodySmall"
+              style={{ color: theme.colors.onSurfaceVariant, marginTop: 2 }}
+            >
+              {item.paragraphs?.length ?? 0} {t('courses.paragraphs').toLowerCase()}
+            </Text>
+          </View>
+          <MaterialCommunityIcons
+            name="chevron-right"
+            size={24}
+            color={theme.colors.onSurfaceVariant}
+          />
+        </Card.Content>
+      </Card>
+    ),
+    [theme, t],
+  );
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background }]}>

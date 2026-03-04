@@ -53,7 +53,12 @@ export function ListeningPlayer() {
         <Text variant="titleLarge" style={{ color: theme.colors.primary, marginTop: 16 }}>
           {paragraph?.title}
         </Text>
-        <Button mode="contained" onPress={handleStart} style={styles.startButton} contentStyle={{ height: 48 }}>
+        <Button
+          mode="contained"
+          onPress={handleStart}
+          style={styles.startButton}
+          contentStyle={{ height: 48 }}
+        >
           {t('learn.startLesson')}
         </Button>
       </View>
@@ -72,7 +77,11 @@ export function ListeningPlayer() {
         />
       ) : (
         <View style={[styles.videoPlaceholder, { backgroundColor: theme.colors.surfaceVariant }]}>
-          <MaterialCommunityIcons name="video-off" size={48} color={theme.colors.onSurfaceVariant} />
+          <MaterialCommunityIcons
+            name="video-off"
+            size={48}
+            color={theme.colors.onSurfaceVariant}
+          />
         </View>
       )}
 
@@ -121,7 +130,19 @@ const styles = StyleSheet.create({
   startButton: { marginTop: 32, borderRadius: 12 },
   finishContainer: { flex: 1, justifyContent: 'center', alignItems: 'center', padding: 24 },
   restartButton: { marginTop: 24, borderRadius: 12 },
-  videoPlaceholder: { width: '100%', aspectRatio: 16 / 9, justifyContent: 'center', alignItems: 'center', borderRadius: 12, margin: 16 },
-  controls: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', paddingVertical: 8 },
+  videoPlaceholder: {
+    width: '100%',
+    aspectRatio: 16 / 9,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 12,
+    margin: 16,
+  },
+  controls: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 8,
+  },
   finishButton: { marginHorizontal: 16, marginTop: 8, borderRadius: 12 },
 });

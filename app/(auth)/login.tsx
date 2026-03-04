@@ -3,7 +3,6 @@ import { Text, TextInput, Button, HelperText, useTheme } from 'react-native-pape
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { router } from 'expo-router';
 import { useLoginMutation } from '@/src/api/hooks/useAuth';
 import { useAuthStore } from '@/src/store/authStore';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -20,7 +19,11 @@ export default function LoginScreen() {
   const loginMutation = useLoginMutation();
   const setAuth = useAuthStore((s) => s.setAuth);
 
-  const { control, handleSubmit, formState: { errors } } = useForm<LoginForm>({
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginForm>({
     resolver: zodResolver(loginSchema),
     defaultValues: { phone: '', password: '' },
   });
@@ -29,7 +32,7 @@ export default function LoginScreen() {
     try {
       const result = await loginMutation.mutateAsync(data);
       await setAuth(result);
-      router.replace('/(tabs)');
+      // AuthGuard handles navigation after auth state change
     } catch {
       // Error handled by mutation state
     }
@@ -67,9 +70,7 @@ export default function LoginScreen() {
               />
             )}
           />
-          {errors.phone && (
-            <HelperText type="error">{errors.phone.message}</HelperText>
-          )}
+          {errors.phone && <HelperText type="error">{errors.phone.message}</HelperText>}
 
           <Controller
             control={control}
@@ -87,9 +88,7 @@ export default function LoginScreen() {
               />
             )}
           />
-          {errors.password && (
-            <HelperText type="error">{errors.password.message}</HelperText>
-          )}
+          {errors.password && <HelperText type="error">{errors.password.message}</HelperText>}
 
           {loginMutation.isError && (
             <HelperText type="error" style={styles.apiError}>

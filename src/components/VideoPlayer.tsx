@@ -1,7 +1,7 @@
 import { useRef, useCallback, forwardRef, useImperativeHandle } from 'react';
 import { View, StyleSheet } from 'react-native';
-import { Video, ResizeMode, AVPlaybackStatus } from 'expo-av';
-import { useTheme } from 'react-native-paper';
+import type { AVPlaybackStatus } from 'expo-av';
+import { Video, ResizeMode } from 'expo-av';
 
 export interface VideoPlayerRef {
   play: () => Promise<void>;
@@ -20,7 +20,6 @@ interface VideoPlayerProps {
 
 export const VideoPlayer = forwardRef<VideoPlayerRef, VideoPlayerProps>(
   ({ uri, onProgress, onEnd, onReady, onError }, ref) => {
-    const theme = useTheme();
     const videoRef = useRef<Video>(null);
 
     useImperativeHandle(ref, () => ({
@@ -47,7 +46,10 @@ export const VideoPlayer = forwardRef<VideoPlayerRef, VideoPlayerProps>(
           return;
         }
         if (status.isPlaying && onProgress) {
-          onProgress(status.positionMillis / 1000, status.durationMillis ? status.durationMillis / 1000 : 0);
+          onProgress(
+            status.positionMillis / 1000,
+            status.durationMillis ? status.durationMillis / 1000 : 0,
+          );
         }
         if (status.didJustFinish) {
           onEnd?.();

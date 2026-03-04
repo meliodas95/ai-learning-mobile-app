@@ -3,6 +3,7 @@ import { Text, Surface, Switch, Button, Divider, useTheme, List } from 'react-na
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
+import { colors } from '@/src/theme/colors';
 import { useAuthStore } from '@/src/store/authStore';
 import { useSettingsStore } from '@/src/store/settingsStore';
 import i18n from '@/src/i18n';
@@ -14,7 +15,8 @@ export default function ProfileScreen() {
   const user = useAuthStore((s) => s.user);
   const member = useAuthStore((s) => s.member);
   const logout = useAuthStore((s) => s.logout);
-  const { locale, showTranslation, autoPlay, setLocale, setShowTranslation, setAutoPlay } = useSettingsStore();
+  const { locale, showTranslation, autoPlay, setLocale, setShowTranslation, setAutoPlay } =
+    useSettingsStore();
 
   const handleLogout = async () => {
     await logout();
@@ -51,7 +53,10 @@ export default function ProfileScreen() {
 
         {/* Token Balance */}
         {member && (
-          <Surface style={[styles.balanceCard, { backgroundColor: theme.colors.primary }]} elevation={2}>
+          <Surface
+            style={[styles.balanceCard, { backgroundColor: theme.colors.primary }]}
+            elevation={2}
+          >
             <MaterialCommunityIcons name="star-circle" size={28} color="#FFF" />
             <View style={{ marginLeft: 12 }}>
               <Text variant="bodySmall" style={{ color: 'rgba(255,255,255,0.7)' }}>
@@ -65,10 +70,16 @@ export default function ProfileScreen() {
         )}
 
         {/* Settings */}
-        <Text variant="titleMedium" style={[styles.sectionTitle, { color: theme.colors.onSurface }]}>
+        <Text
+          variant="titleMedium"
+          style={[styles.sectionTitle, { color: theme.colors.onSurface }]}
+        >
           {t('profile.settings')}
         </Text>
-        <Surface style={[styles.settingsCard, { backgroundColor: theme.colors.surface }]} elevation={1}>
+        <Surface
+          style={[styles.settingsCard, { backgroundColor: theme.colors.surface }]}
+          elevation={1}
+        >
           <List.Item
             title={t('profile.language')}
             description={locale === 'vi' ? 'Tiếng Việt' : 'English'}
@@ -113,8 +124,14 @@ const styles = StyleSheet.create({
   header: { fontWeight: '700', marginBottom: 16 },
   userCard: { borderRadius: 12, padding: 24, alignItems: 'center', marginBottom: 16 },
   avatar: { marginBottom: 8 },
-  balanceCard: { flexDirection: 'row', alignItems: 'center', padding: 16, borderRadius: 12, marginBottom: 24 },
+  balanceCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 16,
+    borderRadius: 12,
+    marginBottom: 24,
+  },
   sectionTitle: { fontWeight: '600', marginBottom: 8 },
   settingsCard: { borderRadius: 12, overflow: 'hidden', marginBottom: 24 },
-  logoutButton: { borderRadius: 12, borderColor: '#E53935' },
+  logoutButton: { borderRadius: 12, borderColor: colors.error },
 });

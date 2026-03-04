@@ -6,6 +6,7 @@ import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '@/src/store/authStore';
 import { useCourses } from '@/src/api/hooks/useCourses';
+import { colors } from '@/src/theme/colors';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 
 export default function HomeScreen() {
@@ -15,7 +16,9 @@ export default function HomeScreen() {
   const member = useAuthStore((s) => s.member);
   const { data: courses, refetch, isRefetching } = useCourses();
 
-  const onRefresh = useCallback(() => { refetch(); }, [refetch]);
+  const onRefresh = useCallback(() => {
+    refetch();
+  }, [refetch]);
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background }]}>
@@ -31,30 +34,57 @@ export default function HomeScreen() {
         </View>
 
         {/* Daily Stats */}
-        <Text variant="titleMedium" style={[styles.sectionTitle, { color: theme.colors.onSurface }]}>
+        <Text
+          variant="titleMedium"
+          style={[styles.sectionTitle, { color: theme.colors.onSurface }]}
+        >
           {t('home.dailyStats')}
         </Text>
         <View style={styles.statsRow}>
-          <Surface style={[styles.statCard, { backgroundColor: theme.colors.surface }]} elevation={1}>
+          <Surface
+            style={[styles.statCard, { backgroundColor: theme.colors.surface }]}
+            elevation={1}
+          >
             <MaterialCommunityIcons name="book-check" size={24} color={theme.colors.primary} />
-            <Text variant="titleLarge" style={{ color: theme.colors.primary, fontWeight: '700' }}>0</Text>
-            <Text variant="bodySmall" style={{ color: theme.colors.onSurfaceVariant }}>{t('home.lessonsCompleted')}</Text>
+            <Text variant="titleLarge" style={{ color: theme.colors.primary, fontWeight: '700' }}>
+              0
+            </Text>
+            <Text variant="bodySmall" style={{ color: theme.colors.onSurfaceVariant }}>
+              {t('home.lessonsCompleted')}
+            </Text>
           </Surface>
-          <Surface style={[styles.statCard, { backgroundColor: theme.colors.surface }]} elevation={1}>
-            <MaterialCommunityIcons name="star" size={24} color="#FB8C00" />
-            <Text variant="titleLarge" style={{ color: theme.colors.primary, fontWeight: '700' }}>--</Text>
-            <Text variant="bodySmall" style={{ color: theme.colors.onSurfaceVariant }}>{t('home.avgScore')}</Text>
+          <Surface
+            style={[styles.statCard, { backgroundColor: theme.colors.surface }]}
+            elevation={1}
+          >
+            <MaterialCommunityIcons name="star" size={24} color={colors.warning} />
+            <Text variant="titleLarge" style={{ color: theme.colors.primary, fontWeight: '700' }}>
+              --
+            </Text>
+            <Text variant="bodySmall" style={{ color: theme.colors.onSurfaceVariant }}>
+              {t('home.avgScore')}
+            </Text>
           </Surface>
-          <Surface style={[styles.statCard, { backgroundColor: theme.colors.surface }]} elevation={1}>
-            <MaterialCommunityIcons name="translate" size={24} color="#43A047" />
-            <Text variant="titleLarge" style={{ color: theme.colors.primary, fontWeight: '700' }}>0</Text>
-            <Text variant="bodySmall" style={{ color: theme.colors.onSurfaceVariant }}>{t('home.wordsLearned')}</Text>
+          <Surface
+            style={[styles.statCard, { backgroundColor: theme.colors.surface }]}
+            elevation={1}
+          >
+            <MaterialCommunityIcons name="translate" size={24} color={colors.success} />
+            <Text variant="titleLarge" style={{ color: theme.colors.primary, fontWeight: '700' }}>
+              0
+            </Text>
+            <Text variant="bodySmall" style={{ color: theme.colors.onSurfaceVariant }}>
+              {t('home.wordsLearned')}
+            </Text>
           </Surface>
         </View>
 
         {/* Token Balance */}
         {member && (
-          <Surface style={[styles.balanceCard, { backgroundColor: theme.colors.primary }]} elevation={2}>
+          <Surface
+            style={[styles.balanceCard, { backgroundColor: theme.colors.primary }]}
+            elevation={2}
+          >
             <View style={styles.balanceRow}>
               <MaterialCommunityIcons name="star-circle" size={28} color="#FFF" />
               <View style={{ marginLeft: 12 }}>
@@ -70,7 +100,10 @@ export default function HomeScreen() {
         )}
 
         {/* Recent Courses */}
-        <Text variant="titleMedium" style={[styles.sectionTitle, { color: theme.colors.onSurface }]}>
+        <Text
+          variant="titleMedium"
+          style={[styles.sectionTitle, { color: theme.colors.onSurface }]}
+        >
           {t('home.recentCourses')}
         </Text>
         {courses?.slice(0, 5).map((course) => (
@@ -84,7 +117,10 @@ export default function HomeScreen() {
                 {course.title}
               </Text>
               {course.title_vi && (
-                <Text variant="bodySmall" style={{ color: theme.colors.onSurfaceVariant, marginTop: 4 }}>
+                <Text
+                  variant="bodySmall"
+                  style={{ color: theme.colors.onSurfaceVariant, marginTop: 4 }}
+                >
                   {course.title_vi}
                 </Text>
               )}
@@ -94,8 +130,15 @@ export default function HomeScreen() {
 
         {(!courses || courses.length === 0) && (
           <View style={styles.empty}>
-            <MaterialCommunityIcons name="book-open-page-variant" size={48} color={theme.colors.outline} />
-            <Text variant="bodyMedium" style={{ color: theme.colors.onSurfaceVariant, marginTop: 12 }}>
+            <MaterialCommunityIcons
+              name="book-open-page-variant"
+              size={48}
+              color={theme.colors.outline}
+            />
+            <Text
+              variant="bodyMedium"
+              style={{ color: theme.colors.onSurfaceVariant, marginTop: 12 }}
+            >
               {t('common.noResults')}
             </Text>
           </View>

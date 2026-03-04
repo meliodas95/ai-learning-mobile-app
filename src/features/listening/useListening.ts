@@ -1,6 +1,5 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { useLearningStore } from '@/src/store/learningStore';
-import { useSettingsStore } from '@/src/store/settingsStore';
 import { useEndListenMutation } from '@/src/api/hooks/useLearning';
 import type { VideoPlayerRef } from '@/src/components/VideoPlayer';
 import type { SentenceEntity } from '@/src/api/types';
@@ -35,37 +34,50 @@ export function useListening(): UseListeningReturn {
   const currentSentenceIndex = useLearningStore((s) => s.currentSentenceIndex);
   const setCurrentSentenceIndex = useLearningStore((s) => s.setCurrentSentenceIndex);
   const paragraph = useLearningStore((s) => s.paragraph);
-  const autoPlay = useSettingsStore((s) => s.autoPlay);
-
   const endListenMutation = useEndListenMutation();
 
   // Find current sentence by time
-  const currentSentence = sentences.find(
-    (s) => s.start != null && s.end != null && currentTime >= s.start && currentTime <= s.end
-  ) ?? sentences[currentSentenceIndex];
+  const currentSentence =
+    sentences.find(
+      (s) =>
+        s.start !== null &&
+        s.start !== undefined &&
+        s.end !== null &&
+        s.end !== undefined &&
+        currentTime >= s.start &&
+        currentTime <= s.end,
+    ) ?? sentences[currentSentenceIndex];
+
+  const currentSentenceId = currentSentence?.id;
+  const currentSentenceEnd = currentSentence?.end;
 
   // Update index when sentence changes by time
   useEffect(() => {
-    if (currentSentence) {
-      const idx = sentences.findIndex((s) => s.id === currentSentence.id);
+    if (currentSentenceId !== undefined) {
+      const idx = sentences.findIndex((s) => s.id === currentSentenceId);
       if (idx >= 0 && idx !== currentSentenceIndex) {
         setCurrentSentenceIndex(idx);
       }
     }
-  }, [currentSentence?.id]);
+  }, [currentSentenceId, sentences, currentSentenceIndex, setCurrentSentenceIndex]);
 
   // Save sentence completion
   useEffect(() => {
-    if (currentSentence && currentSentence.end != null && currentTime >= currentSentence.end - 0.05) {
-      if (lastSavedSentenceRef.current !== currentSentence.id && paragraph) {
-        lastSavedSentenceRef.current = currentSentence.id;
+    if (
+      currentSentenceId !== undefined &&
+      currentSentenceEnd !== null &&
+      currentSentenceEnd !== undefined &&
+      currentTime >= currentSentenceEnd - 0.05
+    ) {
+      if (lastSavedSentenceRef.current !== currentSentenceId && paragraph) {
+        lastSavedSentenceRef.current = currentSentenceId;
         endListenMutation.mutate({
           paragraph_id: paragraph.id,
-          sentence_id: currentSentence.id,
+          sentence_id: currentSentenceId,
         });
       }
     }
-  }, [currentTime, currentSentence?.id]);
+  }, [currentTime, currentSentenceId, currentSentenceEnd, paragraph, endListenMutation]);
 
   const handleProgress = useCallback((time: number) => {
     setCurrentTime(time);
@@ -91,7 +103,7 @@ export function useListening(): UseListeningReturn {
     if (nextIdx < sentences.length) {
       setCurrentSentenceIndex(nextIdx);
       const nextSentence = sentences[nextIdx];
-      if (nextSentence?.start != null) {
+      if (nextSentence?.start !== null && nextSentence?.start !== undefined) {
         await videoRef.current?.seekTo(nextSentence.start * 1000);
       }
     }
@@ -102,7 +114,7 @@ export function useListening(): UseListeningReturn {
     if (prevIdx >= 0) {
       setCurrentSentenceIndex(prevIdx);
       const prevSentence = sentences[prevIdx];
-      if (prevSentence?.start != null) {
+      if (prevSentence?.start !== null && prevSentence?.start !== undefined) {
         await videoRef.current?.seekTo(prevSentence.start * 1000);
       }
     }

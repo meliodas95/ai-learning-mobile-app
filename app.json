@@ -29,13 +29,14 @@
       },
       "predictiveBackGestureEnabled": false,
       "package": "com.langenter.learningai",
-      "permissions": [
-        "RECORD_AUDIO"
-      ]
+      "permissions": ["RECORD_AUDIO"]
     },
     "web": {
       "favicon": "./assets/favicon.png",
       "bundler": "metro"
+    },
+    "extra": {
+      "tripleDesKey": "REPLACE_WITH_ACTUAL_KEY"
     },
     "plugins": [
       "expo-router",
