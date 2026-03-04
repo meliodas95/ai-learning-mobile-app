@@ -8,3 +8,5 @@ export function calculateSimilarity(userTranscript: string, template: string): n
 
   return fuzzball.ratio(normalizedUser, normalizedTemplate);
 }
+
+
