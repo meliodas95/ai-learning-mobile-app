@@ -6,6 +6,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { ActivityIndicator, View } from 'react-native';
 import { theme } from '@/src/theme';
 import { useAuthStore } from '@/src/store/authStore';
+import { ErrorBoundary } from '@/src/components/ErrorBoundary';
 import '@/src/i18n';
 
 const queryClient = new QueryClient({
@@ -50,11 +51,13 @@ export default function RootLayout() {
 
   return (
     <SafeAreaProvider>
-      <QueryClientProvider client={queryClient}>
-        <PaperProvider theme={theme}>
-          <AuthGuard />
-        </PaperProvider>
-      </QueryClientProvider>
+      <ErrorBoundary>
+        <QueryClientProvider client={queryClient}>
+          <PaperProvider theme={theme}>
+            <AuthGuard />
+          </PaperProvider>
+        </QueryClientProvider>
+      </ErrorBoundary>
     </SafeAreaProvider>
   );
 }
