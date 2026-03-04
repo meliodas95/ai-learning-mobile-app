@@ -10,17 +10,9 @@ import { useLearningStore } from '@/src/store/learningStore';
 import { LessonTabBar } from '@/src/components/LessonTabBar';
 import { LearnTab } from '@/src/api/types';
 import { ListeningPlayer } from '@/src/features/listening/ListeningPlayer';
+import { SpeakingPlayer } from '@/src/features/speaking/SpeakingPlayer';
 import { WordList } from '@/src/features/vocabulary/WordList';
 import { ExerciseView } from '@/src/features/exercise/ExerciseView';
-
-// Placeholder component - will be replaced by feature implementation
-function SpeakingPlaceholder() {
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Speaking Mode</Text>
-    </View>
-  );
-}
 
 export default function LessonScreen() {
   const theme = useTheme();
@@ -92,7 +84,7 @@ export default function LessonScreen() {
       case LearnTab.LISTEN:
         return <ListeningPlayer />;
       case LearnTab.SPEAKING:
-        return <SpeakingPlaceholder />;
+        return <SpeakingPlayer />;
       case LearnTab.WORD:
         return <WordList />;
       case LearnTab.EXERCISE:
