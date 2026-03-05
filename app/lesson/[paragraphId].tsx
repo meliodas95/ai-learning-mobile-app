@@ -1,8 +1,9 @@
 import React, { useEffect, Suspense } from 'react';
-import { View, StyleSheet } from 'react-native';
-import { Text, IconButton, ActivityIndicator, useTheme } from 'react-native-paper';
+import { View, StyleSheet, Pressable } from 'react-native';
+import { Text, ActivityIndicator } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router, useLocalSearchParams } from 'expo-router';
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { useI18n } from '@/src/i18n';
 import { useParagraphDetail } from '@/src/api/hooks/useCourses';
 import { useSentences } from '@/src/api/hooks/useSentences';
@@ -10,6 +11,7 @@ import { useLearningStore } from '@/src/store/learningStore';
 import { LessonTabBar } from '@/src/components/LessonTabBar';
 import { LearnTab } from '@/src/api/types';
 import { PROCESS_QUIZ_COMPLETED } from '@/src/constants';
+import { colors } from '@/src/theme/colors';
 
 const ListeningPlayer = React.lazy(() =>
   import('@/src/features/listening/ListeningPlayer').then((m) => ({ default: m.ListeningPlayer })),
@@ -24,8 +26,14 @@ const ExerciseView = React.lazy(() =>
   import('@/src/features/exercise/ExerciseView').then((m) => ({ default: m.ExerciseView })),
 );
 
+const PARAGRAPH_TYPE_LABELS: Record<string, string> = {
+  conversation: 'Conversation',
+  essay: 'Essay',
+  gallery: 'Image Lesson',
+  video: 'Video',
+};
+
 export default function LessonScreen() {
-  const theme = useTheme();
   const { t } = useI18n();
   const { paragraphId } = useLocalSearchParams<{ paragraphId: string }>();
   const numId = paragraphId ? Number(paragraphId) : undefined;
@@ -71,15 +79,10 @@ export default function LessonScreen() {
 
   if (isLoading) {
     return (
-      <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background }]}>
-        <View style={styles.loading}>
-          <ActivityIndicator size="large" color={theme.colors.primary} />
-          <Text
-            variant="bodyMedium"
-            style={{ color: theme.colors.onSurfaceVariant, marginTop: 16 }}
-          >
-            {t('common.loading')}
-          </Text>
+      <SafeAreaView style={styles.container}>
+        <View style={styles.centered}>
+          <ActivityIndicator size="large" color={colors.primary} />
+          <Text style={styles.loadingText}>{t('common.loading')}</Text>
         </View>
       </SafeAreaView>
     );
@@ -87,16 +90,19 @@ export default function LessonScreen() {
 
   if (paragraphError || !paragraph) {
     return (
-      <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background }]}>
-        <View style={styles.loading}>
-          <Text variant="bodyLarge" style={{ color: theme.colors.error }}>
-            {t('common.error')}
-          </Text>
-          <IconButton icon="arrow-left" onPress={() => router.back()} />
+      <SafeAreaView style={styles.container}>
+        <View style={styles.centered}>
+          <Text style={styles.errorText}>{t('common.error')}</Text>
+          <Pressable onPress={() => router.back()} hitSlop={8} style={styles.backButton}>
+            <MaterialCommunityIcons name="chevron-left" size={20} color={colors.primary} />
+            <Text style={styles.backButtonText}>{t('common.back')}</Text>
+          </Pressable>
         </View>
       </SafeAreaView>
     );
   }
+
+  const typeName = PARAGRAPH_TYPE_LABELS[paragraph.item] ?? paragraph.item;
 
   const renderActiveTab = () => {
     switch (activeTab) {
@@ -114,17 +120,23 @@ export default function LessonScreen() {
   };
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background }]}>
+    <SafeAreaView style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-        <IconButton icon="arrow-left" onPress={() => router.back()} />
-        <Text
-          variant="titleMedium"
-          style={{ color: theme.colors.onSurface, flex: 1 }}
-          numberOfLines={1}
-        >
+        <Pressable onPress={() => router.back()} hitSlop={8}>
+          <MaterialCommunityIcons name="chevron-left" size={24} color={colors.onSurface} />
+        </Pressable>
+        <Text style={styles.title} numberOfLines={1}>
           {paragraph.title}
         </Text>
+        {typeName ? (
+          <View style={styles.typeBadge}>
+            <Text style={styles.typeBadgeText}>{typeName}</Text>
+          </View>
+        ) : null}
+        <Pressable hitSlop={8}>
+          <MaterialCommunityIcons name="dots-vertical" size={22} color={colors.textTertiary} />
+        </Pressable>
       </View>
 
       {/* Tab Bar */}
@@ -132,7 +144,7 @@ export default function LessonScreen() {
 
       {/* Active Tab Content */}
       <View style={styles.content}>
-        <Suspense fallback={<ActivityIndicator size="large" style={{ flex: 1 }} />}>
+        <Suspense fallback={<ActivityIndicator size="large" style={styles.content} />}>
           {renderActiveTab()}
         </Suspense>
       </View>
@@ -141,8 +153,35 @@ export default function LessonScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1 },
-  header: { flexDirection: 'row', alignItems: 'center', paddingRight: 16 },
+  container: { flex: 1, backgroundColor: colors.background },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 24,
+    paddingVertical: 8,
+    gap: 12,
+  },
+  title: {
+    fontSize: 18,
+    fontWeight: '600',
+    flex: 1,
+    color: colors.onSurface,
+  },
+  typeBadge: {
+    backgroundColor: colors.primaryLight,
+    borderRadius: 100,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+  },
+  typeBadgeText: {
+    fontSize: 11,
+    fontWeight: '600',
+    color: colors.primary,
+  },
   content: { flex: 1 },
-  loading: { flex: 1, justifyContent: 'center', alignItems: 'center' },
+  centered: { flex: 1, justifyContent: 'center', alignItems: 'center', gap: 16 },
+  loadingText: { fontSize: 14, color: colors.onSurfaceVariant, marginTop: 16 },
+  errorText: { fontSize: 16, color: colors.error, fontWeight: '500' },
+  backButton: { flexDirection: 'row', alignItems: 'center', gap: 4 },
+  backButtonText: { fontSize: 14, color: colors.primary, fontWeight: '500' },
 });

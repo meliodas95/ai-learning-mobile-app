@@ -20,25 +20,25 @@ Mobile English language learning app with video-based lessons, speech recognitio
 
 ## Tech Stack
 
-| Purpose | Library | Version |
-|---------|---------|---------|
-| Framework | Expo SDK | 52+ |
-| Routing | Expo Router | v4 |
-| UI Components | React Native Paper | v5 (MD3) |
-| State Management | Zustand | v5 |
-| Data Fetching | TanStack Query | v5 |
-| HTTP Client | Axios | latest |
-| Video/Audio | expo-av | latest |
-| Speech Recognition | @react-native-voice/voice | latest |
-| Scoring | fuzzball | latest |
-| Encryption | crypto-js | latest |
-| Storage | react-native-mmkv | latest |
-| Auth Storage | expo-secure-store | latest |
-| Animations | react-native-reanimated | v3 |
-| i18n | i18next + react-i18next | latest |
-| Forms | react-hook-form + zod | latest |
-| Icons | @expo/vector-icons | built-in |
-| Package Manager | bun | latest |
+| Purpose            | Library                   | Version  |
+| ------------------ | ------------------------- | -------- |
+| Framework          | Expo SDK                  | 52+      |
+| Routing            | Expo Router               | v4       |
+| UI Components      | React Native Paper        | v5 (MD3) |
+| State Management   | Zustand                   | v5       |
+| Data Fetching      | TanStack Query            | v5       |
+| HTTP Client        | Axios                     | latest   |
+| Video/Audio        | expo-av                   | latest   |
+| Speech Recognition | @react-native-voice/voice | latest   |
+| Scoring            | fuzzball                  | latest   |
+| Encryption         | crypto-js                 | latest   |
+| Storage            | react-native-mmkv         | latest   |
+| Auth Storage       | expo-secure-store         | latest   |
+| Animations         | react-native-reanimated   | v3       |
+| i18n               | i18next + react-i18next   | latest   |
+| Forms              | react-hook-form + zod     | latest   |
+| Icons              | @expo/vector-icons        | built-in |
+| Package Manager    | bun                       | latest   |
 
 ## Project Structure
 
@@ -118,14 +118,16 @@ learning-ai-app/
 ## Navigation
 
 ### Bottom Tabs
-| Tab | Icon | Screen |
-|-----|------|--------|
-| Home | home | Dashboard - continue learning, daily stats |
-| Courses | book-open-variant | Course browser |
-| History | clock-outline | Learning history with scores |
-| Profile | account-circle | Account, settings, balance |
+
+| Tab     | Icon              | Screen                                     |
+| ------- | ----------------- | ------------------------------------------ |
+| Home    | home              | Dashboard - continue learning, daily stats |
+| Courses | book-open-variant | Course browser                             |
+| History | clock-outline     | Learning history with scores               |
+| Profile | account-circle    | Account, settings, balance                 |
 
 ### Screen Flow
+
 ```
 Auth: Login → OTP → Home
 Main: Home → Courses → Documents → Paragraphs → Lesson
@@ -136,6 +138,7 @@ Profile: Settings | Balance | Favorites
 ## Theme
 
 Modern minimal palette for Paper MD3:
+
 ```typescript
 {
   primary: '#1A1A2E',
@@ -160,6 +163,7 @@ Modern minimal palette for Paper MD3:
 **settingsStore** - Locale, theme, preferences (persisted via MMKV)
 
 ### Speaking State Machine
+
 ```
 idle → listening → recording → scoring → scored → idle (next)
                       │                     │
@@ -173,6 +177,7 @@ Replaces the 1084-line useSpeakingVideo.ts with clean state transitions.
 Uses existing api.langenter.com. TanStack Query for all data fetching (replaces SWR + React Query mix).
 
 Key endpoints:
+
 - `POST /v1/api/account/login` - Auth
 - `GET /v1/api/library/courses` - Course list
 - `GET /v1/api/library/sentences` - Lesson sentences
@@ -182,18 +187,18 @@ Key endpoints:
 
 ## Key Refactoring from Longan
 
-| Problem | Solution |
-|---------|----------|
+| Problem                       | Solution                                                   |
+| ----------------------------- | ---------------------------------------------------------- |
 | 1084-line useSpeakingVideo.ts | 3 hooks: useSpeechRecognition, useScoring, useSpeakingFlow |
-| 19 Zustand stores | 3 stores: auth, learning, settings |
-| SWR + React Query mixed | TanStack Query only |
-| Web Speech API | @react-native-voice/voice (native) |
-| console.logs in production | Dev-only logger |
-| strict: false | strict: true |
-| No tests | Jest + React Native Testing Library |
-| Race conditions via refs | State machine |
-| sessionStorage | MMKV |
-| No error boundaries | Error boundaries + retry UI |
+| 19 Zustand stores             | 3 stores: auth, learning, settings                         |
+| SWR + React Query mixed       | TanStack Query only                                        |
+| Web Speech API                | @react-native-voice/voice (native)                         |
+| console.logs in production    | Dev-only logger                                            |
+| strict: false                 | strict: true                                               |
+| No tests                      | Jest + React Native Testing Library                        |
+| Race conditions via refs      | State machine                                              |
+| sessionStorage                | MMKV                                                       |
+| No error boundaries           | Error boundaries + retry UI                                |
 
 ## Error Handling
 

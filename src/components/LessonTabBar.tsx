@@ -1,5 +1,5 @@
-import { StyleSheet } from 'react-native';
-import { SegmentedButtons } from 'react-native-paper';
+import { StyleSheet, View } from 'react-native';
+import { SegmentedControl } from '@/src/components/SegmentedControl';
 import { useI18n } from '@/src/i18n';
 import { LearnTab } from '@/src/api/types';
 import { useLearningStore } from '@/src/store/learningStore';
@@ -14,27 +14,24 @@ export function LessonTabBar({ hasKeywords, hasExercise }: LessonTabBarProps) {
   const activeTab = useLearningStore((s) => s.activeTab);
   const setActiveTab = useLearningStore((s) => s.setActiveTab);
 
-  const buttons = [
-    { value: LearnTab.LISTEN, label: t('learn.listen'), icon: 'headphones' },
-    { value: LearnTab.SPEAKING, label: t('learn.speaking'), icon: 'microphone' },
-    ...(hasKeywords
-      ? [{ value: LearnTab.WORD, label: t('learn.word'), icon: 'book-alphabet' }]
-      : []),
-    ...(hasExercise
-      ? [{ value: LearnTab.EXERCISE, label: t('learn.exercise'), icon: 'clipboard-text' }]
-      : []),
+  const segments = [
+    { value: LearnTab.LISTEN, label: t('learn.listen') },
+    { value: LearnTab.SPEAKING, label: t('learn.speaking') },
+    ...(hasKeywords ? [{ value: LearnTab.WORD, label: t('learn.word') }] : []),
+    ...(hasExercise ? [{ value: LearnTab.EXERCISE, label: t('learn.exercise') }] : []),
   ];
 
   return (
-    <SegmentedButtons
-      value={activeTab}
-      onValueChange={(value) => setActiveTab(value as LearnTab)}
-      buttons={buttons}
-      style={styles.tabs}
-    />
+    <View style={styles.container}>
+      <SegmentedControl
+        segments={segments}
+        activeValue={activeTab}
+        onValueChange={(v) => setActiveTab(v as LearnTab)}
+      />
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  tabs: { marginHorizontal: 16, marginVertical: 8 },
+  container: { paddingHorizontal: 24, paddingVertical: 8 },
 });

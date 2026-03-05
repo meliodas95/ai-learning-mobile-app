@@ -1,17 +1,29 @@
 import { useCallback } from 'react';
-import { View, StyleSheet, ScrollView, RefreshControl } from 'react-native';
-import { Text, Card, useTheme, Surface } from 'react-native-paper';
+import { View, StyleSheet, ScrollView, RefreshControl, Pressable } from 'react-native';
+import { Text } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { useI18n } from '@/src/i18n';
 import { useAuthStore } from '@/src/store/authStore';
 import { useCourses } from '@/src/api/hooks/useCourses';
 import { colors } from '@/src/theme/colors';
-import { HOME_RECENT_COURSES_LIMIT } from '@/src/constants';
+import { CourseCard } from '@/src/components/CourseCard';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 
+const LESSON_TYPES = [
+  { key: 'image', icon: 'image' as const, color: colors.primaryLight },
+  { key: 'chat', icon: 'chat' as const, color: '#FDEEE6' },
+  { key: 'paragraph', icon: 'text-box' as const, color: '#FFF5E0' },
+  { key: 'video', icon: 'video' as const, color: '#E8F0FE' },
+];
+
+const LEARNING_MODES = [
+  { key: 'vocab', icon: 'book-open-variant' as const, color: colors.primary },
+  { key: 'listening', icon: 'headphones' as const, color: colors.coral },
+  { key: 'speaking', icon: 'microphone' as const, color: colors.primaryDark },
+];
+
 export default function HomeScreen() {
-  const theme = useTheme();
   const { t } = useI18n();
   const user = useAuthStore((s) => s.user);
   const member = useAuthStore((s) => s.member);
@@ -21,127 +33,88 @@ export default function HomeScreen() {
     refetch();
   }, [refetch]);
 
+  const displayName = user?.fullname ?? member?.fullname ?? '';
+  const initial = displayName.charAt(0).toUpperCase() || '?';
+  const firstCourse = courses?.courses?.[0];
+
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background }]}>
+    <SafeAreaView style={styles.container}>
       <ScrollView
         contentContainerStyle={styles.scrollContent}
         refreshControl={<RefreshControl refreshing={isRefetching} onRefresh={onRefresh} />}
+        showsVerticalScrollIndicator={false}
       >
-        {/* Greeting */}
-        <View style={styles.header}>
-          <Text variant="headlineSmall" style={{ color: theme.colors.primary, fontWeight: '700' }}>
-            {t('home.greeting', { name: user?.fullname ?? member?.fullname ?? '' })}
-          </Text>
-        </View>
-
-        {/* Daily Stats */}
-        <Text
-          variant="titleMedium"
-          style={[styles.sectionTitle, { color: theme.colors.onSurface }]}
-        >
-          {t('home.dailyStats')}
-        </Text>
-        <View style={styles.statsRow}>
-          <Surface
-            style={[styles.statCard, { backgroundColor: theme.colors.surface }]}
-            elevation={1}
-          >
-            <MaterialCommunityIcons name="book-check" size={24} color={theme.colors.primary} />
-            <Text variant="titleLarge" style={{ color: theme.colors.primary, fontWeight: '700' }}>
-              0
-            </Text>
-            <Text variant="bodySmall" style={{ color: theme.colors.onSurfaceVariant }}>
-              {t('home.lessonsCompleted')}
-            </Text>
-          </Surface>
-          <Surface
-            style={[styles.statCard, { backgroundColor: theme.colors.surface }]}
-            elevation={1}
-          >
-            <MaterialCommunityIcons name="star" size={24} color={colors.warning} />
-            <Text variant="titleLarge" style={{ color: theme.colors.primary, fontWeight: '700' }}>
-              --
-            </Text>
-            <Text variant="bodySmall" style={{ color: theme.colors.onSurfaceVariant }}>
-              {t('home.avgScore')}
-            </Text>
-          </Surface>
-          <Surface
-            style={[styles.statCard, { backgroundColor: theme.colors.surface }]}
-            elevation={1}
-          >
-            <MaterialCommunityIcons name="translate" size={24} color={colors.success} />
-            <Text variant="titleLarge" style={{ color: theme.colors.primary, fontWeight: '700' }}>
-              0
-            </Text>
-            <Text variant="bodySmall" style={{ color: theme.colors.onSurfaceVariant }}>
-              {t('home.wordsLearned')}
-            </Text>
-          </Surface>
-        </View>
-
-        {/* Token Balance */}
-        {member && (
-          <Surface
-            style={[styles.balanceCard, { backgroundColor: theme.colors.primary }]}
-            elevation={2}
-          >
-            <View style={styles.balanceRow}>
-              <MaterialCommunityIcons name="star-circle" size={28} color={colors.onPrimary} />
-              <View style={{ marginLeft: 12 }}>
-                <Text variant="bodySmall" style={{ color: colors.onPrimaryMuted }}>
-                  {t('profile.tokenBalance')}
-                </Text>
-                <Text variant="titleLarge" style={{ color: colors.onPrimary, fontWeight: '700' }}>
-                  {t('profile.tokens', { count: member.member_token?.quantity ?? 0 })}
-                </Text>
-              </View>
+        {/* Greeting Header */}
+        <View style={styles.greetingRow}>
+          <View style={styles.greetingLeft}>
+            <View style={styles.avatar}>
+              <Text style={styles.avatarText}>{initial}</Text>
             </View>
-          </Surface>
-        )}
+            <View style={styles.greetingTextCol}>
+              <Text style={styles.greetingSmall}>{t('home.goodMorning')}</Text>
+              <Text style={styles.greetingName}>{displayName}</Text>
+            </View>
+          </View>
+          <Pressable style={styles.bellButton}>
+            <MaterialCommunityIcons name="bell-outline" size={22} color={colors.onSurface} />
+          </Pressable>
+        </View>
 
-        {/* Recent Courses */}
-        <Text
-          variant="titleMedium"
-          style={[styles.sectionTitle, { color: theme.colors.onSurface }]}
+        {/* Search Bar */}
+        <Pressable style={styles.searchBar}>
+          <MaterialCommunityIcons name="magnify" size={20} color={colors.textTertiary} />
+          <Text style={styles.searchPlaceholder}>{t('home.searchPlaceholder')}</Text>
+        </Pressable>
+
+        {/* Lesson Types */}
+        <Text style={styles.sectionTitle}>{t('home.lessonTypes')}</Text>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.lessonTypesRow}
         >
-          {t('home.recentCourses')}
-        </Text>
-        {courses?.courses?.slice(0, HOME_RECENT_COURSES_LIMIT).map((course) => (
-          <Card
-            key={course.id}
-            style={[styles.courseCard, { backgroundColor: theme.colors.surface }]}
-            onPress={() => router.push(`/course/${course.id}`)}
-          >
-            <Card.Content>
-              <Text variant="titleSmall" style={{ color: theme.colors.onSurface }}>
-                {course.title}
+          {LESSON_TYPES.map((item) => (
+            <Pressable
+              key={item.key}
+              style={[styles.lessonTypeCard, { backgroundColor: item.color }]}
+            >
+              <MaterialCommunityIcons name={item.icon} size={28} color={colors.primary} />
+              <Text style={styles.lessonTypeLabel}>
+                {t(`home.${item.key}` as `home.${typeof item.key}`)}
               </Text>
-              {course.title_vi && (
-                <Text
-                  variant="bodySmall"
-                  style={{ color: theme.colors.onSurfaceVariant, marginTop: 4 }}
-                >
-                  {course.title_vi}
-                </Text>
-              )}
-            </Card.Content>
-          </Card>
-        ))}
+            </Pressable>
+          ))}
+        </ScrollView>
 
-        {(!courses || courses.courses.length === 0) && (
+        {/* Learning Modes */}
+        <Text style={styles.sectionTitle}>{t('home.learningModes')}</Text>
+        <View style={styles.modesRow}>
+          {LEARNING_MODES.map((mode) => (
+            <Pressable key={mode.key} style={[styles.modePill, { backgroundColor: mode.color }]}>
+              <MaterialCommunityIcons name={mode.icon} size={18} color={colors.onPrimary} />
+              <Text style={styles.modePillText}>
+                {t(`home.${mode.key}` as `home.${typeof mode.key}`)}
+              </Text>
+            </Pressable>
+          ))}
+        </View>
+
+        {/* Continue Learning */}
+        <Text style={styles.sectionTitle}>{t('home.continueLearning')}</Text>
+        {firstCourse ? (
+          <CourseCard
+            title={firstCourse.title}
+            subtitle={firstCourse.title_vi}
+            onPress={() => router.push(`/course/${firstCourse.id}`)}
+          />
+        ) : (
           <View style={styles.empty}>
             <MaterialCommunityIcons
               name="book-open-page-variant"
               size={48}
-              color={theme.colors.outline}
+              color={colors.outline}
             />
-            <Text
-              variant="bodyMedium"
-              style={{ color: theme.colors.onSurfaceVariant, marginTop: 12 }}
-            >
-              {t('common.noResults')}
-            </Text>
+            <Text style={styles.emptyText}>{t('common.noResults')}</Text>
           </View>
         )}
       </ScrollView>
@@ -150,14 +123,136 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1 },
-  scrollContent: { padding: 16, paddingBottom: 32 },
-  header: { marginBottom: 24 },
-  sectionTitle: { fontWeight: '600', marginBottom: 12, marginTop: 8 },
-  statsRow: { flexDirection: 'row', gap: 12, marginBottom: 16 },
-  statCard: { flex: 1, alignItems: 'center', padding: 16, borderRadius: 12, gap: 4 },
-  balanceCard: { padding: 16, borderRadius: 12, marginBottom: 16 },
-  balanceRow: { flexDirection: 'row', alignItems: 'center' },
-  courseCard: { marginBottom: 8, borderRadius: 12 },
-  empty: { alignItems: 'center', paddingVertical: 48 },
+  container: {
+    flex: 1,
+    backgroundColor: colors.background,
+  },
+  scrollContent: {
+    paddingHorizontal: 24,
+    paddingBottom: 32,
+    gap: 24,
+  },
+  // Greeting Header
+  greetingRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingTop: 8,
+  },
+  greetingLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+  avatar: {
+    width: 48,
+    height: 48,
+    borderRadius: 100,
+    backgroundColor: colors.primaryLight,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  avatarText: {
+    fontSize: 20,
+    fontWeight: '700',
+    color: colors.primary,
+  },
+  greetingTextCol: {
+    gap: 2,
+  },
+  greetingSmall: {
+    fontSize: 12,
+    color: colors.onSurfaceVariant,
+  },
+  greetingName: {
+    fontSize: 20,
+    fontWeight: '600',
+    color: colors.onSurface,
+  },
+  bellButton: {
+    width: 44,
+    height: 44,
+    borderRadius: 100,
+    backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: colors.outline,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#1A1918',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.04,
+    shadowRadius: 8,
+    elevation: 1,
+  },
+  // Search Bar
+  searchBar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: colors.surface,
+    borderRadius: 12,
+    height: 48,
+    borderWidth: 1,
+    borderColor: colors.outline,
+    paddingHorizontal: 16,
+    gap: 12,
+  },
+  searchPlaceholder: {
+    fontSize: 15,
+    color: colors.textTertiary,
+  },
+  // Section Title
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: colors.onSurface,
+    letterSpacing: -0.2,
+  },
+  // Lesson Types
+  lessonTypesRow: {
+    gap: 12,
+    marginTop: -12,
+  },
+  lessonTypeCard: {
+    width: 90,
+    height: 100,
+    borderRadius: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+  },
+  lessonTypeLabel: {
+    fontSize: 11,
+    fontWeight: '600',
+    color: colors.onSurface,
+  },
+  // Learning Modes
+  modesRow: {
+    flexDirection: 'row',
+    gap: 10,
+    marginTop: -12,
+  },
+  modePill: {
+    flex: 1,
+    height: 46,
+    borderRadius: 100,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 6,
+  },
+  modePillText: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: colors.onPrimary,
+  },
+  // Empty
+  empty: {
+    alignItems: 'center',
+    paddingVertical: 48,
+    gap: 12,
+  },
+  emptyText: {
+    fontSize: 14,
+    color: colors.onSurfaceVariant,
+  },
 });

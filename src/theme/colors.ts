@@ -1,21 +1,41 @@
 export const colors = {
-  primary: '#1A1A2E',
-  secondary: '#16213E',
-  tertiary: '#0F3460',
+  // Primary greens
+  primary: '#3D8A5A',
+  primaryDark: '#4D9B6A',
+  primaryLight: '#C8F0D8',
+
+  // Accent
+  coral: '#D89575',
+
+  // Backgrounds
+  background: '#F5F4F1',
   surface: '#FFFFFF',
-  surfaceVariant: '#F5F5F7',
-  background: '#FAFAFA',
-  outline: '#E0E0E0',
+  surfaceVariant: '#EDECEA',
+  elevated: '#FAFAF8',
+
+  // Borders
+  outline: '#E5E4E1',
+  outlineStrong: '#D1D0CD',
+
+  // Text
+  onSurface: '#1A1918',
+  onSurfaceVariant: '#6D6C6A',
+  textTertiary: '#9C9B99',
   onPrimary: '#FFFFFF',
-  onPrimaryMuted: 'rgba(255,255,255,0.7)',
-  onSurface: '#1A1A2E',
-  onSurfaceVariant: '#6B7280',
-  error: '#E53935',
-  success: '#43A047',
-  warning: '#FB8C00',
-  scoreRed: '#E53935',
-  scoreYellow: '#FB8C00',
-  scoreGreen: '#43A047',
+
+  // Tab bar
+  tabInactive: '#A8A7A5',
+  tabBarBg: '#FFFFFF',
+
+  // Status
+  error: '#D08068',
+  warning: '#D4A64A',
+  success: '#3D8A5A',
+
+  // Score colors
+  scoreGreen: '#3D8A5A',
+  scoreYellow: '#D4A64A',
+  scoreRed: '#D08068',
 } as const;
 
 export type AppColors = typeof colors;

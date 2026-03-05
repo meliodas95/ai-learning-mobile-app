@@ -13,23 +13,23 @@ Mobile English language learning app with video-based lessons, speech recognitio
 
 ## Tech Stack
 
-| Category | Library |
-|----------|---------|
-| Framework | Expo SDK 55, React Native 0.83 |
-| Routing | Expo Router v4 (file-based) |
-| UI | React Native Paper v5 (Material Design 3) |
-| State | Zustand v5 (3 stores) |
-| Data Fetching | TanStack Query v5 |
-| HTTP | Axios + auth interceptor |
-| Video/Audio | expo-av |
-| Speech | @react-native-voice/voice |
-| Scoring | fuzzball (Levenshtein similarity) |
-| Encryption | crypto-js (Triple DES) |
-| Storage | MMKV (settings), expo-secure-store (auth) |
-| i18n | i18next + react-i18next |
-| Forms | react-hook-form + zod |
-| Linting | ESLint + Prettier |
-| Package Manager | bun |
+| Category        | Library                                   |
+| --------------- | ----------------------------------------- |
+| Framework       | Expo SDK 55, React Native 0.83            |
+| Routing         | Expo Router v4 (file-based)               |
+| UI              | React Native Paper v5 (Material Design 3) |
+| State           | Zustand v5 (3 stores)                     |
+| Data Fetching   | TanStack Query v5                         |
+| HTTP            | Axios + auth interceptor                  |
+| Video/Audio     | expo-av                                   |
+| Speech          | @react-native-voice/voice                 |
+| Scoring         | fuzzball (Levenshtein similarity)         |
+| Encryption      | crypto-js (Triple DES)                    |
+| Storage         | MMKV (settings), expo-secure-store (auth) |
+| i18n            | i18next + react-i18next                   |
+| Forms           | react-hook-form + zod                     |
+| Linting         | ESLint + Prettier                         |
+| Package Manager | bun                                       |
 
 ## Project Structure
 
@@ -143,6 +143,7 @@ IDLE → LISTENING → COUNTDOWN → RECORDING → SCORING → SCORED → FINISH
 ```
 
 The speaking flow is decomposed into 3 focused hooks:
+
 - `useSpeechRecognition` - Native voice capture + audio recording
 - `useScoring` - Similarity calculation + encrypted score submission
 - `useSpeakingFlow` - State machine orchestration
