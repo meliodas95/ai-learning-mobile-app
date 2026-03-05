@@ -1,6 +1,6 @@
 import { View, StyleSheet } from 'react-native';
 import { Text, useTheme } from 'react-native-paper';
-import { useTranslation } from 'react-i18next';
+import { useI18n } from '@/src/i18n';
 import { useSettingsStore } from '@/src/store/settingsStore';
 import type { SentenceEntity } from '@/src/api/types';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
@@ -17,7 +17,7 @@ export function SentenceHighlight({
   totalSentences,
 }: SentenceHighlightProps) {
   const theme = useTheme();
-  const { t } = useTranslation();
+  const { t } = useI18n();
   const showTranslation = useSettingsStore((s) => s.showTranslation);
 
   if (!sentence) {

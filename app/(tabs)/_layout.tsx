@@ -1,11 +1,17 @@
 import { Tabs } from 'expo-router';
 import { useTheme } from 'react-native-paper';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import { useTranslation } from 'react-i18next';
+import { useI18n } from '@/src/i18n';
+import {
+  TAB_BAR_HEIGHT,
+  TAB_BAR_PADDING_BOTTOM,
+  TAB_BAR_PADDING_TOP,
+  TAB_BAR_FONT_SIZE,
+} from '@/src/constants';
 
 export default function TabLayout() {
   const theme = useTheme();
-  const { t } = useTranslation();
+  const { t } = useI18n();
 
   return (
     <Tabs
@@ -17,12 +23,12 @@ export default function TabLayout() {
           backgroundColor: theme.colors.surface,
           borderTopColor: theme.colors.outline,
           elevation: 0,
-          height: 60,
-          paddingBottom: 8,
-          paddingTop: 4,
+          height: TAB_BAR_HEIGHT,
+          paddingBottom: TAB_BAR_PADDING_BOTTOM,
+          paddingTop: TAB_BAR_PADDING_TOP,
         },
         tabBarLabelStyle: {
-          fontSize: 11,
+          fontSize: TAB_BAR_FONT_SIZE,
           fontWeight: '500',
         },
       }}

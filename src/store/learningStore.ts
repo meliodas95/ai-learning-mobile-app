@@ -8,6 +8,7 @@ import {
   type ParagraphEntity,
   type ConversationGroup,
 } from '@/src/api/types';
+import { DEFAULT_CHARACTER_NAME } from '@/src/constants';
 
 interface LearningState {
   // Lesson data
@@ -79,7 +80,7 @@ export const useLearningStore = create<LearningState>((set, get) => ({
       if (!current || current.characterId !== s.character_id) {
         current = {
           characterId: s.character_id,
-          characterName: s.character_name ?? 'Unknown',
+          characterName: s.character_name ?? DEFAULT_CHARACTER_NAME,
           sentences: [],
         };
         groups.push(current);

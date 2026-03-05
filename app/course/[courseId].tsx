@@ -3,14 +3,14 @@ import { View, StyleSheet, FlatList } from 'react-native';
 import { Text, Card, useTheme, IconButton } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router, useLocalSearchParams } from 'expo-router';
-import { useTranslation } from 'react-i18next';
+import { useI18n } from '@/src/i18n';
 import { useDocuments } from '@/src/api/hooks/useCourses';
 import type { DocumentEntity } from '@/src/api/types';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 
 export default function CourseDetailScreen() {
   const theme = useTheme();
-  const { t } = useTranslation();
+  const { t } = useI18n();
   const { courseId } = useLocalSearchParams<{ courseId: string }>();
   const { data: documents, isLoading } = useDocuments(courseId ? Number(courseId) : undefined);
 

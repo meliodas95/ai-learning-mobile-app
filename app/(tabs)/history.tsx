@@ -2,52 +2,46 @@ import { View, StyleSheet, FlatList } from 'react-native';
 import { Text, Card, useTheme } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
-import { useTranslation } from 'react-i18next';
+import { useI18n } from '@/src/i18n';
 import { useHistory } from '@/src/api/hooks/useHistory';
 import { useSettingsStore } from '@/src/store/settingsStore';
 import { formatRelativeTime } from '@/src/utils/formatters';
-import { getScoreHex } from '@/src/utils/score';
-import type { HistoryItem } from '@/src/api/types';
+import type { HistoryParagraphEntity } from '@/src/api/types';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 
 export default function HistoryScreen() {
   const theme = useTheme();
-  const { t } = useTranslation();
+  const { t } = useI18n();
   const locale = useSettingsStore((s) => s.locale);
   const { data: history, isLoading } = useHistory();
 
-  const renderItem = ({ item }: { item: HistoryItem }) => (
+  const renderItem = ({ item }: { item: HistoryParagraphEntity }) => (
     <Card
       style={[styles.card, { backgroundColor: theme.colors.surface }]}
-      onPress={() => router.push(`/lesson/${item.paragraph_id}`)}
+      onPress={() => router.push(`/lesson/${item.paragraph?.id ?? item.id}`)}
     >
       <Card.Content style={styles.cardContent}>
         <View style={{ flex: 1 }}>
           <Text variant="titleSmall" style={{ color: theme.colors.onSurface }}>
-            {item.paragraph_title ?? `Lesson #${item.paragraph_id}`}
+            {item.paragraph?.title ?? item.title ?? `Lesson #${item.id}`}
           </Text>
-          {item.course_title && (
+          {item.course?.title && (
             <Text
               variant="bodySmall"
               style={{ color: theme.colors.onSurfaceVariant, marginTop: 2 }}
             >
-              {item.course_title}
+              {item.course.title}
             </Text>
           )}
-          <Text variant="bodySmall" style={{ color: theme.colors.onSurfaceVariant, marginTop: 4 }}>
-            {formatRelativeTime(item.created_at, locale)}
-          </Text>
-        </View>
-        {item.score !== null && item.score !== undefined && (
-          <View style={styles.scoreContainer}>
+          {item.created_at && (
             <Text
-              variant="titleMedium"
-              style={{ color: getScoreHex(item.score), fontWeight: '700' }}
+              variant="bodySmall"
+              style={{ color: theme.colors.onSurfaceVariant, marginTop: 4 }}
             >
-              {item.score}
+              {formatRelativeTime(String(item.created_at), locale)}
             </Text>
-          </View>
-        )}
+          )}
+        </View>
       </Card.Content>
     </Card>
   );

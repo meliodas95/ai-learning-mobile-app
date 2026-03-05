@@ -7,6 +7,7 @@ export const colors = {
   background: '#FAFAFA',
   outline: '#E0E0E0',
   onPrimary: '#FFFFFF',
+  onPrimaryMuted: 'rgba(255,255,255,0.7)',
   onSurface: '#1A1A2E',
   onSurfaceVariant: '#6B7280',
   error: '#E53935',

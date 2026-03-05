@@ -3,19 +3,19 @@ import { View, StyleSheet, FlatList, RefreshControl } from 'react-native';
 import { Text, Card, Searchbar, useTheme } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
-import { useTranslation } from 'react-i18next';
+import { useI18n } from '@/src/i18n';
 import { useCourses } from '@/src/api/hooks/useCourses';
 import type { CourseEntity } from '@/src/api/types';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 
 export default function CoursesScreen() {
   const theme = useTheme();
-  const { t } = useTranslation();
+  const { t } = useI18n();
   const { data: courses, refetch, isRefetching, isLoading } = useCourses();
   const [search, setSearch] = useState('');
 
-  const filtered = courses?.filter(
-    (c) =>
+  const filtered = courses?.courses?.filter(
+    (c: CourseEntity) =>
       c.title.toLowerCase().includes(search.toLowerCase()) ||
       c.title_vi?.toLowerCase().includes(search.toLowerCase()),
   );

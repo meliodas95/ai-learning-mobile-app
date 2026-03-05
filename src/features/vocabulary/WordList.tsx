@@ -1,6 +1,6 @@
 import { View, StyleSheet } from 'react-native';
 import { Text, IconButton, useTheme } from 'react-native-paper';
-import { useTranslation } from 'react-i18next';
+import { useI18n } from '@/src/i18n';
 import { useEffect } from 'react';
 import { useVocabulary } from './useVocabulary';
 import { WordCard } from './WordCard';
@@ -8,7 +8,7 @@ import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 
 export function WordList() {
   const theme = useTheme();
-  const { t } = useTranslation();
+  const { t } = useI18n();
 
   const {
     words,

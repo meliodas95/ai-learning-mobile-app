@@ -1,15 +1,16 @@
 import { create } from 'zustand';
 import * as SecureStore from 'expo-secure-store';
-import type { MemberEntity, LoginResponse, UserAccount } from '@/src/api/types';
+import type { MemberEntity, LoginResponse, Account, CategoryEntity } from '@/src/api/types';
 import { setTokenGetter } from '@/src/api/client';
+import { SECURE_STORE_KEYS } from '@/src/constants';
 
 interface AuthState {
-  user: UserAccount | null;
+  user: Account | null;
   member: MemberEntity | null;
   members: MemberEntity[];
   accessToken: string | null;
   accountToken: string | null;
-  memberCategories: string[];
+  memberCategories: CategoryEntity[];
   isAuthenticated: boolean;
   isLoading: boolean;
 
@@ -35,8 +36,8 @@ export const useAuthStore = create<AuthState>((set, get) => {
 
     setAuth: async (data: LoginResponse) => {
       const token = data.member_token;
-      await SecureStore.setItemAsync('accessToken', token);
-      await SecureStore.setItemAsync('accountToken', data.account_token);
+      await SecureStore.setItemAsync(SECURE_STORE_KEYS.ACCESS_TOKEN, token);
+      await SecureStore.setItemAsync(SECURE_STORE_KEYS.ACCOUNT_TOKEN, data.account_token);
 
       set({
         user: data.account,
@@ -51,8 +52,8 @@ export const useAuthStore = create<AuthState>((set, get) => {
     },
 
     logout: async () => {
-      await SecureStore.deleteItemAsync('accessToken');
-      await SecureStore.deleteItemAsync('accountToken');
+      await SecureStore.deleteItemAsync(SECURE_STORE_KEYS.ACCESS_TOKEN);
+      await SecureStore.deleteItemAsync(SECURE_STORE_KEYS.ACCOUNT_TOKEN);
       set({
         user: null,
         member: null,
@@ -67,7 +68,7 @@ export const useAuthStore = create<AuthState>((set, get) => {
 
     loadStoredAuth: async () => {
       try {
-        const token = await SecureStore.getItemAsync('accessToken');
+        const token = await SecureStore.getItemAsync(SECURE_STORE_KEYS.ACCESS_TOKEN);
         if (token) {
           set({ accessToken: token, isAuthenticated: true, isLoading: false });
         } else {
@@ -81,7 +82,7 @@ export const useAuthStore = create<AuthState>((set, get) => {
     updateBalance: (balance: number) => {
       const member = get().member;
       if (member) {
-        set({ member: { ...member, token: balance } });
+        set({ member: { ...member, member_token: { quantity: balance } } });
       }
     },
   };

@@ -1,6 +1,6 @@
 import { View, StyleSheet, Pressable } from 'react-native';
 import { Text, Card, Button, useTheme } from 'react-native-paper';
-import { useTranslation } from 'react-i18next';
+import { useI18n } from '@/src/i18n';
 import type { ExerciseQuestion, ExerciseAnswer } from '@/src/api/types';
 import { colors } from '@/src/theme/colors';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
@@ -27,7 +27,7 @@ export function QuizCard({
   onNext,
 }: QuizCardProps) {
   const theme = useTheme();
-  const { t } = useTranslation();
+  const { t } = useI18n();
 
   const getAnswerStyle = (answer: ExerciseAnswer) => {
     if (!isAnswered) {

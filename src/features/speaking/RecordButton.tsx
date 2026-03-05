@@ -1,6 +1,6 @@
 import { View, StyleSheet, Pressable } from 'react-native';
 import { Text, useTheme } from 'react-native-paper';
-import { useTranslation } from 'react-i18next';
+import { useI18n } from '@/src/i18n';
 import { formatDuration } from '@/src/utils/formatters';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 
@@ -20,7 +20,7 @@ export function RecordButton({
   onStopRecording,
 }: RecordButtonProps) {
   const theme = useTheme();
-  const { t } = useTranslation();
+  const { t } = useI18n();
 
   return (
     <View style={styles.container}>

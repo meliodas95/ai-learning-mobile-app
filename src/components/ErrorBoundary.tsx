@@ -1,7 +1,7 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
-import { Text, Button } from 'react-native-paper';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { colors } from '@/src/theme/colors';
+import { BORDER_RADIUS } from '@/src/constants';
 
 interface Props {
   children: React.ReactNode;
@@ -30,15 +30,11 @@ export class ErrorBoundary extends React.Component<Props, State> {
     if (this.state.hasError) {
       return (
         <View style={styles.container}>
-          <Text variant="titleMedium" style={styles.title}>
-            Something went wrong
-          </Text>
-          <Text variant="bodySmall" style={styles.error}>
-            {this.state.error?.message}
-          </Text>
-          <Button mode="contained" onPress={this.handleRetry} style={styles.button}>
-            Try Again
-          </Button>
+          <Text style={styles.title}>Something went wrong</Text>
+          <Text style={styles.error}>{this.state.error?.message}</Text>
+          <TouchableOpacity style={styles.button} onPress={this.handleRetry}>
+            <Text style={styles.buttonText}>Try Again</Text>
+          </TouchableOpacity>
         </View>
       );
     }
@@ -48,7 +44,13 @@ export class ErrorBoundary extends React.Component<Props, State> {
 
 const styles = StyleSheet.create({
   container: { flex: 1, justifyContent: 'center', alignItems: 'center', padding: 24 },
-  title: { marginBottom: 8, color: colors.error },
-  error: { color: colors.onSurfaceVariant, marginBottom: 24, textAlign: 'center' },
-  button: { borderRadius: 12 },
+  title: { marginBottom: 8, color: colors.error, fontSize: 18, fontWeight: '600' },
+  error: { color: colors.onSurfaceVariant, marginBottom: 24, textAlign: 'center', fontSize: 14 },
+  button: {
+    backgroundColor: colors.primary,
+    paddingHorizontal: 24,
+    paddingVertical: 12,
+    borderRadius: BORDER_RADIUS,
+  },
+  buttonText: { color: colors.onPrimary, fontWeight: '600', fontSize: 16 },
 });

@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import apiClient from '../client';
 import { Endpoints } from '../endpoints';
-import type { SentenceScoreEntity } from '../types';
+import type { ApiResponse, SentenceScoreEntity } from '../types';
 
 interface StartParagraphParams {
   paragraph_id: number;
@@ -67,7 +67,7 @@ export function useEndSpeakMutation() {
 
       return apiClient.post<
         unknown,
-        { data: { sentenceScore: SentenceScoreEntity; member_token: number } }
+        ApiResponse<{ sentenceScore: SentenceScoreEntity; member_token: number }>
       >(Endpoints.END_SPEAK, formData, { headers: { 'Content-Type': 'multipart/form-data' } });
     },
     onSuccess: () => {

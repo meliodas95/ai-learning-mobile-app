@@ -1,6 +1,6 @@
 import { View, StyleSheet } from 'react-native';
 import { Text, Button, useTheme } from 'react-native-paper';
-import { useTranslation } from 'react-i18next';
+import { useI18n } from '@/src/i18n';
 import { getScoreHex } from '@/src/utils/score';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 
@@ -12,7 +12,7 @@ interface ExerciseResultProps {
 
 export function ExerciseResult({ correctCount, totalQuestions, onRestart }: ExerciseResultProps) {
   const theme = useTheme();
-  const { t } = useTranslation();
+  const { t } = useI18n();
   const percentage = totalQuestions > 0 ? Math.round((correctCount / totalQuestions) * 100) : 0;
   const color = getScoreHex(percentage);
 

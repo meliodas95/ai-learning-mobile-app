@@ -1,7 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
 import apiClient from '../client';
 import { Endpoints } from '../endpoints';
-import type { LoginResponse } from '../types';
+import type { ApiResponse, LoginResponse } from '../types';
 
 interface LoginParams {
   phone: string;
@@ -16,14 +16,14 @@ interface MemberLoginParams {
 export function useLoginMutation() {
   return useMutation({
     mutationFn: (params: LoginParams) =>
-      apiClient.post<unknown, LoginResponse>(Endpoints.LOGIN, params),
+      apiClient.post<unknown, ApiResponse<LoginResponse>>(Endpoints.LOGIN, params),
   });
 }
 
 export function useMemberLoginMutation() {
   return useMutation({
     mutationFn: (params: MemberLoginParams) =>
-      apiClient.post<unknown, LoginResponse>(Endpoints.LOGIN_MEMBER, params),
+      apiClient.post<unknown, ApiResponse<LoginResponse>>(Endpoints.LOGIN_MEMBER, params),
   });
 }
 

@@ -1,9 +1,10 @@
 import axios, { type InternalAxiosRequestConfig, type AxiosError } from 'axios';
 import { API_BASE_URL, Endpoints } from './endpoints';
+import { API_TIMEOUT } from '@/src/constants';
 
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
-  timeout: 30000,
+  timeout: API_TIMEOUT,
   headers: {
     'Content-Type': 'application/json',
   },

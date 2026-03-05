@@ -3,15 +3,16 @@ import { View, StyleSheet, ScrollView, RefreshControl } from 'react-native';
 import { Text, Card, useTheme, Surface } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
-import { useTranslation } from 'react-i18next';
+import { useI18n } from '@/src/i18n';
 import { useAuthStore } from '@/src/store/authStore';
 import { useCourses } from '@/src/api/hooks/useCourses';
 import { colors } from '@/src/theme/colors';
+import { HOME_RECENT_COURSES_LIMIT } from '@/src/constants';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 
 export default function HomeScreen() {
   const theme = useTheme();
-  const { t } = useTranslation();
+  const { t } = useI18n();
   const user = useAuthStore((s) => s.user);
   const member = useAuthStore((s) => s.member);
   const { data: courses, refetch, isRefetching } = useCourses();
@@ -86,13 +87,13 @@ export default function HomeScreen() {
             elevation={2}
           >
             <View style={styles.balanceRow}>
-              <MaterialCommunityIcons name="star-circle" size={28} color="#FFF" />
+              <MaterialCommunityIcons name="star-circle" size={28} color={colors.onPrimary} />
               <View style={{ marginLeft: 12 }}>
-                <Text variant="bodySmall" style={{ color: 'rgba(255,255,255,0.7)' }}>
+                <Text variant="bodySmall" style={{ color: colors.onPrimaryMuted }}>
                   {t('profile.tokenBalance')}
                 </Text>
-                <Text variant="titleLarge" style={{ color: '#FFF', fontWeight: '700' }}>
-                  {t('profile.tokens', { count: member.token })}
+                <Text variant="titleLarge" style={{ color: colors.onPrimary, fontWeight: '700' }}>
+                  {t('profile.tokens', { count: member.member_token?.quantity ?? 0 })}
                 </Text>
               </View>
             </View>
@@ -106,7 +107,7 @@ export default function HomeScreen() {
         >
           {t('home.recentCourses')}
         </Text>
-        {courses?.slice(0, 5).map((course) => (
+        {courses?.courses?.slice(0, HOME_RECENT_COURSES_LIMIT).map((course) => (
           <Card
             key={course.id}
             style={[styles.courseCard, { backgroundColor: theme.colors.surface }]}
@@ -128,7 +129,7 @@ export default function HomeScreen() {
           </Card>
         ))}
 
-        {(!courses || courses.length === 0) && (
+        {(!courses || courses.courses.length === 0) && (
           <View style={styles.empty}>
             <MaterialCommunityIcons
               name="book-open-page-variant"

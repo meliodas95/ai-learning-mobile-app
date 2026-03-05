@@ -31,7 +31,7 @@ export default function LoginScreen() {
   const onSubmit = async (data: LoginForm) => {
     try {
       const result = await loginMutation.mutateAsync(data);
-      await setAuth(result);
+      await setAuth(result.data);
       // AuthGuard handles navigation after auth state change
     } catch {
       // Error handled by mutation state

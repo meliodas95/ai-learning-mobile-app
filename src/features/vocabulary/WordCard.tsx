@@ -1,6 +1,6 @@
 import { View, StyleSheet } from 'react-native';
 import { Text, Card, ActivityIndicator, useTheme } from 'react-native-paper';
-import { useTranslation } from 'react-i18next';
+import { useI18n } from '@/src/i18n';
 import type { DictionaryWord } from '@/src/api/types';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 
@@ -12,7 +12,7 @@ interface WordCardProps {
 
 export function WordCard({ word, definition, isLoading }: WordCardProps) {
   const theme = useTheme();
-  const { t } = useTranslation();
+  const { t } = useI18n();
 
   return (
     <Card style={[styles.card, { backgroundColor: theme.colors.surface }]}>
@@ -27,7 +27,7 @@ export function WordCard({ word, definition, isLoading }: WordCardProps) {
         {definition && (
           <>
             {/* Pronunciation */}
-            {definition.pronunciation && (
+            {definition.phonetic && (
               <View style={styles.pronunciationRow}>
                 <MaterialCommunityIcons
                   name="volume-high"
@@ -38,7 +38,7 @@ export function WordCard({ word, definition, isLoading }: WordCardProps) {
                   variant="bodyMedium"
                   style={[styles.pronunciation, { color: theme.colors.secondary }]}
                 >
-                  /{definition.pronunciation}/
+                  /{definition.phonetic}/
                 </Text>
               </View>
             )}
@@ -53,31 +53,35 @@ export function WordCard({ word, definition, isLoading }: WordCardProps) {
               </Text>
             )}
 
-            {/* Definitions */}
-            {definition.definitions?.map((def, i) => (
-              <View key={i} style={styles.definitionRow}>
-                <Text variant="bodySmall" style={{ color: theme.colors.onSurfaceVariant }}>
-                  {i + 1}.
-                </Text>
+            {/* Definition */}
+            {definition.definition && (
+              <View style={styles.definitionRow}>
                 <Text
                   variant="bodyMedium"
                   style={[styles.definitionText, { color: theme.colors.onSurface }]}
                 >
-                  {def}
+                  {definition.definition}
                 </Text>
               </View>
-            ))}
-
-            {/* Examples */}
-            {definition.examples?.map((ex, i) => (
+            )}
+            {definition.definition_vi && (
               <Text
-                key={i}
+                variant="bodySmall"
+                style={{ color: theme.colors.onSurfaceVariant, marginTop: 2 }}
+              >
+                {definition.definition_vi}
+              </Text>
+            )}
+
+            {/* Example */}
+            {definition.example && (
+              <Text
                 variant="bodySmall"
                 style={[styles.example, { color: theme.colors.onSurfaceVariant }]}
               >
-                "{ex}"
+                "{definition.example}"
               </Text>
-            ))}
+            )}
           </>
         )}
 

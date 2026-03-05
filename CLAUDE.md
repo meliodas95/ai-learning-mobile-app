@@ -31,7 +31,7 @@ bunx tsc --noEmit    # TypeScript type check
 ### State Management (Zustand v5 - 3 stores only)
 - `authStore` - Tokens, user info, login/logout. Tokens in expo-secure-store.
 - `learningStore` - Active lesson: sentences, current index, tab, paragraph, speaking state.
-- `settingsStore` - Locale, showTranslation, autoPlay. Persisted via MMKV.
+- `settingsStore` - Locale, showTranslation, autoPlay. Persisted via AsyncStorage (Zustand persist middleware).
 
 ### Data Fetching (TanStack Query v5)
 - All API calls go through `src/api/client.ts` (Axios instance)
@@ -80,7 +80,7 @@ Managed in `useSpeakingFlow.ts`. Never add states without updating the SpeakingS
 ### State
 - Do NOT create new Zustand stores - use the existing 3
 - Use TanStack Query for all server state (not Zustand)
-- MMKV v4 API: `createMMKV()` not `new MMKV()` (MMKV is type-only export)
+- Settings persisted via Zustand `persist` middleware with AsyncStorage
 
 ### API
 - Add new endpoints to `src/api/endpoints.ts`

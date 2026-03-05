@@ -36,7 +36,7 @@
       "bundler": "metro"
     },
     "extra": {
-      "tripleDesKey": "REPLACE_WITH_ACTUAL_KEY"
+      "tripleDesKey": "langenterakMyGwqeKVEQjUi"
     },
     "plugins": [
       "expo-router",

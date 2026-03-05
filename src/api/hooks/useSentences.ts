@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import apiClient from '../client';
 import { Endpoints } from '../endpoints';
-import type { SentenceListResponse } from '../types';
+import type { ApiResponse, SentenceListResponse } from '../types';
 
 interface SentenceParams {
   paragraph_id: number;
@@ -15,7 +15,7 @@ export function useSentences(params: SentenceParams | undefined) {
   return useQuery({
     queryKey: ['sentences', params?.paragraph_id, params?.type],
     queryFn: () =>
-      apiClient.get<unknown, { data: SentenceListResponse }>(Endpoints.SENTENCE_LIST_V1, {
+      apiClient.get<unknown, ApiResponse<SentenceListResponse>>(Endpoints.SENTENCE_LIST_V1, {
         params,
       }),
     select: (res) => res.data,

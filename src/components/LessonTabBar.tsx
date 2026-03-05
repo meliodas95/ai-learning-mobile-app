@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { SegmentedButtons } from 'react-native-paper';
-import { useTranslation } from 'react-i18next';
+import { useI18n } from '@/src/i18n';
 import { LearnTab } from '@/src/api/types';
 import { useLearningStore } from '@/src/store/learningStore';
 
@@ -10,7 +10,7 @@ interface LessonTabBarProps {
 }
 
 export function LessonTabBar({ hasKeywords, hasExercise }: LessonTabBarProps) {
-  const { t } = useTranslation();
+  const { t } = useI18n();
   const activeTab = useLearningStore((s) => s.activeTab);
   const setActiveTab = useLearningStore((s) => s.setActiveTab);
 

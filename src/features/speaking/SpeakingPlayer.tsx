@@ -1,6 +1,6 @@
 import { View, StyleSheet, ScrollView } from 'react-native';
 import { Text, Button, IconButton, useTheme, Surface } from 'react-native-paper';
-import { useTranslation } from 'react-i18next';
+import { useI18n } from '@/src/i18n';
 import { useSpeakingFlow } from './useSpeakingFlow';
 import { RecordButton } from './RecordButton';
 import { ScoreDisplay } from './ScoreDisplay';
@@ -10,7 +10,7 @@ import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 
 export function SpeakingPlayer() {
   const theme = useTheme();
-  const { t } = useTranslation();
+  const { t } = useI18n();
 
   const {
     state,

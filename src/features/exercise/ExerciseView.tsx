@@ -1,6 +1,6 @@
 import { View, StyleSheet, ScrollView } from 'react-native';
 import { Text, useTheme } from 'react-native-paper';
-import { useTranslation } from 'react-i18next';
+import { useI18n } from '@/src/i18n';
 import { useExercise } from './useExercise';
 import { QuizCard } from './QuizCard';
 import { ExerciseResult } from './ExerciseResult';
@@ -12,7 +12,7 @@ const MOCK_QUESTIONS: ExerciseQuestion[] = [];
 
 export function ExerciseView() {
   const theme = useTheme();
-  const { t } = useTranslation();
+  const { t } = useI18n();
 
   const {
     currentQuestion,

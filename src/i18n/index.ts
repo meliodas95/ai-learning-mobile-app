@@ -1,20 +1,47 @@
-import i18n from 'i18next';
-import { initReactI18next } from 'react-i18next';
-import { createMMKV } from 'react-native-mmkv';
+import { useCallback } from 'react';
+import { FALLBACK_LOCALE } from '@/src/constants';
+import { useSettingsStore } from '@/src/store/settingsStore';
 import en from './locales/en';
 import vi from './locales/vi';
 
-const storage = createMMKV({ id: 'settings' });
-const savedLocale = storage.getString('locale') ?? 'vi';
+type Locale = 'vi' | 'en';
 
-i18n.use(initReactI18next).init({
-  resources: {
-    en: { translation: en },
-    vi: { translation: vi },
-  },
-  lng: savedLocale,
-  fallbackLng: 'en',
-  interpolation: { escapeValue: false },
-});
+const translations: Record<Locale, Record<string, unknown>> = { en, vi };
 
-export default i18n;
+function getNestedValue(obj: Record<string, unknown>, path: string): string | undefined {
+  const result = path.split('.').reduce<unknown>((acc, key) => {
+    if (acc && typeof acc === 'object' && key in (acc as Record<string, unknown>)) {
+      return (acc as Record<string, unknown>)[key];
+    }
+    return undefined;
+  }, obj);
+  return typeof result === 'string' ? result : undefined;
+}
+
+function interpolate(str: string, params?: Record<string, string | number>): string {
+  if (!params) return str;
+  return str.replace(/\{\{(\w+)\}\}/g, (_, key: string) => String(params[key] ?? ''));
+}
+
+export function translate(
+  locale: Locale,
+  key: string,
+  params?: Record<string, string | number>,
+): string {
+  const value =
+    getNestedValue(translations[locale], key) ??
+    getNestedValue(translations[FALLBACK_LOCALE], key) ??
+    key;
+  return interpolate(value, params);
+}
+
+export function useI18n() {
+  const locale = useSettingsStore((s) => s.locale);
+
+  const t = useCallback(
+    (key: string, params?: Record<string, string | number>) => translate(locale, key, params),
+    [locale],
+  );
+
+  return { t, locale };
+}

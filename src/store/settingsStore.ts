@@ -1,7 +1,7 @@
 import { create } from 'zustand';
-import { createMMKV } from 'react-native-mmkv';
-
-const storage = createMMKV({ id: 'settings' });
+import { persist, createJSONStorage } from 'zustand/middleware';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { DEFAULT_LOCALE } from '@/src/constants';
 
 interface SettingsState {
   locale: 'vi' | 'en';
@@ -13,23 +13,25 @@ interface SettingsState {
   setAutoPlay: (auto: boolean) => void;
 }
 
-export const useSettingsStore = create<SettingsState>((set) => ({
-  locale: (storage.getString('locale') as 'vi' | 'en') ?? 'vi',
-  showTranslation: storage.getBoolean('showTranslation') ?? true,
-  autoPlay: storage.getBoolean('autoPlay') ?? false,
+export const useSettingsStore = create<SettingsState>()(
+  persist(
+    (set) => ({
+      locale: DEFAULT_LOCALE,
+      showTranslation: true,
+      autoPlay: false,
 
-  setLocale: (locale) => {
-    storage.set('locale', locale);
-    set({ locale });
-  },
-
-  setShowTranslation: (showTranslation) => {
-    storage.set('showTranslation', showTranslation);
-    set({ showTranslation });
-  },
-
-  setAutoPlay: (autoPlay) => {
-    storage.set('autoPlay', autoPlay);
-    set({ autoPlay });
-  },
-}));
+      setLocale: (locale) => set({ locale }),
+      setShowTranslation: (showTranslation) => set({ showTranslation }),
+      setAutoPlay: (autoPlay) => set({ autoPlay }),
+    }),
+    {
+      name: 'settings',
+      storage: createJSONStorage(() => AsyncStorage),
+      partialize: (state) => ({
+        locale: state.locale,
+        showTranslation: state.showTranslation,
+        autoPlay: state.autoPlay,
+      }),
+    },
+  ),
+);

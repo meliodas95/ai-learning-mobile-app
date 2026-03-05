@@ -1,6 +1,6 @@
 import { View, StyleSheet } from 'react-native';
 import { IconButton, Button, Text, useTheme } from 'react-native-paper';
-import { useTranslation } from 'react-i18next';
+import { useI18n } from '@/src/i18n';
 import { VideoPlayer } from '@/src/components/VideoPlayer';
 import { SentenceHighlight } from './SentenceHighlight';
 import { useListening } from './useListening';
@@ -9,7 +9,7 @@ import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 
 export function ListeningPlayer() {
   const theme = useTheme();
-  const { t } = useTranslation();
+  const { t } = useI18n();
   const paragraph = useLearningStore((s) => s.paragraph);
 
   const {

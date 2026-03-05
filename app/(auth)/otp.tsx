@@ -25,7 +25,7 @@ export default function OtpScreen() {
     if (!token || otp.length < 4) return;
     try {
       const result = await memberLogin.mutateAsync({ token, password: otp });
-      await setAuth(result);
+      await setAuth(result.data);
       // AuthGuard handles navigation after auth state change
     } catch {
       // Error handled by mutation state

@@ -1,22 +1,32 @@
-import { useEffect } from 'react';
+import React, { useEffect, Suspense } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Text, IconButton, ActivityIndicator, useTheme } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router, useLocalSearchParams } from 'expo-router';
-import { useTranslation } from 'react-i18next';
+import { useI18n } from '@/src/i18n';
 import { useParagraphDetail } from '@/src/api/hooks/useCourses';
 import { useSentences } from '@/src/api/hooks/useSentences';
 import { useLearningStore } from '@/src/store/learningStore';
 import { LessonTabBar } from '@/src/components/LessonTabBar';
 import { LearnTab } from '@/src/api/types';
-import { ListeningPlayer } from '@/src/features/listening/ListeningPlayer';
-import { SpeakingPlayer } from '@/src/features/speaking/SpeakingPlayer';
-import { WordList } from '@/src/features/vocabulary/WordList';
-import { ExerciseView } from '@/src/features/exercise/ExerciseView';
+import { PROCESS_QUIZ_COMPLETED } from '@/src/constants';
+
+const ListeningPlayer = React.lazy(() =>
+  import('@/src/features/listening/ListeningPlayer').then((m) => ({ default: m.ListeningPlayer })),
+);
+const SpeakingPlayer = React.lazy(() =>
+  import('@/src/features/speaking/SpeakingPlayer').then((m) => ({ default: m.SpeakingPlayer })),
+);
+const WordList = React.lazy(() =>
+  import('@/src/features/vocabulary/WordList').then((m) => ({ default: m.WordList })),
+);
+const ExerciseView = React.lazy(() =>
+  import('@/src/features/exercise/ExerciseView').then((m) => ({ default: m.ExerciseView })),
+);
 
 export default function LessonScreen() {
   const theme = useTheme();
-  const { t } = useTranslation();
+  const { t } = useI18n();
   const { paragraphId } = useLocalSearchParams<{ paragraphId: string }>();
   const numId = paragraphId ? Number(paragraphId) : undefined;
 
@@ -57,7 +67,7 @@ export default function LessonScreen() {
   const isLoading = loadingParagraph || loadingSentences;
   const paragraph = paragraphData?.paragraph;
   const hasKeywords = !!paragraph?.keywords;
-  const hasExercise = paragraph?.process_quiz === 2;
+  const hasExercise = paragraph?.process_quiz === PROCESS_QUIZ_COMPLETED;
 
   if (isLoading) {
     return (
@@ -121,7 +131,11 @@ export default function LessonScreen() {
       <LessonTabBar hasKeywords={hasKeywords} hasExercise={hasExercise} />
 
       {/* Active Tab Content */}
-      <View style={styles.content}>{renderActiveTab()}</View>
+      <View style={styles.content}>
+        <Suspense fallback={<ActivityIndicator size="large" style={{ flex: 1 }} />}>
+          {renderActiveTab()}
+        </Suspense>
+      </View>
     </SafeAreaView>
   );
 }

@@ -1,21 +1,17 @@
 import { useEffect } from 'react';
-import { Slot, router, useSegments } from 'expo-router';
+import { Stack, router, useSegments } from 'expo-router';
 import { PaperProvider } from 'react-native-paper';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { QueryClientProvider } from '@tanstack/react-query';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { ActivityIndicator, View } from 'react-native';
 import { theme } from '@/src/theme';
 import { useAuthStore } from '@/src/store/authStore';
 import { ErrorBoundary } from '@/src/components/ErrorBoundary';
-import '@/src/i18n';
+import { queryClient } from '@/src/api/queryClient';
+import '@/src/api/networkManager';
+import '@/src/api/focusManager';
 
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: { staleTime: 5 * 60 * 1000, retry: 2 },
-  },
-});
-
-function AuthGuard() {
+function useAuthGuard() {
   const { isAuthenticated, isLoading } = useAuthStore();
   const segments = useSegments();
 
@@ -31,6 +27,17 @@ function AuthGuard() {
     }
   }, [isAuthenticated, isLoading, segments]);
 
+  return { isLoading };
+}
+
+export default function RootLayout() {
+  const loadStoredAuth = useAuthStore((s) => s.loadStoredAuth);
+  const { isLoading } = useAuthGuard();
+
+  useEffect(() => {
+    loadStoredAuth();
+  }, [loadStoredAuth]);
+
   if (isLoading) {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -39,22 +46,18 @@ function AuthGuard() {
     );
   }
 
-  return <Slot />;
-}
-
-export default function RootLayout() {
-  const loadStoredAuth = useAuthStore((s) => s.loadStoredAuth);
-
-  useEffect(() => {
-    loadStoredAuth();
-  }, [loadStoredAuth]);
-
   return (
     <SafeAreaProvider>
       <ErrorBoundary>
         <QueryClientProvider client={queryClient}>
           <PaperProvider theme={theme}>
-            <AuthGuard />
+            <Stack screenOptions={{ headerShown: false }}>
+              <Stack.Screen name="(auth)" />
+              <Stack.Screen name="(tabs)" />
+              <Stack.Screen name="course/[courseId]" />
+              <Stack.Screen name="document/[documentId]" />
+              <Stack.Screen name="lesson" />
+            </Stack>
           </PaperProvider>
         </QueryClientProvider>
       </ErrorBoundary>

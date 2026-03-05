@@ -1,6 +1,6 @@
 import { View, StyleSheet } from 'react-native';
 import { Text, Button, useTheme } from 'react-native-paper';
-import { useTranslation } from 'react-i18next';
+import { useI18n } from '@/src/i18n';
 import { getScoreHex, getScoreMessage } from '@/src/utils/score';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 
@@ -14,7 +14,7 @@ interface ScoreDisplayProps {
 
 export function ScoreDisplay({ score, template, transcript, onNext, onRetry }: ScoreDisplayProps) {
   const theme = useTheme();
-  const { t } = useTranslation();
+  const { t } = useI18n();
   const scoreColor = getScoreHex(score);
   const message = getScoreMessage(score);
 
