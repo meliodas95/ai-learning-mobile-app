@@ -8,6 +8,7 @@ import {
   TextInput,
   Pressable,
 } from 'react-native';
+import { Image } from 'expo-image';
 import { Text, HelperText } from 'react-native-paper';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -65,9 +66,11 @@ export default function LoginScreen() {
         >
           {/* Hero Area */}
           <View style={styles.hero}>
-            <View style={styles.iconCircle}>
-              <MaterialCommunityIcons name="translate" size={80} color={colors.primary} />
-            </View>
+            <Image
+              source={require('@/assets/logo.png')}
+              style={styles.logo}
+              contentFit="contain"
+            />
             <Text style={styles.appName}>{t('auth.appTitle')}</Text>
             <Text style={styles.tagline}>{t('auth.appSubtitle')}</Text>
           </View>
@@ -198,13 +201,9 @@ const styles = StyleSheet.create({
     gap: 16,
     marginBottom: 40,
   },
-  iconCircle: {
+  logo: {
     width: 200,
     height: 200,
-    borderRadius: 100,
-    backgroundColor: colors.primaryLight,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   appName: {
     fontSize: 32,

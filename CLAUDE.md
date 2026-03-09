@@ -154,6 +154,7 @@ Managed in `useSpeakingFlow.ts`. Never add states without updating the SpeakingS
 - **Named exports** - Prefer `export function` over `export default` for non-route files
 - **Route files use default exports** - Required by Expo Router
 - **React.lazy** for code splitting heavy components (lesson tabs)
+- **Prefer Expo modules** over React Native equivalents when an Expo version exists (e.g., `expo-image` instead of `Image` from `react-native`, `expo-linear-gradient` instead of `react-native-linear-gradient`, etc.)
 
 ### Imports
 

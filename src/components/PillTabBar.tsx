@@ -1,6 +1,7 @@
 import { Pressable, StyleSheet, View } from 'react-native';
 import { Text } from 'react-native-paper';
 import type { BottomTabBarProps } from '@react-navigation/bottom-tabs';
+import * as Haptics from 'expo-haptics';
 import { colors } from '@/src/theme/colors';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 
@@ -28,6 +29,7 @@ export function PillTabBar({ state, descriptors, navigation }: BottomTabBarProps
               canPreventDefault: true,
             });
             if (!isFocused && !event.defaultPrevented) {
+              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
               navigation.navigate(route.name);
             }
           };
