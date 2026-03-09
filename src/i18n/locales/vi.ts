@@ -35,6 +35,32 @@ export default {
     noAccount: 'Chưa có tài khoản?',
     termsNotice: 'Bằng việc đăng nhập, bạn đồng ý với Điều khoản dịch vụ và Chính sách bảo mật',
     phonePrefix: 'VN +84',
+    // Registration
+    registerTitle: 'Tạo tài khoản',
+    registerSubtitle: 'Nhập thông tin của bạn để bắt đầu',
+    haveAccount: 'Đã có tài khoản?',
+    sendOtp: 'Gửi mã xác thực',
+    registerFailed: 'Đăng ký thất bại. Vui lòng thử lại.',
+    // OTP verification
+    otpTitle: 'Xác thực số điện thoại',
+    otpSentTo: 'Nhập mã 6 chữ số đã gửi đến',
+    resendOtp: 'Gửi lại mã',
+    resendIn: 'Gửi lại sau {{seconds}}s',
+    verifyFailed: 'Xác thực thất bại. Vui lòng thử lại.',
+    // Create password
+    createPasswordTitle: 'Tạo mật khẩu',
+    createPasswordSubtitle: 'Đặt mật khẩu cho tài khoản của bạn',
+    confirmPassword: 'Xác nhận mật khẩu',
+    passwordMismatch: 'Mật khẩu không khớp',
+    createAccount: 'Tạo tài khoản',
+    createAccountFailed: 'Tạo tài khoản thất bại. Vui lòng thử lại.',
+    // Forgot password
+    forgotPasswordTitle: 'Đặt lại mật khẩu',
+    forgotPasswordSubtitle: 'Nhập số điện thoại để nhận hướng dẫn đặt lại mật khẩu',
+    sendResetLink: 'Gửi yêu cầu',
+    resetSent: 'Hướng dẫn đặt lại đã được gửi đến điện thoại của bạn',
+    resetFailed: 'Gửi yêu cầu thất bại. Vui lòng thử lại.',
+    backToSignIn: 'Quay lại đăng nhập',
   },
   tabs: {
     home: 'Trang chủ',
@@ -113,6 +139,21 @@ export default {
     dayStreak: 'Chuỗi ngày',
     lessonsCount: 'Bài học',
     wordsCount: 'Từ vựng',
+    // Language sheet
+    languageTitle: 'Ngôn ngữ',
+    languageDesc: 'Chọn ngôn ngữ hiển thị',
+    vietnamese: 'Tiếng Việt',
+    english: 'English',
+    // Audio sheet
+    audioTitle: 'Cài đặt âm thanh',
+    autoPlayAudio: 'Tự động phát',
+    autoPlayAudioDesc: 'Tự động phát âm thanh câu',
+    showTranslationToggle: 'Hiện bản dịch',
+    showTranslationDesc: 'Hiển thị bản dịch tiếng Việt bên dưới câu',
+    // Notification sheet
+    notificationTitle: 'Thông báo',
+    dailyRemindersToggle: 'Nhắc nhở hàng ngày',
+    dailyRemindersDesc: 'Nhận nhắc nhở luyện tập mỗi ngày',
   },
   courses: {
     allCourses: 'Tất cả khóa học',

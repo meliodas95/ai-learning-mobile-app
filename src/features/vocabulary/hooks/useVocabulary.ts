@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 import { useLearningStore } from '@/src/store/learningStore';
-import { useDictionaryMutation } from '@/src/api/hooks/useLearning';
+import { useDictionaryMutation } from '@/src/features/lesson/hooks/useLearning';
 import type { DictionaryWord } from '@/src/api/types';
 
 interface UseVocabularyReturn {

@@ -3,10 +3,11 @@ import { Stack, router, useSegments } from 'expo-router';
 import { PaperProvider } from 'react-native-paper';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { ActivityIndicator, View } from 'react-native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { theme } from '@/src/theme';
 import { useAuthStore } from '@/src/store/authStore';
 import { ErrorBoundary } from '@/src/components/ErrorBoundary';
+import { LoadingScreen } from '@/src/components/LoadingScreen';
 import { queryClient } from '@/src/api/queryClient';
 import '@/src/api/networkManager';
 import '@/src/api/focusManager';
@@ -39,28 +40,26 @@ export default function RootLayout() {
   }, [loadStoredAuth]);
 
   if (isLoading) {
-    return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <ActivityIndicator size="large" />
-      </View>
-    );
+    return <LoadingScreen />;
   }
 
   return (
-    <SafeAreaProvider>
-      <ErrorBoundary>
-        <QueryClientProvider client={queryClient}>
-          <PaperProvider theme={theme}>
-            <Stack screenOptions={{ headerShown: false }}>
-              <Stack.Screen name="(auth)" />
-              <Stack.Screen name="(tabs)" />
-              <Stack.Screen name="course/[courseId]" />
-              <Stack.Screen name="document/[documentId]" />
-              <Stack.Screen name="lesson" />
-            </Stack>
-          </PaperProvider>
-        </QueryClientProvider>
-      </ErrorBoundary>
-    </SafeAreaProvider>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <SafeAreaProvider>
+        <ErrorBoundary>
+          <QueryClientProvider client={queryClient}>
+            <PaperProvider theme={theme}>
+              <Stack screenOptions={{ headerShown: false }}>
+                <Stack.Screen name="(auth)" />
+                <Stack.Screen name="(tabs)" />
+                <Stack.Screen name="course/[courseId]" />
+                <Stack.Screen name="document/[documentId]" />
+                <Stack.Screen name="lesson" />
+              </Stack>
+            </PaperProvider>
+          </QueryClientProvider>
+        </ErrorBoundary>
+      </SafeAreaProvider>
+    </GestureHandlerRootView>
   );
 }

@@ -3,7 +3,7 @@ import { IconButton, Button, Text, useTheme } from 'react-native-paper';
 import { useI18n } from '@/src/i18n';
 import { VideoPlayer } from '@/src/components/VideoPlayer';
 import { SentenceHighlight } from './SentenceHighlight';
-import { useListening } from './useListening';
+import { useListening } from '../hooks/useListening';
 import { useLearningStore } from '@/src/store/learningStore';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 

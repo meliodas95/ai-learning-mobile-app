@@ -1,7 +1,7 @@
 import { View, StyleSheet, ScrollView } from 'react-native';
 import { Text, useTheme } from 'react-native-paper';
 import { useI18n } from '@/src/i18n';
-import { useExercise } from './useExercise';
+import { useExercise } from '../hooks/useExercise';
 import { QuizCard } from './QuizCard';
 import { ExerciseResult } from './ExerciseResult';
 import type { ExerciseQuestion } from '@/src/api/types';

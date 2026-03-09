@@ -1,19 +1,17 @@
+import { SelectRow, SettingsBottomSheet, ToggleRow } from '@/src/components/SettingsBottomSheet';
 import { useI18n } from '@/src/i18n';
 import { useAuthStore } from '@/src/store/authStore';
+import { useSettingsStore } from '@/src/store/settingsStore';
 import { colors } from '@/src/theme/colors';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import type BottomSheet from '@gorhom/bottom-sheet';
 import { router } from 'expo-router';
+import { useCallback, useRef } from 'react';
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { Text } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 type IconName = React.ComponentProps<typeof MaterialCommunityIcons>['name'];
-
-interface SettingsItem {
-  icon: IconName;
-  title: string;
-  desc: string;
-}
 
 export default function ProfileScreen() {
   const { t } = useI18n();
@@ -21,28 +19,67 @@ export default function ProfileScreen() {
   const member = useAuthStore((s) => s.member);
   const logout = useAuthStore((s) => s.logout);
 
+  const locale = useSettingsStore((s) => s.locale);
+  const setLocale = useSettingsStore((s) => s.setLocale);
+  const autoPlay = useSettingsStore((s) => s.autoPlay);
+  const setAutoPlay = useSettingsStore((s) => s.setAutoPlay);
+  const showTranslation = useSettingsStore((s) => s.showTranslation);
+  const setShowTranslation = useSettingsStore((s) => s.setShowTranslation);
+
+  const languageSheetRef = useRef<BottomSheet>(null);
+  const audioSheetRef = useRef<BottomSheet>(null);
+  const notificationSheetRef = useRef<BottomSheet>(null);
+
   const handleLogout = async () => {
     await logout();
     router.replace('/(auth)/login');
   };
 
+  const openSheet = useCallback((ref: React.RefObject<BottomSheet | null>) => {
+    ref.current?.expand();
+  }, []);
+
   const displayName = user?.fullname ?? member?.fullname ?? 'User';
   const displayContact = user?.phone ?? '';
   const initial = displayName.charAt(0).toUpperCase();
 
-  const settingsItems: SettingsItem[] = [
-    { icon: 'translate', title: t('profile.language'), desc: 'Vietnamese + English' },
-    { icon: 'brightness-6', title: t('profile.appearance'), desc: t('profile.lightMode') },
+  const languageDesc = locale === 'vi' ? 'Vietnamese + English' : 'English + Vietnamese';
+
+  const settingsItems: {
+    icon: IconName;
+    title: string;
+    desc: string;
+    onPress: () => void;
+  }[] = [
+    {
+      icon: 'translate',
+      title: t('profile.language'),
+      desc: languageDesc,
+      onPress: () => openSheet(languageSheetRef),
+    },
+    {
+      icon: 'brightness-6',
+      title: t('profile.appearance'),
+      desc: t('profile.lightMode'),
+      onPress: () => {},
+    },
     {
       icon: 'bell-outline',
       title: t('profile.notifications'),
       desc: t('profile.dailyReminders'),
+      onPress: () => openSheet(notificationSheetRef),
     },
-    { icon: 'volume-high', title: t('profile.audioSettings'), desc: t('profile.audioDesc') },
+    {
+      icon: 'volume-high',
+      title: t('profile.audioSettings'),
+      desc: t('profile.audioDesc'),
+      onPress: () => openSheet(audioSheetRef),
+    },
     {
       icon: 'help-circle-outline',
       title: t('profile.helpSupport'),
       desc: t('profile.helpDesc'),
+      onPress: () => {},
     },
   ];
 
@@ -83,7 +120,7 @@ export default function ProfileScreen() {
         {/* Settings Menu */}
         <View style={styles.settingsMenu}>
           {settingsItems.map((item, index) => (
-            <Pressable key={index} style={styles.settingsItem}>
+            <Pressable key={index} style={styles.settingsItem} onPress={item.onPress}>
               <View style={styles.settingsIconCircle}>
                 <MaterialCommunityIcons name={item.icon} size={20} color={colors.primary} />
               </View>
@@ -101,6 +138,58 @@ export default function ProfileScreen() {
           <Text style={styles.logoutText}>{t('auth.logout')}</Text>
         </Pressable>
       </ScrollView>
+
+      {/* Language Bottom Sheet */}
+      <SettingsBottomSheet ref={languageSheetRef} title={t('profile.languageTitle')}>
+        <Text style={styles.sheetDesc}>{t('profile.languageDesc')}</Text>
+        <SelectRow
+          icon={<Text style={styles.flagText}>🇻🇳</Text>}
+          title={t('profile.vietnamese')}
+          selected={locale === 'vi'}
+          onPress={() => {
+            setLocale('vi');
+            languageSheetRef.current?.close();
+          }}
+        />
+        <SelectRow
+          icon={<Text style={styles.flagText}>🇬🇧</Text>}
+          title={t('profile.english')}
+          selected={locale === 'en'}
+          onPress={() => {
+            setLocale('en');
+            languageSheetRef.current?.close();
+          }}
+        />
+      </SettingsBottomSheet>
+
+      {/* Audio Settings Bottom Sheet */}
+      <SettingsBottomSheet ref={audioSheetRef} title={t('profile.audioTitle')}>
+        <ToggleRow
+          icon={<MaterialCommunityIcons name="play-circle" size={20} color={colors.primary} />}
+          title={t('profile.autoPlayAudio')}
+          description={t('profile.autoPlayAudioDesc')}
+          value={autoPlay}
+          onToggle={setAutoPlay}
+        />
+        <ToggleRow
+          icon={<MaterialCommunityIcons name="translate" size={20} color={colors.primary} />}
+          title={t('profile.showTranslationToggle')}
+          description={t('profile.showTranslationDesc')}
+          value={showTranslation}
+          onToggle={setShowTranslation}
+        />
+      </SettingsBottomSheet>
+
+      {/* Notifications Bottom Sheet */}
+      <SettingsBottomSheet ref={notificationSheetRef} title={t('profile.notificationTitle')}>
+        <ToggleRow
+          icon={<MaterialCommunityIcons name="bell-ring" size={20} color={colors.primary} />}
+          title={t('profile.dailyRemindersToggle')}
+          description={t('profile.dailyRemindersDesc')}
+          value={false}
+          onToggle={() => {}}
+        />
+      </SettingsBottomSheet>
     </SafeAreaView>
   );
 }
@@ -226,5 +315,15 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: '600',
     color: colors.error,
+  },
+  // Bottom sheet extras
+  sheetDesc: {
+    fontSize: 14,
+    color: colors.onSurfaceVariant,
+    textAlign: 'center',
+    marginBottom: 4,
+  },
+  flagText: {
+    fontSize: 20,
   },
 });

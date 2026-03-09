@@ -1,7 +1,7 @@
 import { View, StyleSheet, ScrollView } from 'react-native';
 import { Text, Button, IconButton, useTheme, Surface } from 'react-native-paper';
 import { useI18n } from '@/src/i18n';
-import { useSpeakingFlow } from './useSpeakingFlow';
+import { useSpeakingFlow } from '../hooks/useSpeakingFlow';
 import { RecordButton } from './RecordButton';
 import { ScoreDisplay } from './ScoreDisplay';
 import { CountdownOverlay } from './CountdownOverlay';

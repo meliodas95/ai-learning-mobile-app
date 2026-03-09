@@ -5,8 +5,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { router, useLocalSearchParams } from 'expo-router';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { useI18n } from '@/src/i18n';
-import { useParagraphDetail } from '@/src/api/hooks/useCourses';
-import { useSentences } from '@/src/api/hooks/useSentences';
+import { useParagraphDetail } from '@/src/features/courses/hooks/useCourses';
+import { useSentences } from '@/src/features/lesson/hooks/useLearning';
 import { useLearningStore } from '@/src/store/learningStore';
 import { LessonTabBar } from '@/src/components/LessonTabBar';
 import { LearnTab } from '@/src/api/types';
@@ -14,16 +14,22 @@ import { PROCESS_QUIZ_COMPLETED } from '@/src/constants';
 import { colors } from '@/src/theme/colors';
 
 const ListeningPlayer = React.lazy(() =>
-  import('@/src/features/listening/ListeningPlayer').then((m) => ({ default: m.ListeningPlayer })),
+  import('@/src/features/listening/components/ListeningPlayer').then((m) => ({
+    default: m.ListeningPlayer,
+  })),
 );
 const SpeakingPlayer = React.lazy(() =>
-  import('@/src/features/speaking/SpeakingPlayer').then((m) => ({ default: m.SpeakingPlayer })),
+  import('@/src/features/speaking/components/SpeakingPlayer').then((m) => ({
+    default: m.SpeakingPlayer,
+  })),
 );
 const WordList = React.lazy(() =>
-  import('@/src/features/vocabulary/WordList').then((m) => ({ default: m.WordList })),
+  import('@/src/features/vocabulary/components/WordList').then((m) => ({ default: m.WordList })),
 );
 const ExerciseView = React.lazy(() =>
-  import('@/src/features/exercise/ExerciseView').then((m) => ({ default: m.ExerciseView })),
+  import('@/src/features/exercise/components/ExerciseView').then((m) => ({
+    default: m.ExerciseView,
+  })),
 );
 
 const PARAGRAPH_TYPE_LABELS: Record<string, string> = {

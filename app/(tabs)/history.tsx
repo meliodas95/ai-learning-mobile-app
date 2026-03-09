@@ -3,7 +3,7 @@ import { Text } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { useI18n } from '@/src/i18n';
-import { useHistory } from '@/src/api/hooks/useHistory';
+import { useHistory } from '@/src/features/history/hooks/useHistory';
 import { useSettingsStore } from '@/src/store/settingsStore';
 import { formatRelativeTime } from '@/src/utils/formatters';
 import type { HistoryParagraphEntity } from '@/src/api/types';

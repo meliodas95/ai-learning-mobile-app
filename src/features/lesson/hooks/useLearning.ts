@@ -1,7 +1,32 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import apiClient from '../client';
-import { Endpoints } from '../endpoints';
-import type { ApiResponse, SentenceScoreEntity } from '../types';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import apiClient from '@/src/api/client';
+import { Endpoints } from '@/src/api/endpoints';
+import type { ApiResponse, SentenceListResponse, SentenceScoreEntity } from '@/src/api/types';
+
+// === Sentence Queries ===
+
+interface SentenceParams {
+  paragraph_id: number;
+  document_id?: number;
+  course_id?: number;
+  type?: string;
+  exercise_token?: string;
+}
+
+export function useSentences(params: SentenceParams | undefined) {
+  return useQuery({
+    queryKey: ['sentences', params?.paragraph_id, params?.type],
+    queryFn: () =>
+      apiClient.get<unknown, ApiResponse<SentenceListResponse>>(Endpoints.SENTENCE_LIST_V1, {
+        params,
+      }),
+    select: (res) => res.data,
+    enabled: !!params?.paragraph_id,
+    staleTime: Infinity,
+  });
+}
+
+// === Learning Action Mutations ===
 
 interface StartParagraphParams {
   paragraph_id: number;

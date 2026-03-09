@@ -4,7 +4,7 @@ import { Text } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useI18n } from '@/src/i18n';
-import { useParagraphs } from '@/src/api/hooks/useCourses';
+import { useParagraphs } from '@/src/features/courses/hooks/useCourses';
 import type { ParagraphEntity } from '@/src/api/types';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { colors } from '@/src/theme/colors';

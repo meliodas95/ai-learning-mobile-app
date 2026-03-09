@@ -2,7 +2,7 @@ import { useCallback } from 'react';
 import { calculateSimilarity } from '@/src/utils/similarity';
 import { encryptScoreData } from '@/src/utils/encryption';
 import { getScoreColor } from '@/src/utils/score';
-import { useEndSpeakMutation } from '@/src/api/hooks/useLearning';
+import { useEndSpeakMutation } from '@/src/features/lesson/hooks/useLearning';
 import type { SentenceEntity, SentenceScoreEntity } from '@/src/api/types';
 
 interface SubmitScoreParams {

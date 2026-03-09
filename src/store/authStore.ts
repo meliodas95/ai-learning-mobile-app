@@ -1,8 +1,16 @@
 import { create } from 'zustand';
 import * as SecureStore from 'expo-secure-store';
 import type { MemberEntity, LoginResponse, Account, CategoryEntity } from '@/src/api/types';
-import { setTokenGetter } from '@/src/api/client';
+import apiClient, { setTokenGetter } from '@/src/api/client';
+import { Endpoints } from '@/src/api/endpoints';
 import { SECURE_STORE_KEYS } from '@/src/constants';
+import { logger } from '@/src/utils/logger';
+
+interface MemberListResponse {
+  account: Account;
+  members: MemberEntity[];
+  member_categories: CategoryEntity[];
+}
 
 interface AuthState {
   user: Account | null;
@@ -68,14 +76,45 @@ export const useAuthStore = create<AuthState>((set, get) => {
 
     loadStoredAuth: async () => {
       try {
-        const token = await SecureStore.getItemAsync(SECURE_STORE_KEYS.ACCESS_TOKEN);
-        if (token) {
-          set({ accessToken: token, isAuthenticated: true, isLoading: false });
-        } else {
+        const [token, accountToken] = await Promise.all([
+          SecureStore.getItemAsync(SECURE_STORE_KEYS.ACCESS_TOKEN),
+          SecureStore.getItemAsync(SECURE_STORE_KEYS.ACCOUNT_TOKEN),
+        ]);
+
+        if (!token) {
           set({ isLoading: false });
+          return;
         }
-      } catch {
-        set({ isLoading: false });
+
+        // Set token first so the API client can use it for the validation request
+        set({ accessToken: token, accountToken });
+
+        // Validate token by fetching user profile from backend
+        const response = await apiClient.get<unknown, { data: MemberListResponse }>(
+          Endpoints.MEMBER_LIST,
+        );
+        const data = response.data;
+        const mainMember = data.members?.find((m) => m.is_main === 1) ?? data.members?.[0] ?? null;
+
+        set({
+          user: data.account,
+          member: mainMember,
+          members: data.members ?? [],
+          memberCategories: data.member_categories ?? [],
+          isAuthenticated: true,
+          isLoading: false,
+        });
+      } catch (error) {
+        logger.warn('Auth restoration failed, clearing tokens', error);
+        // Token is invalid/expired — clear everything and send to login
+        await SecureStore.deleteItemAsync(SECURE_STORE_KEYS.ACCESS_TOKEN);
+        await SecureStore.deleteItemAsync(SECURE_STORE_KEYS.ACCOUNT_TOKEN);
+        set({
+          accessToken: null,
+          accountToken: null,
+          isAuthenticated: false,
+          isLoading: false,
+        });
       }
     },
 

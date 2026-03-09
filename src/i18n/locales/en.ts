@@ -35,6 +35,32 @@ export default {
     noAccount: "Don't have an account?",
     termsNotice: 'By signing in, you agree to our Terms of Service and Privacy Policy',
     phonePrefix: 'VN +84',
+    // Registration
+    registerTitle: 'Create Account',
+    registerSubtitle: 'Enter your information to get started',
+    haveAccount: 'Already have an account?',
+    sendOtp: 'Send Verification Code',
+    registerFailed: 'Registration failed. Please try again.',
+    // OTP verification
+    otpTitle: 'Verify Phone',
+    otpSentTo: 'Enter the 6-digit code sent to',
+    resendOtp: 'Resend code',
+    resendIn: 'Resend in {{seconds}}s',
+    verifyFailed: 'Verification failed. Please try again.',
+    // Create password
+    createPasswordTitle: 'Create Password',
+    createPasswordSubtitle: 'Set a password for your account',
+    confirmPassword: 'Confirm password',
+    passwordMismatch: 'Passwords do not match',
+    createAccount: 'Create Account',
+    createAccountFailed: 'Account creation failed. Please try again.',
+    // Forgot password
+    forgotPasswordTitle: 'Reset Password',
+    forgotPasswordSubtitle: 'Enter your phone number and we will send you a reset link',
+    sendResetLink: 'Send Reset Link',
+    resetSent: 'Reset instructions sent to your phone',
+    resetFailed: 'Failed to send reset link. Please try again.',
+    backToSignIn: 'Back to Sign In',
   },
   tabs: {
     home: 'Home',
@@ -113,6 +139,21 @@ export default {
     dayStreak: 'Day streak',
     lessonsCount: 'Lessons',
     wordsCount: 'Vocabulary',
+    // Language sheet
+    languageTitle: 'Language',
+    languageDesc: 'Choose your display language',
+    vietnamese: 'Tiếng Việt',
+    english: 'English',
+    // Audio sheet
+    audioTitle: 'Audio Settings',
+    autoPlayAudio: 'Auto-play audio',
+    autoPlayAudioDesc: 'Automatically play sentence audio',
+    showTranslationToggle: 'Show translation',
+    showTranslationDesc: 'Display Vietnamese translation below sentences',
+    // Notification sheet
+    notificationTitle: 'Notifications',
+    dailyRemindersToggle: 'Daily reminders',
+    dailyRemindersDesc: 'Get reminded to practice every day',
   },
   courses: {
     allCourses: 'All Courses',

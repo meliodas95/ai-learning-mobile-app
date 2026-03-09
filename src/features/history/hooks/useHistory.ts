@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
-import apiClient from '../client';
-import { Endpoints } from '../endpoints';
-import type { ApiResponse, HistoryParagraphEntity } from '../types';
+import apiClient from '@/src/api/client';
+import { Endpoints } from '@/src/api/endpoints';
+import type { ApiResponse, HistoryParagraphEntity } from '@/src/api/types';
 
 export function useHistory() {
   return useQuery({

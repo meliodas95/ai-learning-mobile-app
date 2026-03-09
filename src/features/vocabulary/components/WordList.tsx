@@ -2,7 +2,7 @@ import { View, StyleSheet } from 'react-native';
 import { Text, IconButton, useTheme } from 'react-native-paper';
 import { useI18n } from '@/src/i18n';
 import { useEffect } from 'react';
-import { useVocabulary } from './useVocabulary';
+import { useVocabulary } from '../hooks/useVocabulary';
 import { WordCard } from './WordCard';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 

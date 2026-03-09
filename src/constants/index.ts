@@ -1,4 +1,4 @@
-import { colors } from './theme/colors';
+import { colors } from '../theme/colors';
 
 // === Query ===
 export const QUERY_STALE_TIME = 5 * 60 * 1000; // 5 minutes

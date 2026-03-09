@@ -1,6 +1,6 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { useLearningStore } from '@/src/store/learningStore';
-import { useEndListenMutation } from '@/src/api/hooks/useLearning';
+import { useEndListenMutation } from '@/src/features/lesson/hooks/useLearning';
 import type { VideoPlayerRef } from '@/src/components/VideoPlayer';
 import type { SentenceEntity } from '@/src/api/types';
 

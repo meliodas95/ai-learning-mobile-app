@@ -12,41 +12,58 @@ import { Text, HelperText } from 'react-native-paper';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { router } from 'expo-router';
-import { useLoginMutation } from '@/src/features/auth/hooks/useAuth';
-import { useAuthStore } from '@/src/store/authStore';
+import { router, useLocalSearchParams } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useI18n } from '@/src/i18n';
 import { colors } from '@/src/theme/colors';
+import { useSavePasswordMutation } from '@/src/features/auth/hooks/useAuth';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 
-const loginSchema = z.object({
-  phone: z.string().regex(/(84|0[35789])\d{8}$/, 'Invalid phone number'),
-  password: z.string().min(8, 'Password must be at least 8 characters'),
-});
+const passwordSchema = z
+  .object({
+    password: z.string().min(8, 'Password must be at least 8 characters'),
+    confirmPassword: z.string().min(8, 'Password must be at least 8 characters'),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: 'Passwords do not match',
+    path: ['confirmPassword'],
+  });
 
-type LoginForm = z.infer<typeof loginSchema>;
+type PasswordForm = z.infer<typeof passwordSchema>;
 
-export default function LoginScreen() {
+export default function CreatePasswordScreen() {
   const { t } = useI18n();
-  const loginMutation = useLoginMutation();
-  const setAuth = useAuthStore((s) => s.setAuth);
+  const { fullname, deviceId, otpToken } = useLocalSearchParams<{
+    phone: string;
+    fullname: string;
+    deviceId: string;
+    otpToken: string;
+  }>();
+
+  const savePassword = useSavePasswordMutation();
   const [secureEntry, setSecureEntry] = useState(true);
+  const [secureEntryConfirm, setSecureEntryConfirm] = useState(true);
 
   const {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<LoginForm>({
-    resolver: zodResolver(loginSchema),
-    defaultValues: { phone: '', password: '' },
+  } = useForm<PasswordForm>({
+    resolver: zodResolver(passwordSchema),
+    defaultValues: { password: '', confirmPassword: '' },
   });
 
-  const onSubmit = async (data: LoginForm) => {
+  const onSubmit = async (data: PasswordForm) => {
+    if (!otpToken || !deviceId) return;
     try {
-      const result = await loginMutation.mutateAsync(data);
-      await setAuth(result.data);
-      // AuthGuard handles navigation after auth state change
+      await savePassword.mutateAsync({
+        token: otpToken,
+        deviceId,
+        fullname: fullname ?? '',
+        password: data.password,
+      });
+      // Navigate to login after successful registration
+      router.replace('/(auth)/login');
     } catch {
       // Error handled by mutation state
     }
@@ -63,46 +80,23 @@ export default function LoginScreen() {
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
         >
+          {/* Back button */}
+          <Pressable style={styles.backButton} onPress={() => router.back()}>
+            <MaterialCommunityIcons name="arrow-left" size={24} color={colors.onSurface} />
+          </Pressable>
+
           {/* Hero Area */}
           <View style={styles.hero}>
             <View style={styles.iconCircle}>
-              <MaterialCommunityIcons name="translate" size={80} color={colors.primary} />
+              <MaterialCommunityIcons name="lock-plus" size={64} color={colors.primary} />
             </View>
-            <Text style={styles.appName}>{t('auth.appTitle')}</Text>
-            <Text style={styles.tagline}>{t('auth.appSubtitle')}</Text>
+            <Text style={styles.title}>{t('auth.createPasswordTitle')}</Text>
+            <Text style={styles.subtitle}>{t('auth.createPasswordSubtitle')}</Text>
           </View>
 
           {/* Form Area */}
           <View style={styles.form}>
-            {/* Phone Section */}
-            <View style={styles.fieldGroup}>
-              <Text style={styles.label}>{t('auth.phone')}</Text>
-              <Controller
-                control={control}
-                name="phone"
-                render={({ field: { onChange, onBlur, value } }) => (
-                  <View style={[styles.inputRow, errors.phone ? styles.inputRowError : undefined]}>
-                    <Text style={styles.prefix}>{t('auth.phonePrefix')}</Text>
-                    <View style={styles.divider} />
-                    <TextInput
-                      style={styles.textInput}
-                      value={value}
-                      onChangeText={onChange}
-                      onBlur={onBlur}
-                      keyboardType="phone-pad"
-                      placeholderTextColor={colors.textTertiary}
-                    />
-                  </View>
-                )}
-              />
-              {errors.phone && (
-                <HelperText type="error" style={styles.helperText}>
-                  {errors.phone.message}
-                </HelperText>
-              )}
-            </View>
-
-            {/* Password Section */}
+            {/* Password */}
             <View style={styles.fieldGroup}>
               <Text style={styles.label}>{t('auth.password')}</Text>
               <Controller
@@ -141,40 +135,63 @@ export default function LoginScreen() {
               )}
             </View>
 
-            {/* Forgot Password */}
-            <Pressable
-              style={styles.forgotRow}
-              onPress={() => router.push('/(auth)/forgot-password')}
-            >
-              <Text style={styles.forgotText}>{t('auth.forgotPassword')}</Text>
-            </Pressable>
+            {/* Confirm Password */}
+            <View style={styles.fieldGroup}>
+              <Text style={styles.label}>{t('auth.confirmPassword')}</Text>
+              <Controller
+                control={control}
+                name="confirmPassword"
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <View
+                    style={[
+                      styles.inputRow,
+                      errors.confirmPassword ? styles.inputRowError : undefined,
+                    ]}
+                  >
+                    <TextInput
+                      style={[styles.textInput, styles.passwordInput]}
+                      value={value}
+                      onChangeText={onChange}
+                      onBlur={onBlur}
+                      secureTextEntry={secureEntryConfirm}
+                      placeholderTextColor={colors.textTertiary}
+                    />
+                    <Pressable
+                      onPress={() => setSecureEntryConfirm(!secureEntryConfirm)}
+                      hitSlop={8}
+                      style={styles.eyeButton}
+                    >
+                      <MaterialCommunityIcons
+                        name={secureEntryConfirm ? 'eye-off-outline' : 'eye-outline'}
+                        size={20}
+                        color={colors.textTertiary}
+                      />
+                    </Pressable>
+                  </View>
+                )}
+              />
+              {errors.confirmPassword && (
+                <HelperText type="error" style={styles.helperText}>
+                  {errors.confirmPassword.message}
+                </HelperText>
+              )}
+            </View>
 
             {/* API Error */}
-            {loginMutation.isError && (
+            {savePassword.isError && (
               <HelperText type="error" style={styles.apiError}>
-                {t('auth.loginFailed')}
+                {t('auth.createAccountFailed')}
               </HelperText>
             )}
 
-            {/* Sign In Button */}
+            {/* Create Account Button */}
             <Pressable
-              style={[styles.signInButton, loginMutation.isPending && styles.signInButtonDisabled]}
+              style={[styles.primaryButton, savePassword.isPending && styles.primaryButtonDisabled]}
               onPress={handleSubmit(onSubmit)}
-              disabled={loginMutation.isPending}
+              disabled={savePassword.isPending}
             >
-              <Text style={styles.signInText}>{t('auth.signIn')}</Text>
+              <Text style={styles.primaryButtonText}>{t('auth.createAccount')}</Text>
             </Pressable>
-
-            {/* Footer */}
-            <View style={styles.footer}>
-              <Text style={styles.noAccountText}>{t('auth.noAccount')}</Text>
-              <Pressable onPress={() => router.push('/(auth)/register')}>
-                <Text style={styles.registerLink}>{t('auth.register')}</Text>
-              </Pressable>
-            </View>
-
-            {/* Terms */}
-            <Text style={styles.termsText}>{t('auth.termsNotice')}</Text>
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
@@ -193,32 +210,46 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingBottom: 32,
   },
+  backButton: {
+    position: 'absolute',
+    top: 16,
+    left: 24,
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: colors.outline,
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 1,
+  },
   hero: {
     alignItems: 'center',
-    gap: 16,
+    gap: 12,
     marginBottom: 40,
   },
   iconCircle: {
-    width: 200,
-    height: 200,
-    borderRadius: 100,
+    width: 120,
+    height: 120,
+    borderRadius: 60,
     backgroundColor: colors.primaryLight,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  appName: {
-    fontSize: 32,
+  title: {
+    fontSize: 28,
     fontWeight: '700',
-    letterSpacing: -1,
+    letterSpacing: -0.5,
     color: colors.onSurface,
   },
-  tagline: {
+  subtitle: {
     fontSize: 15,
     color: colors.onSurfaceVariant,
   },
   form: {
     paddingHorizontal: 24,
-    gap: 24,
+    gap: 20,
   },
   fieldGroup: {
     gap: 6,
@@ -242,17 +273,6 @@ const styles = StyleSheet.create({
   inputRowError: {
     borderColor: colors.error,
   },
-  prefix: {
-    fontWeight: '500',
-    fontSize: 15,
-    color: colors.onSurface,
-  },
-  divider: {
-    width: 1,
-    height: 24,
-    backgroundColor: colors.outline,
-    marginHorizontal: 12,
-  },
   textInput: {
     flex: 1,
     fontSize: 15,
@@ -268,53 +288,23 @@ const styles = StyleSheet.create({
   helperText: {
     paddingHorizontal: 0,
   },
-  forgotRow: {
-    alignSelf: 'flex-end',
-    marginTop: -16,
-  },
-  forgotText: {
-    fontSize: 13,
-    fontWeight: '600',
-    color: colors.primary,
-  },
   apiError: {
     textAlign: 'center',
     paddingHorizontal: 0,
   },
-  signInButton: {
+  primaryButton: {
     backgroundColor: colors.primary,
     height: 52,
     borderRadius: 12,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  signInButtonDisabled: {
+  primaryButtonDisabled: {
     opacity: 0.6,
   },
-  signInText: {
+  primaryButtonText: {
     fontSize: 16,
     fontWeight: '600',
     color: colors.onPrimary,
-  },
-  footer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    gap: 4,
-  },
-  noAccountText: {
-    fontSize: 14,
-    color: colors.onSurfaceVariant,
-  },
-  registerLink: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: colors.primary,
-  },
-  termsText: {
-    fontSize: 11,
-    color: colors.textTertiary,
-    textAlign: 'center',
-    lineHeight: 16,
   },
 });

@@ -19,9 +19,15 @@ export function setTokenGetter(getter: () => string | null) {
 // Request interceptor: inject auth token
 apiClient.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    const isLoginEndpoint = config.url === Endpoints.LOGIN || config.url === Endpoints.LOGIN_MEMBER;
+    const isPublicEndpoint =
+      config.url === Endpoints.LOGIN ||
+      config.url === Endpoints.LOGIN_MEMBER ||
+      config.url === Endpoints.REGISTER_SEND_OTP ||
+      config.url === Endpoints.REGISTER_VERIFY_OTP ||
+      config.url === Endpoints.REGISTER_SAVE_PASSWORD ||
+      config.url === Endpoints.FORGOT_PASSWORD;
 
-    if (!isLoginEndpoint && getAccessToken) {
+    if (!isPublicEndpoint && getAccessToken) {
       const token = getAccessToken();
       if (token) {
         config.headers.set('x-access-token', token);

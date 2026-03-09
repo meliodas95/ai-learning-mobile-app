@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Text, TextInput, Button, HelperText, useTheme } from 'react-native-paper';
 import { router, useLocalSearchParams } from 'expo-router';
-import { useMemberLoginMutation } from '@/src/api/hooks/useAuth';
+import { useMemberLoginMutation } from '@/src/features/auth/hooks/useAuth';
 import { useAuthStore } from '@/src/store/authStore';
 import { SafeAreaView } from 'react-native-safe-area-context';
 

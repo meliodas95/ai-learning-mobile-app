@@ -1,13 +1,13 @@
 import { useQuery } from '@tanstack/react-query';
-import apiClient from '../client';
-import { Endpoints } from '../endpoints';
+import apiClient from '@/src/api/client';
+import { Endpoints } from '@/src/api/endpoints';
 import type {
   ApiResponse,
   CourseEntity,
   DocumentEntity,
   ParagraphDetailResponse,
   ParagraphEntity,
-} from '../types';
+} from '@/src/api/types';
 
 export function useCourses() {
   return useQuery({

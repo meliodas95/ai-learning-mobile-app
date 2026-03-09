@@ -13,40 +13,47 @@ import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { router } from 'expo-router';
-import { useLoginMutation } from '@/src/features/auth/hooks/useAuth';
-import { useAuthStore } from '@/src/store/authStore';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useI18n } from '@/src/i18n';
 import { colors } from '@/src/theme/colors';
+import { useSendOtpMutation } from '@/src/features/auth/hooks/useAuth';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 
-const loginSchema = z.object({
+const registerSchema = z.object({
+  fullname: z.string().min(2, 'Full name is required'),
   phone: z.string().regex(/(84|0[35789])\d{8}$/, 'Invalid phone number'),
-  password: z.string().min(8, 'Password must be at least 8 characters'),
 });
 
-type LoginForm = z.infer<typeof loginSchema>;
+type RegisterForm = z.infer<typeof registerSchema>;
 
-export default function LoginScreen() {
+export default function RegisterScreen() {
   const { t } = useI18n();
-  const loginMutation = useLoginMutation();
-  const setAuth = useAuthStore((s) => s.setAuth);
-  const [secureEntry, setSecureEntry] = useState(true);
+  const sendOtp = useSendOtpMutation();
+  const [deviceId] = useState(() => `mobile_${Date.now()}_${Math.random().toString(36).slice(2)}`);
 
   const {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<LoginForm>({
-    resolver: zodResolver(loginSchema),
-    defaultValues: { phone: '', password: '' },
+  } = useForm<RegisterForm>({
+    resolver: zodResolver(registerSchema),
+    defaultValues: { fullname: '', phone: '' },
   });
 
-  const onSubmit = async (data: LoginForm) => {
+  const onSubmit = async (data: RegisterForm) => {
     try {
-      const result = await loginMutation.mutateAsync(data);
-      await setAuth(result.data);
-      // AuthGuard handles navigation after auth state change
+      const result = await sendOtp.mutateAsync({
+        phone: data.phone,
+        deviceId,
+      });
+      router.push({
+        pathname: '/(auth)/verify-otp',
+        params: {
+          phone: data.phone,
+          fullname: data.fullname,
+          deviceId: result.data?.device_id ?? deviceId,
+        },
+      });
     } catch {
       // Error handled by mutation state
     }
@@ -66,15 +73,49 @@ export default function LoginScreen() {
           {/* Hero Area */}
           <View style={styles.hero}>
             <View style={styles.iconCircle}>
-              <MaterialCommunityIcons name="translate" size={80} color={colors.primary} />
+              <MaterialCommunityIcons name="account-plus" size={80} color={colors.primary} />
             </View>
-            <Text style={styles.appName}>{t('auth.appTitle')}</Text>
-            <Text style={styles.tagline}>{t('auth.appSubtitle')}</Text>
+            <Text style={styles.title}>{t('auth.registerTitle')}</Text>
+            <Text style={styles.subtitle}>{t('auth.registerSubtitle')}</Text>
           </View>
 
           {/* Form Area */}
           <View style={styles.form}>
-            {/* Phone Section */}
+            {/* Full Name */}
+            <View style={styles.fieldGroup}>
+              <Text style={styles.label}>{t('auth.fullName')}</Text>
+              <Controller
+                control={control}
+                name="fullname"
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <View
+                    style={[styles.inputRow, errors.fullname ? styles.inputRowError : undefined]}
+                  >
+                    <MaterialCommunityIcons
+                      name="account-outline"
+                      size={20}
+                      color={colors.textTertiary}
+                    />
+                    <TextInput
+                      style={styles.textInput}
+                      value={value}
+                      onChangeText={onChange}
+                      onBlur={onBlur}
+                      placeholder={t('auth.fullName')}
+                      placeholderTextColor={colors.textTertiary}
+                      autoCapitalize="words"
+                    />
+                  </View>
+                )}
+              />
+              {errors.fullname && (
+                <HelperText type="error" style={styles.helperText}>
+                  {errors.fullname.message}
+                </HelperText>
+              )}
+            </View>
+
+            {/* Phone */}
             <View style={styles.fieldGroup}>
               <Text style={styles.label}>{t('auth.phone')}</Text>
               <Controller
@@ -102,79 +143,29 @@ export default function LoginScreen() {
               )}
             </View>
 
-            {/* Password Section */}
-            <View style={styles.fieldGroup}>
-              <Text style={styles.label}>{t('auth.password')}</Text>
-              <Controller
-                control={control}
-                name="password"
-                render={({ field: { onChange, onBlur, value } }) => (
-                  <View
-                    style={[styles.inputRow, errors.password ? styles.inputRowError : undefined]}
-                  >
-                    <TextInput
-                      style={[styles.textInput, styles.passwordInput]}
-                      value={value}
-                      onChangeText={onChange}
-                      onBlur={onBlur}
-                      secureTextEntry={secureEntry}
-                      placeholderTextColor={colors.textTertiary}
-                    />
-                    <Pressable
-                      onPress={() => setSecureEntry(!secureEntry)}
-                      hitSlop={8}
-                      style={styles.eyeButton}
-                    >
-                      <MaterialCommunityIcons
-                        name={secureEntry ? 'eye-off-outline' : 'eye-outline'}
-                        size={20}
-                        color={colors.textTertiary}
-                      />
-                    </Pressable>
-                  </View>
-                )}
-              />
-              {errors.password && (
-                <HelperText type="error" style={styles.helperText}>
-                  {errors.password.message}
-                </HelperText>
-              )}
-            </View>
-
-            {/* Forgot Password */}
-            <Pressable
-              style={styles.forgotRow}
-              onPress={() => router.push('/(auth)/forgot-password')}
-            >
-              <Text style={styles.forgotText}>{t('auth.forgotPassword')}</Text>
-            </Pressable>
-
             {/* API Error */}
-            {loginMutation.isError && (
+            {sendOtp.isError && (
               <HelperText type="error" style={styles.apiError}>
-                {t('auth.loginFailed')}
+                {t('auth.registerFailed')}
               </HelperText>
             )}
 
-            {/* Sign In Button */}
+            {/* Send OTP Button */}
             <Pressable
-              style={[styles.signInButton, loginMutation.isPending && styles.signInButtonDisabled]}
+              style={[styles.primaryButton, sendOtp.isPending && styles.primaryButtonDisabled]}
               onPress={handleSubmit(onSubmit)}
-              disabled={loginMutation.isPending}
+              disabled={sendOtp.isPending}
             >
-              <Text style={styles.signInText}>{t('auth.signIn')}</Text>
+              <Text style={styles.primaryButtonText}>{t('auth.sendOtp')}</Text>
             </Pressable>
 
             {/* Footer */}
             <View style={styles.footer}>
-              <Text style={styles.noAccountText}>{t('auth.noAccount')}</Text>
-              <Pressable onPress={() => router.push('/(auth)/register')}>
-                <Text style={styles.registerLink}>{t('auth.register')}</Text>
+              <Text style={styles.footerText}>{t('auth.haveAccount')}</Text>
+              <Pressable onPress={() => router.back()}>
+                <Text style={styles.footerLink}>{t('auth.signIn')}</Text>
               </Pressable>
             </View>
-
-            {/* Terms */}
-            <Text style={styles.termsText}>{t('auth.termsNotice')}</Text>
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
@@ -195,30 +186,30 @@ const styles = StyleSheet.create({
   },
   hero: {
     alignItems: 'center',
-    gap: 16,
+    gap: 12,
     marginBottom: 40,
   },
   iconCircle: {
-    width: 200,
-    height: 200,
-    borderRadius: 100,
+    width: 160,
+    height: 160,
+    borderRadius: 80,
     backgroundColor: colors.primaryLight,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  appName: {
-    fontSize: 32,
+  title: {
+    fontSize: 28,
     fontWeight: '700',
-    letterSpacing: -1,
+    letterSpacing: -0.5,
     color: colors.onSurface,
   },
-  tagline: {
+  subtitle: {
     fontSize: 15,
     color: colors.onSurfaceVariant,
   },
   form: {
     paddingHorizontal: 24,
-    gap: 24,
+    gap: 20,
   },
   fieldGroup: {
     gap: 6,
@@ -238,6 +229,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     height: 52,
     paddingHorizontal: 16,
+    gap: 12,
   },
   inputRowError: {
     borderColor: colors.error,
@@ -251,7 +243,6 @@ const styles = StyleSheet.create({
     width: 1,
     height: 24,
     backgroundColor: colors.outline,
-    marginHorizontal: 12,
   },
   textInput: {
     flex: 1,
@@ -259,39 +250,24 @@ const styles = StyleSheet.create({
     color: colors.onSurface,
     paddingVertical: 0,
   },
-  passwordInput: {
-    paddingRight: 8,
-  },
-  eyeButton: {
-    padding: 4,
-  },
   helperText: {
     paddingHorizontal: 0,
-  },
-  forgotRow: {
-    alignSelf: 'flex-end',
-    marginTop: -16,
-  },
-  forgotText: {
-    fontSize: 13,
-    fontWeight: '600',
-    color: colors.primary,
   },
   apiError: {
     textAlign: 'center',
     paddingHorizontal: 0,
   },
-  signInButton: {
+  primaryButton: {
     backgroundColor: colors.primary,
     height: 52,
     borderRadius: 12,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  signInButtonDisabled: {
+  primaryButtonDisabled: {
     opacity: 0.6,
   },
-  signInText: {
+  primaryButtonText: {
     fontSize: 16,
     fontWeight: '600',
     color: colors.onPrimary,
@@ -302,19 +278,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 4,
   },
-  noAccountText: {
+  footerText: {
     fontSize: 14,
     color: colors.onSurfaceVariant,
   },
-  registerLink: {
+  footerLink: {
     fontSize: 14,
     fontWeight: '600',
     color: colors.primary,
-  },
-  termsText: {
-    fontSize: 11,
-    color: colors.textTertiary,
-    textAlign: 'center',
-    lineHeight: 16,
   },
 });

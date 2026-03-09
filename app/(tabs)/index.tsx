@@ -5,7 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { useI18n } from '@/src/i18n';
 import { useAuthStore } from '@/src/store/authStore';
-import { useCourses } from '@/src/api/hooks/useCourses';
+import { useCourses } from '@/src/features/courses/hooks/useCourses';
 import { colors } from '@/src/theme/colors';
 import { CourseCard } from '@/src/components/CourseCard';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
@@ -68,11 +68,7 @@ export default function HomeScreen() {
 
         {/* Lesson Types */}
         <Text style={styles.sectionTitle}>{t('home.lessonTypes')}</Text>
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.lessonTypesRow}
-        >
+        <View style={styles.lessonTypesRow}>
           {LESSON_TYPES.map((item) => (
             <Pressable
               key={item.key}
@@ -84,7 +80,7 @@ export default function HomeScreen() {
               </Text>
             </Pressable>
           ))}
-        </ScrollView>
+        </View>
 
         {/* Learning Modes */}
         <Text style={styles.sectionTitle}>{t('home.learningModes')}</Text>
@@ -209,11 +205,14 @@ const styles = StyleSheet.create({
   },
   // Lesson Types
   lessonTypesRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
     gap: 12,
     marginTop: -12,
   },
   lessonTypeCard: {
-    width: 90,
+    flex: 1,
+    minWidth: 70,
     height: 100,
     borderRadius: 16,
     alignItems: 'center',
