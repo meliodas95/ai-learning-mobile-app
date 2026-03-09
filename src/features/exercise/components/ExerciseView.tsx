@@ -1,5 +1,6 @@
 import { View, StyleSheet, ScrollView } from 'react-native';
-import { Text, useTheme } from 'react-native-paper';
+import { useTheme } from 'react-native-paper';
+import { Typography } from '@/src/components/Typography';
 import { useI18n } from '@/src/i18n';
 import { useExercise } from '../hooks/useExercise';
 import { QuizCard } from './QuizCard';
@@ -36,9 +37,9 @@ export function ExerciseView() {
           size={48}
           color={theme.colors.outline}
         />
-        <Text variant="bodyMedium" style={{ color: theme.colors.onSurfaceVariant, marginTop: 12 }}>
+        <Typography size={14} color={theme.colors.onSurfaceVariant} style={{ marginTop: 12 }}>
           {t('learn.noExercises')}
-        </Text>
+        </Typography>
       </View>
     );
   }

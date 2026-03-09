@@ -1,6 +1,5 @@
 import { useCallback } from 'react';
 import { View, StyleSheet, ScrollView, RefreshControl, Pressable } from 'react-native';
-import { Text } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { useI18n } from '@/src/i18n';
@@ -8,6 +7,7 @@ import { useAuthStore } from '@/src/store/authStore';
 import { useCourses } from '@/src/features/courses/hooks/useCourses';
 import { colors } from '@/src/theme/colors';
 import { CourseCard } from '@/src/components/CourseCard';
+import { Typography } from '@/src/components/Typography';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 
 const LESSON_TYPES = [
@@ -48,11 +48,17 @@ export default function HomeScreen() {
         <View style={styles.greetingRow}>
           <View style={styles.greetingLeft}>
             <View style={styles.avatar}>
-              <Text style={styles.avatarText}>{initial}</Text>
+              <Typography size={20} weight="700" color={colors.primary}>
+                {initial}
+              </Typography>
             </View>
             <View style={styles.greetingTextCol}>
-              <Text style={styles.greetingSmall}>{t('home.goodMorning')}</Text>
-              <Text style={styles.greetingName}>{displayName}</Text>
+              <Typography size={12} color={colors.onSurfaceVariant}>
+                {t('home.goodMorning')}
+              </Typography>
+              <Typography size={20} weight="600">
+                {displayName}
+              </Typography>
             </View>
           </View>
           <Pressable style={styles.bellButton}>
@@ -63,11 +69,15 @@ export default function HomeScreen() {
         {/* Search Bar */}
         <Pressable style={styles.searchBar}>
           <MaterialCommunityIcons name="magnify" size={20} color={colors.textTertiary} />
-          <Text style={styles.searchPlaceholder}>{t('home.searchPlaceholder')}</Text>
+          <Typography size={15} color={colors.textTertiary}>
+            {t('home.searchPlaceholder')}
+          </Typography>
         </Pressable>
 
         {/* Lesson Types */}
-        <Text style={styles.sectionTitle}>{t('home.lessonTypes')}</Text>
+        <Typography size={18} weight="600" style={styles.sectionTitle}>
+          {t('home.lessonTypes')}
+        </Typography>
         <View style={styles.lessonTypesRow}>
           {LESSON_TYPES.map((item) => (
             <Pressable
@@ -75,28 +85,32 @@ export default function HomeScreen() {
               style={[styles.lessonTypeCard, { backgroundColor: item.color }]}
             >
               <MaterialCommunityIcons name={item.icon} size={28} color={colors.primary} />
-              <Text style={styles.lessonTypeLabel}>
+              <Typography size={11} weight="600">
                 {t(`home.${item.key}` as `home.${typeof item.key}`)}
-              </Text>
+              </Typography>
             </Pressable>
           ))}
         </View>
 
         {/* Learning Modes */}
-        <Text style={styles.sectionTitle}>{t('home.learningModes')}</Text>
+        <Typography size={18} weight="600" style={styles.sectionTitle}>
+          {t('home.learningModes')}
+        </Typography>
         <View style={styles.modesRow}>
           {LEARNING_MODES.map((mode) => (
             <Pressable key={mode.key} style={[styles.modePill, { backgroundColor: mode.color }]}>
               <MaterialCommunityIcons name={mode.icon} size={18} color={colors.onPrimary} />
-              <Text style={styles.modePillText}>
+              <Typography size={13} weight="600" color={colors.onPrimary}>
                 {t(`home.${mode.key}` as `home.${typeof mode.key}`)}
-              </Text>
+              </Typography>
             </Pressable>
           ))}
         </View>
 
         {/* Continue Learning */}
-        <Text style={styles.sectionTitle}>{t('home.continueLearning')}</Text>
+        <Typography size={18} weight="600" style={styles.sectionTitle}>
+          {t('home.continueLearning')}
+        </Typography>
         {firstCourse ? (
           <CourseCard
             title={firstCourse.title}
@@ -110,7 +124,9 @@ export default function HomeScreen() {
               size={48}
               color={colors.outline}
             />
-            <Text style={styles.emptyText}>{t('common.noResults')}</Text>
+            <Typography size={14} color={colors.onSurfaceVariant}>
+              {t('common.noResults')}
+            </Typography>
           </View>
         )}
       </ScrollView>
@@ -148,22 +164,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  avatarText: {
-    fontSize: 20,
-    fontWeight: '700',
-    color: colors.primary,
-  },
   greetingTextCol: {
     gap: 2,
-  },
-  greetingSmall: {
-    fontSize: 12,
-    color: colors.onSurfaceVariant,
-  },
-  greetingName: {
-    fontSize: 20,
-    fontWeight: '600',
-    color: colors.onSurface,
   },
   bellButton: {
     width: 44,
@@ -192,15 +194,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     gap: 12,
   },
-  searchPlaceholder: {
-    fontSize: 15,
-    color: colors.textTertiary,
-  },
   // Section Title
   sectionTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: colors.onSurface,
     letterSpacing: -0.2,
   },
   // Lesson Types
@@ -219,11 +214,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     gap: 8,
   },
-  lessonTypeLabel: {
-    fontSize: 11,
-    fontWeight: '600',
-    color: colors.onSurface,
-  },
   // Learning Modes
   modesRow: {
     flexDirection: 'row',
@@ -239,19 +229,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     gap: 6,
   },
-  modePillText: {
-    fontSize: 13,
-    fontWeight: '600',
-    color: colors.onPrimary,
-  },
   // Empty
   empty: {
     alignItems: 'center',
     paddingVertical: 48,
     gap: 12,
-  },
-  emptyText: {
-    fontSize: 14,
-    color: colors.onSurfaceVariant,
   },
 });

@@ -8,8 +8,8 @@ import type BottomSheet from '@gorhom/bottom-sheet';
 import { router } from 'expo-router';
 import { useCallback, useRef } from 'react';
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
-import { Text } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { Typography } from '@/src/components/Typography';
 
 type IconName = React.ComponentProps<typeof MaterialCommunityIcons>['name'];
 
@@ -88,32 +88,54 @@ export default function ProfileScreen() {
       <ScrollView contentContainerStyle={styles.scrollContent}>
         {/* Header */}
         <View style={styles.header}>
-          <Text style={styles.headerTitle}>{t('tabs.profile')}</Text>
+          <Typography size={26} weight="600">
+            {t('tabs.profile')}
+          </Typography>
           <MaterialCommunityIcons name="cog-outline" size={22} color={colors.onSurfaceVariant} />
         </View>
 
         {/* Avatar Section */}
         <View style={styles.avatarSection}>
           <View style={styles.avatarCircle}>
-            <Text style={styles.avatarInitial}>{initial}</Text>
+            <Typography size={36} weight="700" color={colors.onPrimary}>
+              {initial}
+            </Typography>
           </View>
-          <Text style={styles.userName}>{displayName}</Text>
-          {displayContact ? <Text style={styles.userContact}>{displayContact}</Text> : null}
+          <Typography size={20} weight="600" style={styles.userName}>
+            {displayName}
+          </Typography>
+          {displayContact ? (
+            <Typography size={14} color={colors.onSurfaceVariant} style={styles.userContact}>
+              {displayContact}
+            </Typography>
+          ) : null}
         </View>
 
         {/* Stats Row */}
         <View style={styles.statsRow}>
           <View style={styles.statCol}>
-            <Text style={styles.statValue}>42</Text>
-            <Text style={styles.statLabel}>{t('profile.dayStreak')}</Text>
+            <Typography size={28} weight="700">
+              42
+            </Typography>
+            <Typography size={12} color={colors.onSurfaceVariant}>
+              {t('profile.dayStreak')}
+            </Typography>
           </View>
           <View style={styles.statCol}>
-            <Text style={styles.statValue}>156</Text>
-            <Text style={styles.statLabel}>{t('profile.lessonsCount')}</Text>
+            <Typography size={28} weight="700">
+              156
+            </Typography>
+            <Typography size={12} color={colors.onSurfaceVariant}>
+              {t('profile.lessonsCount')}
+            </Typography>
           </View>
           <View style={styles.statCol}>
-            <Text style={styles.statValue}>820</Text>
-            <Text style={styles.statLabel}>{t('profile.wordsCount')}</Text>
+            <Typography size={28} weight="700">
+              820
+            </Typography>
+            <Typography size={12} color={colors.onSurfaceVariant}>
+              {t('profile.wordsCount')}
+            </Typography>
           </View>
         </View>
 
@@ -125,8 +147,12 @@ export default function ProfileScreen() {
                 <MaterialCommunityIcons name={item.icon} size={20} color={colors.primary} />
               </View>
               <View style={styles.settingsTextCol}>
-                <Text style={styles.settingsTitle}>{item.title}</Text>
-                <Text style={styles.settingsDesc}>{item.desc}</Text>
+                <Typography size={15} weight="600">
+                  {item.title}
+                </Typography>
+                <Typography size={12} color={colors.onSurfaceVariant}>
+                  {item.desc}
+                </Typography>
               </View>
               <MaterialCommunityIcons name="chevron-right" size={18} color={colors.textTertiary} />
             </Pressable>
@@ -135,15 +161,19 @@ export default function ProfileScreen() {
 
         {/* Logout Button */}
         <Pressable style={styles.logoutButton} onPress={handleLogout}>
-          <Text style={styles.logoutText}>{t('auth.logout')}</Text>
+          <Typography size={15} weight="600" color={colors.error}>
+            {t('auth.logout')}
+          </Typography>
         </Pressable>
       </ScrollView>
 
       {/* Language Bottom Sheet */}
       <SettingsBottomSheet ref={languageSheetRef} title={t('profile.languageTitle')}>
-        <Text style={styles.sheetDesc}>{t('profile.languageDesc')}</Text>
+        <Typography size={14} color={colors.onSurfaceVariant} style={styles.sheetDesc}>
+          {t('profile.languageDesc')}
+        </Typography>
         <SelectRow
-          icon={<Text style={styles.flagText}>🇻🇳</Text>}
+          icon={<Typography size={20}>🇻🇳</Typography>}
           title={t('profile.vietnamese')}
           selected={locale === 'vi'}
           onPress={() => {
@@ -152,7 +182,7 @@ export default function ProfileScreen() {
           }}
         />
         <SelectRow
-          icon={<Text style={styles.flagText}>🇬🇧</Text>}
+          icon={<Typography size={20}>🇬🇧</Typography>}
           title={t('profile.english')}
           selected={locale === 'en'}
           onPress={() => {
@@ -210,11 +240,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     paddingTop: 12,
   },
-  headerTitle: {
-    fontSize: 26,
-    fontWeight: '600',
-    color: colors.onSurface,
-  },
   // Avatar Section
   avatarSection: {
     alignItems: 'center',
@@ -228,20 +253,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  avatarInitial: {
-    fontSize: 36,
-    fontWeight: '700',
-    color: colors.onPrimary,
-  },
   userName: {
-    fontSize: 20,
-    fontWeight: '600',
-    color: colors.onSurface,
     marginTop: 16,
   },
   userContact: {
-    fontSize: 14,
-    color: colors.onSurfaceVariant,
     marginTop: 4,
   },
   // Stats Row
@@ -253,15 +268,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     gap: 4,
-  },
-  statValue: {
-    fontSize: 28,
-    fontWeight: '700',
-    color: colors.onSurface,
-  },
-  statLabel: {
-    fontSize: 12,
-    color: colors.onSurfaceVariant,
   },
   // Settings Menu
   settingsMenu: {
@@ -291,15 +297,6 @@ const styles = StyleSheet.create({
     marginLeft: 14,
     gap: 2,
   },
-  settingsTitle: {
-    fontSize: 15,
-    fontWeight: '600',
-    color: colors.onSurface,
-  },
-  settingsDesc: {
-    fontSize: 12,
-    color: colors.onSurfaceVariant,
-  },
   // Logout
   logoutButton: {
     marginHorizontal: 24,
@@ -311,19 +308,9 @@ const styles = StyleSheet.create({
     borderColor: colors.outline,
     alignItems: 'center',
   },
-  logoutText: {
-    fontSize: 15,
-    fontWeight: '600',
-    color: colors.error,
-  },
   // Bottom sheet extras
   sheetDesc: {
-    fontSize: 14,
-    color: colors.onSurfaceVariant,
     textAlign: 'center',
     marginBottom: 4,
-  },
-  flagText: {
-    fontSize: 20,
   },
 });

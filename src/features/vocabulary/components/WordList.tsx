@@ -1,5 +1,6 @@
 import { View, StyleSheet } from 'react-native';
-import { Text, IconButton, useTheme } from 'react-native-paper';
+import { IconButton, useTheme } from 'react-native-paper';
+import { Typography } from '@/src/components/Typography';
 import { useI18n } from '@/src/i18n';
 import { useEffect } from 'react';
 import { useVocabulary } from '../hooks/useVocabulary';
@@ -33,9 +34,9 @@ export function WordList() {
     return (
       <View style={styles.emptyContainer}>
         <MaterialCommunityIcons name="book-open-variant" size={48} color={theme.colors.outline} />
-        <Text variant="bodyMedium" style={{ color: theme.colors.onSurfaceVariant, marginTop: 12 }}>
+        <Typography size={14} color={theme.colors.onSurfaceVariant} style={{ marginTop: 12 }}>
           {t('learn.noVocabulary')}
-        </Text>
+        </Typography>
       </View>
     );
   }
@@ -44,9 +45,9 @@ export function WordList() {
     return (
       <View style={styles.emptyContainer}>
         <MaterialCommunityIcons name="check-circle" size={64} color={theme.colors.primary} />
-        <Text variant="headlineSmall" style={{ color: theme.colors.primary, marginTop: 16 }}>
+        <Typography size={24} color={theme.colors.primary} style={{ marginTop: 16 }}>
           {t('learn.finishLesson')}
-        </Text>
+        </Typography>
       </View>
     );
   }
@@ -82,9 +83,9 @@ export function WordList() {
           onPress={prevWord}
           disabled={currentWordIndex === 0}
         />
-        <Text variant="labelMedium" style={{ color: theme.colors.onSurfaceVariant }}>
+        <Typography size={12} color={theme.colors.onSurfaceVariant}>
           {currentWordIndex + 1} / {words.length}
-        </Text>
+        </Typography>
         <IconButton icon="chevron-right" size={32} onPress={nextWord} />
       </View>
     </View>

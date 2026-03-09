@@ -8,7 +8,8 @@ import {
   TextInput,
   Pressable,
 } from 'react-native';
-import { Text, HelperText } from 'react-native-paper';
+import { HelperText } from 'react-native-paper';
+import { Typography } from '@/src/components/Typography';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -90,15 +91,21 @@ export default function CreatePasswordScreen() {
             <View style={styles.iconCircle}>
               <MaterialCommunityIcons name="lock-plus" size={64} color={colors.primary} />
             </View>
-            <Text style={styles.title}>{t('auth.createPasswordTitle')}</Text>
-            <Text style={styles.subtitle}>{t('auth.createPasswordSubtitle')}</Text>
+            <Typography size={28} weight="700" style={styles.title}>
+              {t('auth.createPasswordTitle')}
+            </Typography>
+            <Typography size={15} color={colors.onSurfaceVariant}>
+              {t('auth.createPasswordSubtitle')}
+            </Typography>
           </View>
 
           {/* Form Area */}
           <View style={styles.form}>
             {/* Password */}
             <View style={styles.fieldGroup}>
-              <Text style={styles.label}>{t('auth.password')}</Text>
+              <Typography size={14} weight="600" style={styles.label}>
+                {t('auth.password')}
+              </Typography>
               <Controller
                 control={control}
                 name="password"
@@ -137,7 +144,9 @@ export default function CreatePasswordScreen() {
 
             {/* Confirm Password */}
             <View style={styles.fieldGroup}>
-              <Text style={styles.label}>{t('auth.confirmPassword')}</Text>
+              <Typography size={14} weight="600" style={styles.label}>
+                {t('auth.confirmPassword')}
+              </Typography>
               <Controller
                 control={control}
                 name="confirmPassword"
@@ -190,7 +199,9 @@ export default function CreatePasswordScreen() {
               onPress={handleSubmit(onSubmit)}
               disabled={savePassword.isPending}
             >
-              <Text style={styles.primaryButtonText}>{t('auth.createAccount')}</Text>
+              <Typography weight="600" color={colors.onPrimary}>
+                {t('auth.createAccount')}
+              </Typography>
             </Pressable>
           </View>
         </ScrollView>
@@ -238,14 +249,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   title: {
-    fontSize: 28,
-    fontWeight: '700',
     letterSpacing: -0.5,
-    color: colors.onSurface,
-  },
-  subtitle: {
-    fontSize: 15,
-    color: colors.onSurfaceVariant,
   },
   form: {
     paddingHorizontal: 24,
@@ -255,9 +259,6 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   label: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: colors.onSurface,
     marginBottom: 2,
   },
   inputRow: {
@@ -301,10 +302,5 @@ const styles = StyleSheet.create({
   },
   primaryButtonDisabled: {
     opacity: 0.6,
-  },
-  primaryButtonText: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: colors.onPrimary,
   },
 });

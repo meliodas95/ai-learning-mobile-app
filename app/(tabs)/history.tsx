@@ -1,5 +1,4 @@
 import { View, StyleSheet, FlatList, Pressable } from 'react-native';
-import { Text } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { useI18n } from '@/src/i18n';
@@ -9,6 +8,7 @@ import { formatRelativeTime } from '@/src/utils/formatters';
 import type { HistoryParagraphEntity } from '@/src/api/types';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { colors } from '@/src/theme/colors';
+import { Typography } from '@/src/components/Typography';
 
 type IconName = React.ComponentProps<typeof MaterialCommunityIcons>['name'];
 
@@ -55,16 +55,20 @@ export default function HistoryScreen() {
           <MaterialCommunityIcons name={typeInfo.icon} size={18} color={colors.primary} />
         </View>
         <View style={styles.activityTextCol}>
-          <Text style={styles.activityTitle} numberOfLines={1}>
+          <Typography size={15} weight="600" numberOfLines={1}>
             {title}
-          </Text>
-          <Text style={styles.activitySubtitle} numberOfLines={1}>
+          </Typography>
+          <Typography size={12} color={colors.onSurfaceVariant} numberOfLines={1}>
             {subtitle}
-          </Text>
+          </Typography>
         </View>
         <View style={styles.activityScoreCol}>
-          <Text style={[styles.activityScore, { color: getScoreColor(score) }]}>{score}%</Text>
-          <Text style={styles.activityScoreLabel}>{t('history.score')}</Text>
+          <Typography size={18} weight="700" color={getScoreColor(score)}>
+            {score}%
+          </Typography>
+          <Typography size={10} color={colors.onSurfaceVariant}>
+            {t('history.score')}
+          </Typography>
         </View>
       </Pressable>
     );
@@ -74,7 +78,9 @@ export default function HistoryScreen() {
     <SafeAreaView style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>{t('history.title')}</Text>
+        <Typography size={26} weight="600" style={styles.headerTitle}>
+          {t('history.title')}
+        </Typography>
         <Pressable style={styles.bellButton}>
           <MaterialCommunityIcons name="bell-outline" size={20} color={colors.onSurface} />
         </Pressable>
@@ -91,10 +97,14 @@ export default function HistoryScreen() {
             <View style={styles.weeklyCard}>
               <View style={styles.weeklyTopRow}>
                 <View style={styles.weeklyPill}>
-                  <Text style={styles.weeklyPillText}>{t('history.thisWeek')}</Text>
+                  <Typography size={12} weight="600" color={colors.primary}>
+                    {t('history.thisWeek')}
+                  </Typography>
                 </View>
                 <View style={styles.weeklyBadge}>
-                  <Text style={styles.weeklyBadgeText}>+12% vs last week</Text>
+                  <Typography size={12} weight="500" color={colors.primary}>
+                    +12% vs last week
+                  </Typography>
                 </View>
               </View>
               <View style={styles.statsRow}>
@@ -102,8 +112,12 @@ export default function HistoryScreen() {
                   <View style={styles.statIconCircle}>
                     <MaterialCommunityIcons name="clock-outline" size={24} color={colors.primary} />
                   </View>
-                  <Text style={styles.statValue}>4.5h</Text>
-                  <Text style={styles.statLabel}>Time Studied</Text>
+                  <Typography size={22} weight="700">
+                    4.5h
+                  </Typography>
+                  <Typography size={12} color={colors.onSurfaceVariant}>
+                    Time Studied
+                  </Typography>
                 </View>
                 <View style={styles.statCol}>
                   <View style={styles.statIconCircle}>
@@ -113,8 +127,12 @@ export default function HistoryScreen() {
                       color={colors.primary}
                     />
                   </View>
-                  <Text style={styles.statValue}>12</Text>
-                  <Text style={styles.statLabel}>Lessons Done</Text>
+                  <Typography size={22} weight="700">
+                    12
+                  </Typography>
+                  <Typography size={12} color={colors.onSurfaceVariant}>
+                    Lessons Done
+                  </Typography>
                 </View>
                 <View style={styles.statCol}>
                   <View style={styles.statIconCircle}>
@@ -124,29 +142,41 @@ export default function HistoryScreen() {
                       color={colors.primary}
                     />
                   </View>
-                  <Text style={styles.statValue}>87</Text>
-                  <Text style={styles.statLabel}>Words Learned</Text>
+                  <Typography size={22} weight="700">
+                    87
+                  </Typography>
+                  <Typography size={12} color={colors.onSurfaceVariant}>
+                    Words Learned
+                  </Typography>
                 </View>
               </View>
             </View>
 
             {/* Recent Activity Header */}
             <View style={styles.recentHeader}>
-              <Text style={styles.recentTitle}>{t('history.recentActivity')}</Text>
+              <Typography size={18} weight="600">
+                {t('history.recentActivity')}
+              </Typography>
               <View style={styles.allTypesPill}>
-                <Text style={styles.allTypesText}>{t('history.allTypes')}</Text>
+                <Typography size={12} color={colors.textTertiary}>
+                  {t('history.allTypes')}
+                </Typography>
               </View>
             </View>
 
             {/* Date separator */}
-            <Text style={styles.dateSeparator}>Today, Mar 5</Text>
+            <Typography size={12} color={colors.onSurfaceVariant} style={styles.dateSeparator}>
+              Today, Mar 5
+            </Typography>
           </>
         }
         ListEmptyComponent={
           !isLoading ? (
             <View style={styles.empty}>
               <MaterialCommunityIcons name="history" size={48} color={colors.outline} />
-              <Text style={styles.emptyText}>{t('common.noResults')}</Text>
+              <Typography size={14} color={colors.onSurfaceVariant} style={styles.emptyText}>
+                {t('common.noResults')}
+              </Typography>
             </View>
           ) : null
         }
@@ -169,10 +199,7 @@ const styles = StyleSheet.create({
     paddingBottom: 8,
   },
   headerTitle: {
-    fontSize: 26,
-    fontWeight: '600',
     letterSpacing: -0.5,
-    color: colors.onSurface,
   },
   bellButton: {
     width: 44,
@@ -220,21 +247,11 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
     paddingHorizontal: 12,
   },
-  weeklyPillText: {
-    color: colors.primary,
-    fontWeight: '600',
-    fontSize: 12,
-  },
   weeklyBadge: {
     backgroundColor: colors.primaryLight,
     borderRadius: 100,
     paddingVertical: 4,
     paddingHorizontal: 12,
-  },
-  weeklyBadgeText: {
-    color: colors.primary,
-    fontSize: 12,
-    fontWeight: '500',
   },
   statsRow: {
     flexDirection: 'row',
@@ -252,15 +269,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  statValue: {
-    fontSize: 22,
-    fontWeight: '700',
-    color: colors.onSurface,
-  },
-  statLabel: {
-    fontSize: 12,
-    color: colors.onSurfaceVariant,
-  },
   // Recent Activity
   recentHeader: {
     flexDirection: 'row',
@@ -268,22 +276,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 12,
   },
-  recentTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: colors.onSurface,
-  },
   allTypesPill: {
     paddingVertical: 4,
     paddingHorizontal: 12,
   },
-  allTypesText: {
-    fontSize: 12,
-    color: colors.textTertiary,
-  },
   dateSeparator: {
-    fontSize: 12,
-    color: colors.onSurfaceVariant,
     marginBottom: 0,
   },
   // Activity Items
@@ -314,34 +311,15 @@ const styles = StyleSheet.create({
     marginLeft: 12,
     gap: 2,
   },
-  activityTitle: {
-    fontSize: 15,
-    fontWeight: '600',
-    color: colors.onSurface,
-  },
-  activitySubtitle: {
-    fontSize: 12,
-    color: colors.onSurfaceVariant,
-  },
   activityScoreCol: {
     alignItems: 'center',
     marginLeft: 8,
-  },
-  activityScore: {
-    fontSize: 18,
-    fontWeight: '700',
-  },
-  activityScoreLabel: {
-    fontSize: 10,
-    color: colors.onSurfaceVariant,
   },
   empty: {
     alignItems: 'center',
     paddingVertical: 48,
   },
   emptyText: {
-    color: colors.onSurfaceVariant,
     marginTop: 12,
-    fontSize: 14,
   },
 });

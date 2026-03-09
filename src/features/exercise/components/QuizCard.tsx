@@ -1,5 +1,6 @@
 import { View, StyleSheet, Pressable } from 'react-native';
-import { Text, Card, Button, useTheme } from 'react-native-paper';
+import { Card, Button, useTheme } from 'react-native-paper';
+import { Typography } from '@/src/components/Typography';
 import { useI18n } from '@/src/i18n';
 import type { ExerciseQuestion, ExerciseAnswer } from '@/src/api/types';
 import { colors } from '@/src/theme/colors';
@@ -45,19 +46,14 @@ export function QuizCard({
   return (
     <View style={styles.container}>
       {/* Progress */}
-      <Text
-        variant="labelMedium"
-        style={[styles.progress, { color: theme.colors.onSurfaceVariant }]}
-      >
+      <Typography size={12} color={theme.colors.onSurfaceVariant} style={styles.progress}>
         {t('learn.questionOf', { current: questionIndex + 1, total: totalQuestions })}
-      </Text>
+      </Typography>
 
       {/* Question */}
       <Card style={[styles.questionCard, { backgroundColor: theme.colors.surfaceVariant }]}>
         <Card.Content>
-          <Text variant="titleMedium" style={{ color: theme.colors.onSurface }}>
-            {question.content}
-          </Text>
+          <Typography color={theme.colors.onSurface}>{question.content}</Typography>
         </Card.Content>
       </Card>
 
@@ -76,9 +72,9 @@ export function QuizCard({
                   },
                 ]}
               >
-                <Text variant="bodyMedium" style={{ color: theme.colors.onSurface, flex: 1 }}>
+                <Typography size={14} color={theme.colors.onSurface} style={{ flex: 1 }}>
                   {answer.content}
-                </Text>
+                </Typography>
                 {isAnswered && answer.is_correct && (
                   <MaterialCommunityIcons name="check-circle" size={20} color="#43A047" />
                 )}
@@ -94,12 +90,13 @@ export function QuizCard({
       {/* Feedback */}
       {isAnswered && (
         <View style={styles.feedback}>
-          <Text
-            variant="titleSmall"
-            style={{ color: selectedAnswer?.is_correct ? colors.success : colors.error }}
+          <Typography
+            size={14}
+            weight="500"
+            color={selectedAnswer?.is_correct ? colors.success : colors.error}
           >
             {selectedAnswer?.is_correct ? t('learn.correct') : t('learn.incorrect')}
-          </Text>
+          </Typography>
           <Button mode="contained" onPress={onNext} style={styles.nextButton}>
             {t('common.next')}
           </Button>

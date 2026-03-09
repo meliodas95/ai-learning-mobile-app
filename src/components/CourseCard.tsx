@@ -1,5 +1,5 @@
 import { Pressable, StyleSheet, View } from 'react-native';
-import { Text } from 'react-native-paper';
+import { Typography } from '@/src/components/Typography';
 import { colors } from '@/src/theme/colors';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 
@@ -18,9 +18,9 @@ export function CourseCard({ title, subtitle, progress, type, onPress }: CourseC
         <MaterialCommunityIcons name="image-outline" size={32} color={colors.primary} />
       </View>
       <View style={styles.content}>
-        <Text style={styles.title} numberOfLines={1}>
+        <Typography size={18} weight="600" color={colors.onSurface} numberOfLines={1}>
           {title}
-        </Text>
+        </Typography>
         {type && (
           <View style={styles.badge}>
             <MaterialCommunityIcons
@@ -28,20 +28,24 @@ export function CourseCard({ title, subtitle, progress, type, onPress }: CourseC
               size={12}
               color={colors.primary}
             />
-            <Text style={styles.badgeText}>{type}</Text>
+            <Typography size={11} weight="600" color={colors.primary}>
+              {type}
+            </Typography>
           </View>
         )}
         {subtitle && (
-          <Text style={styles.subtitle} numberOfLines={1}>
+          <Typography size={13} color={colors.onSurfaceVariant} numberOfLines={1}>
             {subtitle}
-          </Text>
+          </Typography>
         )}
         {progress !== undefined && (
           <View style={styles.progressContainer}>
             <View style={styles.progressBarBg}>
               <View style={[styles.progressBarFill, { width: `${Math.min(progress, 100)}%` }]} />
             </View>
-            <Text style={styles.progressText}>{progress}% complete</Text>
+            <Typography size={12} weight="500" color={colors.primary}>
+              {progress}% complete
+            </Typography>
           </View>
         )}
       </View>
@@ -69,7 +73,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   content: { padding: 16, gap: 8 },
-  title: { fontSize: 18, fontWeight: '600', color: colors.onSurface },
   badge: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -80,8 +83,6 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     alignSelf: 'flex-start',
   },
-  badgeText: { fontSize: 11, fontWeight: '600', color: colors.primary },
-  subtitle: { fontSize: 13, color: colors.onSurfaceVariant },
   progressContainer: { gap: 6 },
   progressBarBg: {
     height: 6,
@@ -90,5 +91,4 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   progressBarFill: { height: '100%', backgroundColor: colors.primary, borderRadius: 100 },
-  progressText: { fontSize: 12, fontWeight: '500', color: colors.primary },
 });

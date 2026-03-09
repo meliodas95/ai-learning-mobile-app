@@ -1,5 +1,5 @@
 import { Pressable, StyleSheet, View } from 'react-native';
-import { Text } from 'react-native-paper';
+import { Typography } from '@/src/components/Typography';
 import { colors } from '@/src/theme/colors';
 
 interface Segment {
@@ -27,15 +27,13 @@ export function SegmentedControl({ segments, activeValue, onValueChange }: Segme
             ]}
             onPress={() => onValueChange(segment.value)}
           >
-            <Text
-              style={[
-                styles.label,
-                { color: isActive ? colors.onSurface : colors.textTertiary },
-                isActive && styles.activeLabel,
-              ]}
+            <Typography
+              size={13}
+              weight={isActive ? '600' : '500'}
+              color={isActive ? colors.onSurface : colors.textTertiary}
             >
               {segment.label}
-            </Text>
+            </Typography>
           </Pressable>
         );
       })}
@@ -63,12 +61,5 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.03,
     shadowRadius: 2,
     elevation: 1,
-  },
-  label: {
-    fontSize: 13,
-    fontWeight: '500',
-  },
-  activeLabel: {
-    fontWeight: '600',
   },
 });

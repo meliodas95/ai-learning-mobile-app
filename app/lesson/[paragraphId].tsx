@@ -1,6 +1,7 @@
 import React, { useEffect, Suspense } from 'react';
 import { View, StyleSheet, Pressable } from 'react-native';
-import { Text, ActivityIndicator } from 'react-native-paper';
+import { ActivityIndicator } from 'react-native-paper';
+import { Typography } from '@/src/components/Typography';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router, useLocalSearchParams } from 'expo-router';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
@@ -88,7 +89,9 @@ export default function LessonScreen() {
       <SafeAreaView style={styles.container}>
         <View style={styles.centered}>
           <ActivityIndicator size="large" color={colors.primary} />
-          <Text style={styles.loadingText}>{t('common.loading')}</Text>
+          <Typography size={14} color={colors.onSurfaceVariant} style={styles.loadingText}>
+            {t('common.loading')}
+          </Typography>
         </View>
       </SafeAreaView>
     );
@@ -98,10 +101,14 @@ export default function LessonScreen() {
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.centered}>
-          <Text style={styles.errorText}>{t('common.error')}</Text>
+          <Typography color={colors.error} weight="500">
+            {t('common.error')}
+          </Typography>
           <Pressable onPress={() => router.back()} hitSlop={8} style={styles.backButton}>
             <MaterialCommunityIcons name="chevron-left" size={20} color={colors.primary} />
-            <Text style={styles.backButtonText}>{t('common.back')}</Text>
+            <Typography size={14} color={colors.primary} weight="500">
+              {t('common.back')}
+            </Typography>
           </Pressable>
         </View>
       </SafeAreaView>
@@ -132,12 +139,14 @@ export default function LessonScreen() {
         <Pressable onPress={() => router.back()} hitSlop={8}>
           <MaterialCommunityIcons name="chevron-left" size={24} color={colors.onSurface} />
         </Pressable>
-        <Text style={styles.title} numberOfLines={1}>
+        <Typography size={18} weight="600" style={styles.title} numberOfLines={1}>
           {paragraph.title}
-        </Text>
+        </Typography>
         {typeName ? (
           <View style={styles.typeBadge}>
-            <Text style={styles.typeBadgeText}>{typeName}</Text>
+            <Typography size={11} weight="600" color={colors.primary}>
+              {typeName}
+            </Typography>
           </View>
         ) : null}
         <Pressable hitSlop={8}>
@@ -168,10 +177,7 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   title: {
-    fontSize: 18,
-    fontWeight: '600',
     flex: 1,
-    color: colors.onSurface,
   },
   typeBadge: {
     backgroundColor: colors.primaryLight,
@@ -179,15 +185,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 4,
   },
-  typeBadgeText: {
-    fontSize: 11,
-    fontWeight: '600',
-    color: colors.primary,
-  },
   content: { flex: 1 },
   centered: { flex: 1, justifyContent: 'center', alignItems: 'center', gap: 16 },
-  loadingText: { fontSize: 14, color: colors.onSurfaceVariant, marginTop: 16 },
-  errorText: { fontSize: 16, color: colors.error, fontWeight: '500' },
+  loadingText: { marginTop: 16 },
   backButton: { flexDirection: 'row', alignItems: 'center', gap: 4 },
-  backButtonText: { fontSize: 14, color: colors.primary, fontWeight: '500' },
 });

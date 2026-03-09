@@ -1,7 +1,8 @@
 import { useEffect, useRef } from 'react';
 import { View, StyleSheet, Animated, Image } from 'react-native';
-import { Text } from 'react-native-paper';
+import { Typography } from '@/src/components/Typography';
 import { colors } from '@/src/theme/colors';
+import { images } from '@/assets';
 
 interface LoadingScreenProps {
   message?: string;
@@ -40,7 +41,7 @@ export function LoadingScreen({ message }: LoadingScreenProps) {
     <View style={styles.container}>
       <Animated.View style={[styles.content, { opacity: fadeAnim }]}>
         {/* Logo */}
-        <Image source={require('@/assets/logo.png')} style={styles.logo} resizeMode="contain" />
+        <Image source={images.logo} style={styles.logo} resizeMode="contain" />
 
         {/* Loading indicator */}
         <Animated.View style={[styles.dotsRow, { opacity: pulseAnim }]}>
@@ -50,11 +51,17 @@ export function LoadingScreen({ message }: LoadingScreenProps) {
         </Animated.View>
 
         {/* Message */}
-        {message && <Text style={styles.message}>{message}</Text>}
+        {message && (
+          <Typography size={14} color={colors.onSurfaceVariant}>
+            {message}
+          </Typography>
+        )}
       </Animated.View>
 
       {/* Footer */}
-      <Text style={styles.footer}>LangEnter</Text>
+      <Typography size={13} color={colors.textTertiary} style={styles.footer}>
+        LangEnter
+      </Typography>
     </View>
   );
 }
@@ -87,15 +94,9 @@ const styles = StyleSheet.create({
   dotMiddle: {
     backgroundColor: '#F0A030',
   },
-  message: {
-    fontSize: 14,
-    color: colors.onSurfaceVariant,
-  },
   footer: {
     position: 'absolute',
     bottom: 48,
-    fontSize: 13,
-    color: colors.textTertiary,
     letterSpacing: 0.5,
   },
 });

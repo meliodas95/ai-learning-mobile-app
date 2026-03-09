@@ -1,5 +1,6 @@
 import { View, StyleSheet } from 'react-native';
-import { Text, useTheme } from 'react-native-paper';
+import { useTheme } from 'react-native-paper';
+import { Typography } from '@/src/components/Typography';
 import { useI18n } from '@/src/i18n';
 import { useSettingsStore } from '@/src/store/settingsStore';
 import type { SentenceEntity } from '@/src/api/types';
@@ -23,12 +24,9 @@ export function SentenceHighlight({
   if (!sentence) {
     return (
       <View style={[styles.container, { backgroundColor: theme.colors.surfaceVariant }]}>
-        <Text
-          variant="bodyMedium"
-          style={{ color: theme.colors.onSurfaceVariant, textAlign: 'center' }}
-        >
+        <Typography size={14} color={theme.colors.onSurfaceVariant} style={{ textAlign: 'center' }}>
           ...
-        </Text>
+        </Typography>
       </View>
     );
   }
@@ -39,34 +37,28 @@ export function SentenceHighlight({
       {sentence.character_name && (
         <View style={styles.characterRow}>
           <MaterialCommunityIcons name="account" size={16} color={theme.colors.primary} />
-          <Text variant="labelMedium" style={{ color: theme.colors.primary, marginLeft: 4 }}>
+          <Typography size={12} color={theme.colors.primary} style={{ marginLeft: 4 }}>
             {sentence.character_name}
-          </Text>
+          </Typography>
         </View>
       )}
 
       {/* Sentence content */}
-      <Text variant="bodyLarge" style={[styles.content, { color: theme.colors.onSurface }]}>
+      <Typography size={18} color={theme.colors.onSurface} style={styles.content}>
         {sentence.content}
-      </Text>
+      </Typography>
 
       {/* Translation */}
       {showTranslation && sentence.translation?.translate_google && (
-        <Text
-          variant="bodySmall"
-          style={[styles.translation, { color: theme.colors.onSurfaceVariant }]}
-        >
+        <Typography size={12} color={theme.colors.onSurfaceVariant} style={styles.translation}>
           {sentence.translation.translate_google}
-        </Text>
+        </Typography>
       )}
 
       {/* Progress */}
-      <Text
-        variant="labelSmall"
-        style={[styles.progress, { color: theme.colors.onSurfaceVariant }]}
-      >
+      <Typography size={11} color={theme.colors.onSurfaceVariant} style={styles.progress}>
         {t('learn.sentenceOf', { current: sentenceIndex + 1, total: totalSentences })}
-      </Text>
+      </Typography>
     </View>
   );
 }
@@ -74,7 +66,7 @@ export function SentenceHighlight({
 const styles = StyleSheet.create({
   container: { padding: 16, borderRadius: 12, margin: 16 },
   characterRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 8 },
-  content: { fontSize: 18, lineHeight: 28 },
+  content: { lineHeight: 28 },
   translation: { marginTop: 8, fontStyle: 'italic' },
   progress: { marginTop: 12, textAlign: 'center' },
 });

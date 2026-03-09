@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { View, StyleSheet } from 'react-native';
-import { Text, useTheme } from 'react-native-paper';
+import { useTheme } from 'react-native-paper';
+import { Typography } from '@/src/components/Typography';
 
 interface CountdownOverlayProps {
   seconds?: number;
@@ -27,9 +28,9 @@ export function CountdownOverlay({ seconds = 3, onComplete }: CountdownOverlayPr
   return (
     <View style={styles.container}>
       <View style={[styles.circle, { backgroundColor: theme.colors.primary }]}>
-        <Text variant="displayLarge" style={styles.number}>
+        <Typography size={57} weight="700" color="#FFF">
           {count}
-        </Text>
+        </Typography>
       </View>
     </View>
   );
@@ -48,5 +49,4 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  number: { color: '#FFF', fontWeight: '700' },
 });

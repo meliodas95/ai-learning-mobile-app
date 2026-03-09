@@ -1,7 +1,7 @@
 import { useCallback, forwardRef } from 'react';
 import { View, StyleSheet, Pressable } from 'react-native';
-import { Text } from 'react-native-paper';
 import BottomSheet, { BottomSheetBackdrop, BottomSheetView } from '@gorhom/bottom-sheet';
+import { Typography } from '@/src/components/Typography';
 import type { BottomSheetBackdropProps } from '@gorhom/bottom-sheet';
 import { colors } from '@/src/theme/colors';
 
@@ -30,7 +30,9 @@ export const SettingsBottomSheet = forwardRef<BottomSheet, SettingsBottomSheetPr
         backgroundStyle={styles.background}
       >
         <BottomSheetView style={styles.content}>
-          <Text style={styles.title}>{title}</Text>
+          <Typography size={20} weight="700" color={colors.onSurface} style={styles.title}>
+            {title}
+          </Typography>
           {children}
         </BottomSheetView>
       </BottomSheet>
@@ -53,8 +55,12 @@ export function ToggleRow({ icon, title, description, value, onToggle }: ToggleR
     <Pressable style={styles.row} onPress={() => onToggle(!value)}>
       <View style={styles.rowIconCircle}>{icon}</View>
       <View style={styles.rowTextCol}>
-        <Text style={styles.rowTitle}>{title}</Text>
-        <Text style={styles.rowDesc}>{description}</Text>
+        <Typography size={15} weight="600" color={colors.onSurface}>
+          {title}
+        </Typography>
+        <Typography size={12} color={colors.onSurfaceVariant}>
+          {description}
+        </Typography>
       </View>
       <View style={[styles.toggle, value && styles.toggleActive]}>
         <View style={[styles.toggleThumb, value && styles.toggleThumbActive]} />
@@ -74,12 +80,19 @@ export function SelectRow({ icon, title, selected, onPress }: SelectRowProps) {
   return (
     <Pressable style={[styles.row, selected && styles.rowSelected]} onPress={onPress}>
       <View style={[styles.rowIconCircle, selected && styles.rowIconCircleSelected]}>{icon}</View>
-      <Text style={[styles.rowTitle, styles.rowTitleFlex, selected && styles.rowTitleSelected]}>
+      <Typography
+        size={15}
+        weight="600"
+        color={selected ? colors.primary : colors.onSurface}
+        style={styles.rowTitleFlex}
+      >
         {title}
-      </Text>
+      </Typography>
       {selected && (
         <View style={styles.checkCircle}>
-          <Text style={styles.checkMark}>✓</Text>
+          <Typography size={14} weight="700" color={colors.onPrimary}>
+            ✓
+          </Typography>
         </View>
       )}
     </Pressable>
@@ -102,9 +115,6 @@ const styles = StyleSheet.create({
     gap: 16,
   },
   title: {
-    fontSize: 20,
-    fontWeight: '700',
-    color: colors.onSurface,
     textAlign: 'center',
     marginBottom: 4,
   },
@@ -138,21 +148,9 @@ const styles = StyleSheet.create({
     marginLeft: 12,
     gap: 2,
   },
-  rowTitle: {
-    fontSize: 15,
-    fontWeight: '600',
-    color: colors.onSurface,
-  },
   rowTitleFlex: {
     flex: 1,
     marginLeft: 12,
-  },
-  rowTitleSelected: {
-    color: colors.primary,
-  },
-  rowDesc: {
-    fontSize: 12,
-    color: colors.onSurfaceVariant,
   },
   // Toggle
   toggle: {
@@ -183,10 +181,5 @@ const styles = StyleSheet.create({
     backgroundColor: colors.primary,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  checkMark: {
-    fontSize: 14,
-    fontWeight: '700',
-    color: colors.onPrimary,
   },
 });

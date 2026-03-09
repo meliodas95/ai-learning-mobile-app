@@ -1,5 +1,5 @@
 import { Pressable, StyleSheet, View } from 'react-native';
-import { Text } from 'react-native-paper';
+import { Typography } from '@/src/components/Typography';
 import { colors } from '@/src/theme/colors';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 
@@ -15,17 +15,25 @@ export function LessonItem({ number, title, meta, type, onPress }: LessonItemPro
   return (
     <Pressable style={styles.container} onPress={onPress}>
       <View style={styles.numberCircle}>
-        <Text style={styles.numberText}>{String(number).padStart(2, '0')}</Text>
+        <Typography weight="700" color={colors.primary}>
+          {String(number).padStart(2, '0')}
+        </Typography>
       </View>
       <View style={styles.info}>
-        <Text style={styles.title} numberOfLines={1}>
+        <Typography size={15} weight="600" color={colors.onSurface} numberOfLines={1}>
           {title}
-        </Text>
-        {meta && <Text style={styles.meta}>{meta}</Text>}
+        </Typography>
+        {meta && (
+          <Typography size={12} color={colors.onSurfaceVariant}>
+            {meta}
+          </Typography>
+        )}
         {type && (
           <View style={styles.typeBadge}>
             <MaterialCommunityIcons name="image" size={10} color={colors.primary} />
-            <Text style={styles.typeText}>{type}</Text>
+            <Typography size={10} weight="600" color={colors.primary}>
+              {type}
+            </Typography>
           </View>
         )}
       </View>
@@ -59,10 +67,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  numberText: { fontSize: 16, fontWeight: '700', color: colors.primary },
   info: { flex: 1, gap: 2 },
-  title: { fontSize: 15, fontWeight: '600', color: colors.onSurface },
-  meta: { fontSize: 12, color: colors.onSurfaceVariant },
   typeBadge: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -74,5 +79,4 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
     marginTop: 2,
   },
-  typeText: { fontSize: 10, fontWeight: '600', color: colors.primary },
 });

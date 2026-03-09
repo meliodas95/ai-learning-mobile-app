@@ -1,5 +1,6 @@
 import { View, StyleSheet } from 'react-native';
-import { Text, Card, ActivityIndicator, useTheme } from 'react-native-paper';
+import { Card, ActivityIndicator, useTheme } from 'react-native-paper';
+import { Typography } from '@/src/components/Typography';
 import { useI18n } from '@/src/i18n';
 import type { DictionaryWord } from '@/src/api/types';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
@@ -18,9 +19,9 @@ export function WordCard({ word, definition, isLoading }: WordCardProps) {
     <Card style={[styles.card, { backgroundColor: theme.colors.surface }]}>
       <Card.Content>
         {/* Word */}
-        <Text variant="headlineMedium" style={[styles.word, { color: theme.colors.primary }]}>
+        <Typography size={28} weight="700" color={theme.colors.primary} style={styles.word}>
           {word}
-        </Text>
+        </Typography>
 
         {isLoading && <ActivityIndicator style={styles.loader} />}
 
@@ -34,64 +35,46 @@ export function WordCard({ word, definition, isLoading }: WordCardProps) {
                   size={18}
                   color={theme.colors.secondary}
                 />
-                <Text
-                  variant="bodyMedium"
-                  style={[styles.pronunciation, { color: theme.colors.secondary }]}
-                >
+                <Typography size={14} color={theme.colors.secondary} style={styles.pronunciation}>
                   /{definition.phonetic}/
-                </Text>
+                </Typography>
               </View>
             )}
 
             {/* Part of speech */}
             {definition.pos && (
-              <Text
-                variant="labelMedium"
-                style={[styles.pos, { color: theme.colors.onSurfaceVariant }]}
-              >
+              <Typography size={12} color={theme.colors.onSurfaceVariant} style={styles.pos}>
                 {definition.pos}
-              </Text>
+              </Typography>
             )}
 
             {/* Definition */}
             {definition.definition && (
               <View style={styles.definitionRow}>
-                <Text
-                  variant="bodyMedium"
-                  style={[styles.definitionText, { color: theme.colors.onSurface }]}
-                >
+                <Typography size={14} color={theme.colors.onSurface} style={styles.definitionText}>
                   {definition.definition}
-                </Text>
+                </Typography>
               </View>
             )}
             {definition.definition_vi && (
-              <Text
-                variant="bodySmall"
-                style={{ color: theme.colors.onSurfaceVariant, marginTop: 2 }}
-              >
+              <Typography size={12} color={theme.colors.onSurfaceVariant} style={{ marginTop: 2 }}>
                 {definition.definition_vi}
-              </Text>
+              </Typography>
             )}
 
             {/* Example */}
             {definition.example && (
-              <Text
-                variant="bodySmall"
-                style={[styles.example, { color: theme.colors.onSurfaceVariant }]}
-              >
+              <Typography size={12} color={theme.colors.onSurfaceVariant} style={styles.example}>
                 "{definition.example}"
-              </Text>
+              </Typography>
             )}
           </>
         )}
 
         {!definition && !isLoading && (
-          <Text
-            variant="bodyMedium"
-            style={{ color: theme.colors.onSurfaceVariant, marginTop: 12 }}
-          >
+          <Typography size={14} color={theme.colors.onSurfaceVariant} style={{ marginTop: 12 }}>
             {t('learn.noDefinition')}
-          </Text>
+          </Typography>
         )}
       </Card.Content>
     </Card>
@@ -100,7 +83,7 @@ export function WordCard({ word, definition, isLoading }: WordCardProps) {
 
 const styles = StyleSheet.create({
   card: { marginHorizontal: 16, borderRadius: 16 },
-  word: { fontWeight: '700', textAlign: 'center', marginBottom: 8 },
+  word: { textAlign: 'center', marginBottom: 8 },
   loader: { marginVertical: 24 },
   pronunciationRow: {
     flexDirection: 'row',

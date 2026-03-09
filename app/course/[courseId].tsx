@@ -1,6 +1,5 @@
 import { useCallback } from 'react';
 import { View, StyleSheet, FlatList, Pressable } from 'react-native';
-import { Text } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useI18n } from '@/src/i18n';
@@ -8,6 +7,7 @@ import { useDocuments } from '@/src/features/courses/hooks/useCourses';
 import type { DocumentEntity } from '@/src/api/types';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { colors } from '@/src/theme/colors';
+import { Typography } from '@/src/components/Typography';
 import { LessonItem } from '@/src/components/LessonItem';
 
 export default function CourseDetailScreen() {
@@ -41,45 +41,63 @@ export default function CourseDetailScreen() {
         <Pressable onPress={() => router.back()} hitSlop={8}>
           <MaterialCommunityIcons name="chevron-left" size={24} color={colors.onSurface} />
         </Pressable>
-        <Text style={styles.headerTitle} numberOfLines={1}>
+        <Typography size={22} weight="600" style={styles.headerTitle} numberOfLines={1}>
           {courseTitle}
-        </Text>
+        </Typography>
         <MaterialCommunityIcons name="bookmark-outline" size={22} color={colors.textTertiary} />
       </View>
 
       {/* Stats Row */}
       <View style={styles.statsRow}>
         <View style={styles.statCol}>
-          <Text style={styles.statValue}>{totalDocuments}</Text>
-          <Text style={styles.statLabel}>{t('home.lessonsDone')}</Text>
+          <Typography size={22} weight="700" style={styles.statValue}>
+            {totalDocuments}
+          </Typography>
+          <Typography size={12} color={colors.onSurfaceVariant} style={styles.statLabel}>
+            {t('home.lessonsDone')}
+          </Typography>
         </View>
         <View style={styles.statCol}>
-          <Text style={styles.statValue}>240+</Text>
-          <Text style={styles.statLabel}>{t('home.vocab')}</Text>
+          <Typography size={22} weight="700" style={styles.statValue}>
+            240+
+          </Typography>
+          <Typography size={12} color={colors.onSurfaceVariant} style={styles.statLabel}>
+            {t('home.vocab')}
+          </Typography>
         </View>
         <View style={styles.statCol}>
-          <Text style={styles.statValue}>3.5 hrs</Text>
-          <Text style={styles.statLabel}>{t('courses.estTime')}</Text>
+          <Typography size={22} weight="700" style={styles.statValue}>
+            3.5 hrs
+          </Typography>
+          <Typography size={12} color={colors.onSurfaceVariant} style={styles.statLabel}>
+            {t('courses.estTime')}
+          </Typography>
         </View>
       </View>
 
       {/* Progress Card */}
       <View style={styles.progressCard}>
         <View style={styles.progressTop}>
-          <Text style={styles.progressTitle}>{t('courses.yourProgress')}</Text>
-          <Text style={styles.progressPercent}>{progressPercent}%</Text>
+          <Typography size={15} weight="600">
+            {t('courses.yourProgress')}
+          </Typography>
+          <Typography size={15} weight="700" color={colors.primary}>
+            {progressPercent}%
+          </Typography>
         </View>
         <View style={styles.progressBarBg}>
           <View style={[styles.progressBarFill, { width: `${progressPercent}%` }]} />
         </View>
-        <Text style={styles.progressMeta}>
+        <Typography size={12} color={colors.onSurfaceVariant}>
           {t('courses.lessonsCompleted', { done: completedCount, total: totalDocuments })}
-        </Text>
+        </Typography>
       </View>
 
       {/* Lessons Section */}
       <View style={styles.lessonsSection}>
-        <Text style={styles.lessonsHeader}>{t('courses.paragraphs')}</Text>
+        <Typography size={18} weight="600" style={styles.lessonsHeader}>
+          {t('courses.paragraphs')}
+        </Typography>
         <FlatList
           data={documents}
           keyExtractor={(item) => String(item.id)}
@@ -95,7 +113,9 @@ export default function CourseDetailScreen() {
                   size={48}
                   color={colors.textTertiary}
                 />
-                <Text style={styles.emptyText}>{t('common.noResults')}</Text>
+                <Typography size={14} color={colors.onSurfaceVariant}>
+                  {t('common.noResults')}
+                </Typography>
               </View>
             ) : null
           }
@@ -115,11 +135,8 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
   },
   headerTitle: {
-    fontSize: 22,
-    fontWeight: '600',
     letterSpacing: -0.3,
     flex: 1,
-    color: colors.onSurface,
   },
   statsRow: {
     flexDirection: 'row',
@@ -129,12 +146,9 @@ const styles = StyleSheet.create({
   },
   statCol: { flex: 1, alignItems: 'center' },
   statValue: {
-    fontSize: 22,
-    fontWeight: '700',
     letterSpacing: -0.5,
-    color: colors.onSurface,
   },
-  statLabel: { fontSize: 12, color: colors.onSurfaceVariant, marginTop: 2 },
+  statLabel: { marginTop: 2 },
   progressCard: {
     backgroundColor: colors.surface,
     borderRadius: 16,
@@ -154,8 +168,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  progressTitle: { fontSize: 15, fontWeight: '600', color: colors.onSurface },
-  progressPercent: { fontSize: 15, fontWeight: '700', color: colors.primary },
   progressBarBg: {
     height: 8,
     backgroundColor: colors.surfaceVariant,
@@ -167,16 +179,11 @@ const styles = StyleSheet.create({
     backgroundColor: colors.primary,
     borderRadius: 100,
   },
-  progressMeta: { fontSize: 12, color: colors.onSurfaceVariant },
   lessonsSection: { paddingHorizontal: 24, flex: 1, paddingTop: 24 },
   lessonsHeader: {
-    fontSize: 18,
-    fontWeight: '600',
     letterSpacing: -0.2,
-    color: colors.onSurface,
     marginBottom: 12,
   },
   list: { paddingBottom: 32 },
   empty: { alignItems: 'center', paddingVertical: 48, gap: 12 },
-  emptyText: { fontSize: 14, color: colors.onSurfaceVariant },
 });

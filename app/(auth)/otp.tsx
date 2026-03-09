@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { View, StyleSheet } from 'react-native';
-import { Text, TextInput, Button, HelperText, useTheme } from 'react-native-paper';
+import { TextInput, Button, HelperText, useTheme } from 'react-native-paper';
+import { Typography } from '@/src/components/Typography';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useMemberLoginMutation } from '@/src/features/auth/hooks/useAuth';
 import { useAuthStore } from '@/src/store/authStore';
@@ -35,15 +36,15 @@ export default function OtpScreen() {
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background }]}>
       <View style={styles.content}>
-        <Text variant="headlineSmall" style={[styles.title, { color: theme.colors.primary }]}>
+        <Typography weight="700" color={theme.colors.primary} style={styles.title}>
           Enter OTP
-        </Text>
-        <Text
-          variant="bodyMedium"
-          style={{ color: theme.colors.onSurfaceVariant, textAlign: 'center', marginBottom: 32 }}
+        </Typography>
+        <Typography
+          color={theme.colors.onSurfaceVariant}
+          style={{ textAlign: 'center', marginBottom: 32 }}
         >
           Enter the verification code sent to your device
-        </Text>
+        </Typography>
 
         <TextInput
           label="OTP Code"
@@ -81,7 +82,7 @@ export default function OtpScreen() {
 const styles = StyleSheet.create({
   container: { flex: 1 },
   content: { flex: 1, justifyContent: 'center', paddingHorizontal: 24 },
-  title: { fontWeight: '700', textAlign: 'center', marginBottom: 8 },
+  title: { textAlign: 'center', marginBottom: 8 },
   input: { marginBottom: 8 },
   button: { marginTop: 16, borderRadius: 12 },
   buttonContent: { height: 48 },

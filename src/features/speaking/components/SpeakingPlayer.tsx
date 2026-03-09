@@ -1,5 +1,6 @@
 import { View, StyleSheet, ScrollView } from 'react-native';
-import { Text, Button, IconButton, useTheme, Surface } from 'react-native-paper';
+import { Button, IconButton, useTheme, Surface } from 'react-native-paper';
+import { Typography } from '@/src/components/Typography';
 import { useI18n } from '@/src/i18n';
 import { useSpeakingFlow } from '../hooks/useSpeakingFlow';
 import { RecordButton } from './RecordButton';
@@ -34,9 +35,9 @@ export function SpeakingPlayer() {
     return (
       <View style={styles.centerContainer}>
         <MaterialCommunityIcons name="microphone" size={64} color={theme.colors.primary} />
-        <Text variant="titleLarge" style={{ color: theme.colors.primary, marginTop: 16 }}>
+        <Typography size={22} color={theme.colors.primary} style={{ marginTop: 16 }}>
           {t('learn.speaking')}
-        </Text>
+        </Typography>
         <Button
           mode="contained"
           onPress={startLesson}
@@ -54,9 +55,9 @@ export function SpeakingPlayer() {
     return (
       <View style={styles.centerContainer}>
         <MaterialCommunityIcons name="check-circle" size={64} color={theme.colors.primary} />
-        <Text variant="headlineSmall" style={{ color: theme.colors.primary, marginTop: 16 }}>
+        <Typography size={24} color={theme.colors.primary} style={{ marginTop: 16 }}>
           {t('learn.finishLesson')}
-        </Text>
+        </Typography>
         <Button mode="contained" onPress={restartLesson} style={styles.mainButton}>
           {t('common.retry')}
         </Button>
@@ -91,9 +92,7 @@ export function SpeakingPlayer() {
   if (state === SpeakingState.SCORING) {
     return (
       <View style={styles.centerContainer}>
-        <Text variant="bodyLarge" style={{ color: theme.colors.onSurfaceVariant }}>
-          {t('common.loading')}
-        </Text>
+        <Typography color={theme.colors.onSurfaceVariant}>{t('common.loading')}</Typography>
       </View>
     );
   }
@@ -109,26 +108,23 @@ export function SpeakingPlayer() {
         {currentSentence?.character_name && (
           <View style={styles.characterRow}>
             <MaterialCommunityIcons name="account" size={16} color={theme.colors.primary} />
-            <Text variant="labelMedium" style={{ color: theme.colors.primary, marginLeft: 4 }}>
+            <Typography size={12} color={theme.colors.primary} style={{ marginLeft: 4 }}>
               {currentSentence.character_name}
-            </Text>
+            </Typography>
           </View>
         )}
-        <Text
-          variant="bodyLarge"
-          style={{ color: theme.colors.onSurface, fontSize: 18, lineHeight: 28 }}
-        >
+        <Typography size={18} color={theme.colors.onSurface} style={{ lineHeight: 28 }}>
           {currentSentence?.content ?? ''}
-        </Text>
+        </Typography>
       </Surface>
 
       {/* Status indicator */}
       {state === SpeakingState.LISTENING && (
         <View style={styles.listeningIndicator}>
           <MaterialCommunityIcons name="volume-high" size={24} color={theme.colors.primary} />
-          <Text variant="bodyMedium" style={{ color: theme.colors.primary, marginLeft: 8 }}>
+          <Typography size={14} color={theme.colors.primary} style={{ marginLeft: 8 }}>
             {t('learn.listening')}
-          </Text>
+          </Typography>
         </View>
       )}
 
@@ -151,9 +147,9 @@ export function SpeakingPlayer() {
           onPress={prevSentence}
           disabled={sentenceIndex === 0}
         />
-        <Text variant="labelMedium" style={{ color: theme.colors.onSurfaceVariant }}>
+        <Typography size={12} color={theme.colors.onSurfaceVariant}>
           {t('learn.sentenceOf', { current: sentenceIndex + 1, total: totalSentences })}
-        </Text>
+        </Typography>
         <IconButton
           icon="skip-next"
           size={28}

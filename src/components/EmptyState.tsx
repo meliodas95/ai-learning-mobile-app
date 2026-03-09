@@ -1,5 +1,6 @@
 import { View, StyleSheet } from 'react-native';
-import { Text, Button, useTheme } from 'react-native-paper';
+import { Button, useTheme } from 'react-native-paper';
+import { Typography } from '@/src/components/Typography';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 
 interface EmptyStateProps {
@@ -25,16 +26,13 @@ export function EmptyState({
         size={56}
         color={theme.colors.outline}
       />
-      <Text variant="titleMedium" style={[styles.title, { color: theme.colors.onSurface }]}>
+      <Typography weight="600" color={theme.colors.onSurface} style={styles.title}>
         {title}
-      </Text>
+      </Typography>
       {subtitle && (
-        <Text
-          variant="bodyMedium"
-          style={[styles.subtitle, { color: theme.colors.onSurfaceVariant }]}
-        >
+        <Typography size={14} color={theme.colors.onSurfaceVariant} style={styles.subtitle}>
           {subtitle}
-        </Text>
+        </Typography>
       )}
       {actionLabel && onAction && (
         <Button mode="contained" onPress={onAction} style={styles.button}>
@@ -47,7 +45,7 @@ export function EmptyState({
 
 const styles = StyleSheet.create({
   container: { flex: 1, justifyContent: 'center', alignItems: 'center', padding: 24 },
-  title: { marginTop: 16, fontWeight: '600', textAlign: 'center' },
+  title: { marginTop: 16, textAlign: 'center' },
   subtitle: { marginTop: 8, textAlign: 'center' },
   button: { marginTop: 24, borderRadius: 12 },
 });

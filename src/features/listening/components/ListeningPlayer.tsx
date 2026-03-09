@@ -1,5 +1,6 @@
 import { View, StyleSheet } from 'react-native';
-import { IconButton, Button, Text, useTheme } from 'react-native-paper';
+import { IconButton, Button, useTheme } from 'react-native-paper';
+import { Typography } from '@/src/components/Typography';
 import { useI18n } from '@/src/i18n';
 import { VideoPlayer } from '@/src/components/VideoPlayer';
 import { SentenceHighlight } from './SentenceHighlight';
@@ -36,9 +37,9 @@ export function ListeningPlayer() {
     return (
       <View style={styles.finishContainer}>
         <MaterialCommunityIcons name="check-circle" size={64} color={theme.colors.primary} />
-        <Text variant="headlineSmall" style={{ color: theme.colors.primary, marginTop: 16 }}>
+        <Typography size={24} color={theme.colors.primary} style={{ marginTop: 16 }}>
           {t('learn.finishLesson')}
-        </Text>
+        </Typography>
         <Button mode="contained" onPress={handleRestart} style={styles.restartButton}>
           {t('common.retry')}
         </Button>
@@ -50,9 +51,9 @@ export function ListeningPlayer() {
     return (
       <View style={styles.startContainer}>
         <MaterialCommunityIcons name="headphones" size={64} color={theme.colors.primary} />
-        <Text variant="titleLarge" style={{ color: theme.colors.primary, marginTop: 16 }}>
+        <Typography size={22} color={theme.colors.primary} style={{ marginTop: 16 }}>
           {paragraph?.title}
-        </Text>
+        </Typography>
         <Button
           mode="contained"
           onPress={handleStart}

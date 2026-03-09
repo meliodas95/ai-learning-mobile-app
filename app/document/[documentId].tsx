@@ -1,6 +1,5 @@
 import { useCallback } from 'react';
 import { View, StyleSheet, FlatList, Pressable } from 'react-native';
-import { Text } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useI18n } from '@/src/i18n';
@@ -8,6 +7,7 @@ import { useParagraphs } from '@/src/features/courses/hooks/useCourses';
 import type { ParagraphEntity } from '@/src/api/types';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { colors } from '@/src/theme/colors';
+import { Typography } from '@/src/components/Typography';
 import { LessonItem } from '@/src/components/LessonItem';
 
 export default function DocumentDetailScreen() {
@@ -36,9 +36,9 @@ export default function DocumentDetailScreen() {
         <Pressable onPress={() => router.back()} hitSlop={8}>
           <MaterialCommunityIcons name="chevron-left" size={24} color={colors.onSurface} />
         </Pressable>
-        <Text style={styles.headerTitle} numberOfLines={1}>
+        <Typography size={22} weight="600" style={styles.headerTitle} numberOfLines={1}>
           {t('courses.paragraphs')}
-        </Text>
+        </Typography>
       </View>
 
       {/* Paragraphs List */}
@@ -57,7 +57,9 @@ export default function DocumentDetailScreen() {
                 size={48}
                 color={colors.textTertiary}
               />
-              <Text style={styles.emptyText}>{t('common.noResults')}</Text>
+              <Typography size={14} color={colors.onSurfaceVariant}>
+                {t('common.noResults')}
+              </Typography>
             </View>
           ) : null
         }
@@ -76,13 +78,9 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
   },
   headerTitle: {
-    fontSize: 22,
-    fontWeight: '600',
     letterSpacing: -0.3,
     flex: 1,
-    color: colors.onSurface,
   },
   list: { paddingHorizontal: 24, paddingBottom: 32 },
   empty: { alignItems: 'center', paddingVertical: 48, gap: 12 },
-  emptyText: { fontSize: 14, color: colors.onSurfaceVariant },
 });

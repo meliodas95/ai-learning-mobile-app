@@ -7,7 +7,8 @@ import {
   TextInput,
   Pressable,
 } from 'react-native';
-import { Text, HelperText } from 'react-native-paper';
+import { HelperText } from 'react-native-paper';
+import { Typography } from '@/src/components/Typography';
 import { router, useLocalSearchParams } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useI18n } from '@/src/i18n';
@@ -87,10 +88,12 @@ export default function VerifyOtpScreen() {
             <View style={styles.iconCircle}>
               <MaterialCommunityIcons name="cellphone-message" size={64} color={colors.primary} />
             </View>
-            <Text style={styles.title}>{t('auth.otpTitle')}</Text>
-            <Text style={styles.subtitle}>
+            <Typography size={28} weight="700" style={styles.title}>
+              {t('auth.otpTitle')}
+            </Typography>
+            <Typography size={15} color={colors.onSurfaceVariant} style={styles.subtitle}>
               {t('auth.otpSentTo')} {phone}
-            </Text>
+            </Typography>
           </View>
 
           {/* OTP Input */}
@@ -124,18 +127,22 @@ export default function VerifyOtpScreen() {
             onPress={handleVerify}
             disabled={verifyOtp.isPending || otp.length < OTP_LENGTH}
           >
-            <Text style={styles.primaryButtonText}>{t('auth.verify')}</Text>
+            <Typography weight="600" color={colors.onPrimary}>
+              {t('auth.verify')}
+            </Typography>
           </Pressable>
 
           {/* Resend */}
           <View style={styles.resendRow}>
             {countdown > 0 ? (
-              <Text style={styles.resendDisabled}>
+              <Typography size={14} color={colors.textTertiary}>
                 {t('auth.resendIn', { seconds: countdown })}
-              </Text>
+              </Typography>
             ) : (
               <Pressable onPress={handleResend} disabled={resendOtp.isPending}>
-                <Text style={styles.resendLink}>{t('auth.resendOtp')}</Text>
+                <Typography size={14} weight="600" color={colors.primary}>
+                  {t('auth.resendOtp')}
+                </Typography>
               </Pressable>
             )}
           </View>
@@ -183,14 +190,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   title: {
-    fontSize: 28,
-    fontWeight: '700',
     letterSpacing: -0.5,
-    color: colors.onSurface,
   },
   subtitle: {
-    fontSize: 15,
-    color: colors.onSurfaceVariant,
     textAlign: 'center',
   },
   otpContainer: {
@@ -224,22 +226,8 @@ const styles = StyleSheet.create({
   primaryButtonDisabled: {
     opacity: 0.6,
   },
-  primaryButtonText: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: colors.onPrimary,
-  },
   resendRow: {
     alignItems: 'center',
     marginTop: 20,
-  },
-  resendDisabled: {
-    fontSize: 14,
-    color: colors.textTertiary,
-  },
-  resendLink: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: colors.primary,
   },
 });

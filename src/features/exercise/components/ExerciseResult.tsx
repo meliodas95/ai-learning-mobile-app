@@ -1,5 +1,6 @@
 import { View, StyleSheet } from 'react-native';
-import { Text, Button, useTheme } from 'react-native-paper';
+import { Button, useTheme } from 'react-native-paper';
+import { Typography } from '@/src/components/Typography';
 import { useI18n } from '@/src/i18n';
 import { getScoreHex } from '@/src/utils/score';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
@@ -25,14 +26,14 @@ export function ExerciseResult({ correctCount, totalQuestions, onRestart }: Exer
       />
 
       <View style={[styles.scoreCircle, { borderColor: color }]}>
-        <Text variant="displaySmall" style={{ color, fontWeight: '700' }}>
+        <Typography size={36} weight="700" color={color}>
           {percentage}%
-        </Text>
+        </Typography>
       </View>
 
-      <Text variant="titleMedium" style={{ color: theme.colors.onSurface, marginTop: 12 }}>
+      <Typography color={theme.colors.onSurface} style={{ marginTop: 12 }}>
         {correctCount} / {totalQuestions} {t('learn.correctCount', { count: correctCount })}
-      </Text>
+      </Typography>
 
       <Button mode="contained" onPress={onRestart} style={styles.button}>
         {t('learn.tryAgain')}

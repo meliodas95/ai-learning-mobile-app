@@ -7,7 +7,8 @@ import {
   TextInput,
   Pressable,
 } from 'react-native';
-import { Text, HelperText } from 'react-native-paper';
+import { HelperText } from 'react-native-paper';
+import { Typography } from '@/src/components/Typography';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -68,17 +69,21 @@ export default function ForgotPasswordScreen() {
                 color={colors.primary}
               />
             </View>
-            <Text style={styles.title}>{t('auth.forgotPasswordTitle')}</Text>
-            <Text style={styles.subtitle}>
+            <Typography size={28} weight="700" style={styles.title}>
+              {t('auth.forgotPasswordTitle')}
+            </Typography>
+            <Typography size={15} color={colors.onSurfaceVariant} style={styles.subtitle}>
               {success ? t('auth.resetSent') : t('auth.forgotPasswordSubtitle')}
-            </Text>
+            </Typography>
           </View>
 
           {!success ? (
             <View style={styles.form}>
               {/* Phone */}
               <View style={styles.fieldGroup}>
-                <Text style={styles.label}>{t('auth.phone')}</Text>
+                <Typography size={14} weight="600" style={styles.label}>
+                  {t('auth.phone')}
+                </Typography>
                 <Controller
                   control={control}
                   name="phone"
@@ -86,7 +91,9 @@ export default function ForgotPasswordScreen() {
                     <View
                       style={[styles.inputRow, errors.phone ? styles.inputRowError : undefined]}
                     >
-                      <Text style={styles.prefix}>{t('auth.phonePrefix')}</Text>
+                      <Typography size={15} weight="500">
+                        {t('auth.phonePrefix')}
+                      </Typography>
                       <View style={styles.divider} />
                       <TextInput
                         style={styles.textInput}
@@ -122,7 +129,9 @@ export default function ForgotPasswordScreen() {
                 onPress={handleSubmit(onSubmit)}
                 disabled={forgotPassword.isPending}
               >
-                <Text style={styles.primaryButtonText}>{t('auth.sendResetLink')}</Text>
+                <Typography weight="600" color={colors.onPrimary}>
+                  {t('auth.sendResetLink')}
+                </Typography>
               </Pressable>
             </View>
           ) : (
@@ -131,7 +140,9 @@ export default function ForgotPasswordScreen() {
                 style={styles.primaryButton}
                 onPress={() => router.replace('/(auth)/login')}
               >
-                <Text style={styles.primaryButtonText}>{t('auth.backToSignIn')}</Text>
+                <Typography weight="600" color={colors.onPrimary}>
+                  {t('auth.backToSignIn')}
+                </Typography>
               </Pressable>
             </View>
           )}
@@ -179,14 +190,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   title: {
-    fontSize: 28,
-    fontWeight: '700',
     letterSpacing: -0.5,
-    color: colors.onSurface,
   },
   subtitle: {
-    fontSize: 15,
-    color: colors.onSurfaceVariant,
     textAlign: 'center',
     lineHeight: 22,
   },
@@ -197,9 +203,6 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   label: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: colors.onSurface,
     marginBottom: 2,
   },
   inputRow: {
@@ -214,11 +217,6 @@ const styles = StyleSheet.create({
   },
   inputRowError: {
     borderColor: colors.error,
-  },
-  prefix: {
-    fontWeight: '500',
-    fontSize: 15,
-    color: colors.onSurface,
   },
   divider: {
     width: 1,
@@ -248,10 +246,5 @@ const styles = StyleSheet.create({
   },
   primaryButtonDisabled: {
     opacity: 0.6,
-  },
-  primaryButtonText: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: colors.onPrimary,
   },
 });

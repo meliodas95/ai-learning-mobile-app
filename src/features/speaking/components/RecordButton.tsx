@@ -1,5 +1,6 @@
 import { View, StyleSheet, Pressable } from 'react-native';
-import { Text, useTheme } from 'react-native-paper';
+import { useTheme } from 'react-native-paper';
+import { Typography } from '@/src/components/Typography';
 import { useI18n } from '@/src/i18n';
 import { formatDuration } from '@/src/utils/formatters';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
@@ -26,23 +27,20 @@ export function RecordButton({
     <View style={styles.container}>
       {/* Transcript display */}
       {transcript ? (
-        <Text variant="bodyMedium" style={[styles.transcript, { color: theme.colors.onSurface }]}>
+        <Typography size={14} color={theme.colors.onSurface} style={styles.transcript}>
           {transcript}
-        </Text>
+        </Typography>
       ) : isRecording ? (
-        <Text
-          variant="bodyMedium"
-          style={[styles.transcript, { color: theme.colors.onSurfaceVariant }]}
-        >
+        <Typography size={14} color={theme.colors.onSurfaceVariant} style={styles.transcript}>
           {t('learn.recording')}
-        </Text>
+        </Typography>
       ) : null}
 
       {/* Duration */}
       {isRecording && (
-        <Text variant="labelLarge" style={[styles.duration, { color: theme.colors.error }]}>
+        <Typography size={14} weight="600" color={theme.colors.error} style={styles.duration}>
           {formatDuration(recordingDuration)}
-        </Text>
+        </Typography>
       )}
 
       {/* Record button */}
@@ -57,9 +55,9 @@ export function RecordButton({
       </Pressable>
 
       {!isRecording && (
-        <Text variant="bodySmall" style={{ color: theme.colors.onSurfaceVariant, marginTop: 8 }}>
+        <Typography size={12} color={theme.colors.onSurfaceVariant} style={{ marginTop: 8 }}>
           {t('learn.tapToRecord')}
-        </Text>
+        </Typography>
       )}
     </View>
   );
@@ -73,7 +71,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     minHeight: 24,
   },
-  duration: { marginBottom: 12, fontWeight: '600' },
+  duration: { marginBottom: 12 },
   button: {
     width: 72,
     height: 72,

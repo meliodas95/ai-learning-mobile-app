@@ -1,5 +1,6 @@
 import { View, StyleSheet } from 'react-native';
-import { Text, Button, useTheme } from 'react-native-paper';
+import { Button, useTheme } from 'react-native-paper';
+import { Typography } from '@/src/components/Typography';
 import { useI18n } from '@/src/i18n';
 import { getScoreHex, getScoreMessage } from '@/src/utils/score';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
@@ -22,36 +23,36 @@ export function ScoreDisplay({ score, template, transcript, onNext, onRetry }: S
     <View style={styles.container}>
       {/* Score circle */}
       <View style={[styles.scoreCircle, { borderColor: scoreColor }]}>
-        <Text variant="displaySmall" style={{ color: scoreColor, fontWeight: '700' }}>
+        <Typography size={36} weight="700" color={scoreColor}>
           {score}
-        </Text>
+        </Typography>
       </View>
 
       {/* Message */}
-      <Text variant="titleMedium" style={{ color: scoreColor, marginTop: 12 }}>
+      <Typography color={scoreColor} style={{ marginTop: 12 }}>
         {t(message)}
-      </Text>
+      </Typography>
 
       {/* Template vs transcript */}
       <View style={[styles.comparison, { backgroundColor: theme.colors.surfaceVariant }]}>
         <View style={styles.comparisonRow}>
           <MaterialCommunityIcons name="text" size={16} color={theme.colors.primary} />
-          <Text variant="bodySmall" style={{ color: theme.colors.onSurfaceVariant, marginLeft: 4 }}>
+          <Typography size={12} color={theme.colors.onSurfaceVariant} style={{ marginLeft: 4 }}>
             {t('learn.expected')}
-          </Text>
+          </Typography>
         </View>
-        <Text variant="bodyMedium" style={{ color: theme.colors.onSurface }}>
+        <Typography size={14} color={theme.colors.onSurface}>
           {template}
-        </Text>
+        </Typography>
         <View style={[styles.comparisonRow, { marginTop: 12 }]}>
           <MaterialCommunityIcons name="microphone" size={16} color={theme.colors.secondary} />
-          <Text variant="bodySmall" style={{ color: theme.colors.onSurfaceVariant, marginLeft: 4 }}>
+          <Typography size={12} color={theme.colors.onSurfaceVariant} style={{ marginLeft: 4 }}>
             {t('learn.youSaid')}
-          </Text>
+          </Typography>
         </View>
-        <Text variant="bodyMedium" style={{ color: theme.colors.onSurface }}>
+        <Typography size={14} color={theme.colors.onSurface}>
           {transcript || t('learn.noSpeechDetected')}
-        </Text>
+        </Typography>
       </View>
 
       {/* Actions */}

@@ -8,7 +8,8 @@ import {
   TextInput,
   Pressable,
 } from 'react-native';
-import { Text, HelperText } from 'react-native-paper';
+import { HelperText } from 'react-native-paper';
+import { Typography } from '@/src/components/Typography';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -75,15 +76,21 @@ export default function RegisterScreen() {
             <View style={styles.iconCircle}>
               <MaterialCommunityIcons name="account-plus" size={80} color={colors.primary} />
             </View>
-            <Text style={styles.title}>{t('auth.registerTitle')}</Text>
-            <Text style={styles.subtitle}>{t('auth.registerSubtitle')}</Text>
+            <Typography size={28} weight="700" style={styles.title}>
+              {t('auth.registerTitle')}
+            </Typography>
+            <Typography size={15} color={colors.onSurfaceVariant}>
+              {t('auth.registerSubtitle')}
+            </Typography>
           </View>
 
           {/* Form Area */}
           <View style={styles.form}>
             {/* Full Name */}
             <View style={styles.fieldGroup}>
-              <Text style={styles.label}>{t('auth.fullName')}</Text>
+              <Typography size={14} weight="600" style={styles.label}>
+                {t('auth.fullName')}
+              </Typography>
               <Controller
                 control={control}
                 name="fullname"
@@ -117,13 +124,17 @@ export default function RegisterScreen() {
 
             {/* Phone */}
             <View style={styles.fieldGroup}>
-              <Text style={styles.label}>{t('auth.phone')}</Text>
+              <Typography size={14} weight="600" style={styles.label}>
+                {t('auth.phone')}
+              </Typography>
               <Controller
                 control={control}
                 name="phone"
                 render={({ field: { onChange, onBlur, value } }) => (
                   <View style={[styles.inputRow, errors.phone ? styles.inputRowError : undefined]}>
-                    <Text style={styles.prefix}>{t('auth.phonePrefix')}</Text>
+                    <Typography size={15} weight="500">
+                      {t('auth.phonePrefix')}
+                    </Typography>
                     <View style={styles.divider} />
                     <TextInput
                       style={styles.textInput}
@@ -156,14 +167,20 @@ export default function RegisterScreen() {
               onPress={handleSubmit(onSubmit)}
               disabled={sendOtp.isPending}
             >
-              <Text style={styles.primaryButtonText}>{t('auth.sendOtp')}</Text>
+              <Typography weight="600" color={colors.onPrimary}>
+                {t('auth.sendOtp')}
+              </Typography>
             </Pressable>
 
             {/* Footer */}
             <View style={styles.footer}>
-              <Text style={styles.footerText}>{t('auth.haveAccount')}</Text>
+              <Typography size={14} color={colors.onSurfaceVariant}>
+                {t('auth.haveAccount')}
+              </Typography>
               <Pressable onPress={() => router.back()}>
-                <Text style={styles.footerLink}>{t('auth.signIn')}</Text>
+                <Typography size={14} weight="600" color={colors.primary}>
+                  {t('auth.signIn')}
+                </Typography>
               </Pressable>
             </View>
           </View>
@@ -198,14 +215,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   title: {
-    fontSize: 28,
-    fontWeight: '700',
     letterSpacing: -0.5,
-    color: colors.onSurface,
-  },
-  subtitle: {
-    fontSize: 15,
-    color: colors.onSurfaceVariant,
   },
   form: {
     paddingHorizontal: 24,
@@ -215,9 +225,6 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   label: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: colors.onSurface,
     marginBottom: 2,
   },
   inputRow: {
@@ -233,11 +240,6 @@ const styles = StyleSheet.create({
   },
   inputRowError: {
     borderColor: colors.error,
-  },
-  prefix: {
-    fontWeight: '500',
-    fontSize: 15,
-    color: colors.onSurface,
   },
   divider: {
     width: 1,
@@ -267,24 +269,10 @@ const styles = StyleSheet.create({
   primaryButtonDisabled: {
     opacity: 0.6,
   },
-  primaryButtonText: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: colors.onPrimary,
-  },
   footer: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
     gap: 4,
-  },
-  footerText: {
-    fontSize: 14,
-    color: colors.onSurfaceVariant,
-  },
-  footerLink: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: colors.primary,
   },
 });

@@ -1,6 +1,6 @@
 import { Pressable, StyleSheet, View } from 'react-native';
-import { Text } from 'react-native-paper';
 import type { BottomTabBarProps } from '@react-navigation/bottom-tabs';
+import { Typography } from '@/src/components/Typography';
 import * as Haptics from 'expo-haptics';
 import { colors } from '@/src/theme/colors';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
@@ -42,18 +42,17 @@ export function PillTabBar({ state, descriptors, navigation }: BottomTabBarProps
             >
               <MaterialCommunityIcons
                 name={iconName as React.ComponentProps<typeof MaterialCommunityIcons>['name']}
-                size={18}
+                size={16}
                 color={isFocused ? colors.onPrimary : colors.tabInactive}
               />
-              <Text
-                style={[
-                  styles.label,
-                  { color: isFocused ? colors.onPrimary : colors.tabInactive },
-                  isFocused && styles.activeLabel,
-                ]}
+              <Typography
+                size={9}
+                weight={isFocused ? '600' : '500'}
+                color={isFocused ? colors.onPrimary : colors.tabInactive}
+                style={styles.label}
               >
                 {String(label).toUpperCase()}
-              </Text>
+              </Typography>
             </Pressable>
           );
         })}
@@ -65,15 +64,15 @@ export function PillTabBar({ state, descriptors, navigation }: BottomTabBarProps
 const styles = StyleSheet.create({
   wrapper: {
     backgroundColor: colors.background,
-    paddingHorizontal: 21,
-    paddingTop: 12,
-    paddingBottom: 21,
+    paddingHorizontal: 16,
+    paddingTop: 6,
+    paddingBottom: 12,
   },
   pill: {
     flexDirection: 'row',
     backgroundColor: colors.tabBarBg,
-    borderRadius: 36,
-    padding: 4,
+    borderRadius: 28,
+    padding: 3,
     borderWidth: 1,
     borderColor: colors.outline,
   },
@@ -81,19 +80,14 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 4,
-    paddingVertical: 12,
-    borderRadius: 26,
+    gap: 2,
+    paddingVertical: 8,
+    borderRadius: 24,
   },
   activeTab: {
     backgroundColor: colors.primary,
   },
   label: {
-    fontSize: 9,
-    fontWeight: '500',
     letterSpacing: 0.5,
-  },
-  activeLabel: {
-    fontWeight: '600',
   },
 });

@@ -9,7 +9,8 @@ import {
   Pressable,
 } from 'react-native';
 import { Image } from 'expo-image';
-import { Text, HelperText } from 'react-native-paper';
+import { HelperText } from 'react-native-paper';
+import { Typography } from '@/src/components/Typography';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -19,10 +20,11 @@ import { useAuthStore } from '@/src/store/authStore';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useI18n } from '@/src/i18n';
 import { colors } from '@/src/theme/colors';
+import { images } from '@/assets';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 
 const loginSchema = z.object({
-  phone: z.string().regex(/(84|0[35789])\d{8}$/, 'Invalid phone number'),
+  phone: z.string().regex(/^0[35789]\d{8}$/, 'Invalid phone number'),
   password: z.string().min(8, 'Password must be at least 8 characters'),
 });
 
@@ -66,32 +68,38 @@ export default function LoginScreen() {
         >
           {/* Hero Area */}
           <View style={styles.hero}>
-            <Image
-              source={require('@/assets/logo.png')}
-              style={styles.logo}
-              contentFit="contain"
-            />
-            <Text style={styles.appName}>{t('auth.appTitle')}</Text>
-            <Text style={styles.tagline}>{t('auth.appSubtitle')}</Text>
+            <Image source={images.logo} style={styles.logo} contentFit="contain" />
+            <Typography size={32} weight="700" style={styles.appName}>
+              {t('auth.appTitle')}
+            </Typography>
+            <Typography size={15} color={colors.onSurfaceVariant}>
+              {t('auth.appSubtitle')}
+            </Typography>
           </View>
 
           {/* Form Area */}
           <View style={styles.form}>
             {/* Phone Section */}
             <View style={styles.fieldGroup}>
-              <Text style={styles.label}>{t('auth.phone')}</Text>
+              <Typography size={14} weight="600" style={styles.label}>
+                {t('auth.phone')}
+              </Typography>
               <Controller
                 control={control}
                 name="phone"
                 render={({ field: { onChange, onBlur, value } }) => (
                   <View style={[styles.inputRow, errors.phone ? styles.inputRowError : undefined]}>
-                    <Text style={styles.prefix}>{t('auth.phonePrefix')}</Text>
-                    <View style={styles.divider} />
+                    <MaterialCommunityIcons
+                      name="phone-outline"
+                      size={20}
+                      color={colors.onSurfaceVariant}
+                    />
                     <TextInput
-                      style={styles.textInput}
+                      style={[styles.textInput, styles.phoneInput]}
                       value={value}
                       onChangeText={onChange}
                       onBlur={onBlur}
+                      placeholder="0912 345 678"
                       keyboardType="phone-pad"
                       placeholderTextColor={colors.textTertiary}
                     />
@@ -107,7 +115,9 @@ export default function LoginScreen() {
 
             {/* Password Section */}
             <View style={styles.fieldGroup}>
-              <Text style={styles.label}>{t('auth.password')}</Text>
+              <Typography size={14} weight="600" style={styles.label}>
+                {t('auth.password')}
+              </Typography>
               <Controller
                 control={control}
                 name="password"
@@ -149,7 +159,9 @@ export default function LoginScreen() {
               style={styles.forgotRow}
               onPress={() => router.push('/(auth)/forgot-password')}
             >
-              <Text style={styles.forgotText}>{t('auth.forgotPassword')}</Text>
+              <Typography size={13} weight="600" color={colors.primary}>
+                {t('auth.forgotPassword')}
+              </Typography>
             </Pressable>
 
             {/* API Error */}
@@ -165,19 +177,27 @@ export default function LoginScreen() {
               onPress={handleSubmit(onSubmit)}
               disabled={loginMutation.isPending}
             >
-              <Text style={styles.signInText}>{t('auth.signIn')}</Text>
+              <Typography weight="600" color={colors.onPrimary}>
+                {t('auth.signIn')}
+              </Typography>
             </Pressable>
 
             {/* Footer */}
             <View style={styles.footer}>
-              <Text style={styles.noAccountText}>{t('auth.noAccount')}</Text>
+              <Typography size={14} color={colors.onSurfaceVariant}>
+                {t('auth.noAccount')}
+              </Typography>
               <Pressable onPress={() => router.push('/(auth)/register')}>
-                <Text style={styles.registerLink}>{t('auth.register')}</Text>
+                <Typography size={14} weight="600" color={colors.primary}>
+                  {t('auth.register')}
+                </Typography>
               </Pressable>
             </View>
 
             {/* Terms */}
-            <Text style={styles.termsText}>{t('auth.termsNotice')}</Text>
+            <Typography size={11} color={colors.textTertiary} style={styles.termsText}>
+              {t('auth.termsNotice')}
+            </Typography>
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
@@ -206,14 +226,7 @@ const styles = StyleSheet.create({
     height: 200,
   },
   appName: {
-    fontSize: 32,
-    fontWeight: '700',
     letterSpacing: -1,
-    color: colors.onSurface,
-  },
-  tagline: {
-    fontSize: 15,
-    color: colors.onSurfaceVariant,
   },
   form: {
     paddingHorizontal: 24,
@@ -223,9 +236,6 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   label: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: colors.onSurface,
     marginBottom: 2,
   },
   inputRow: {
@@ -241,16 +251,8 @@ const styles = StyleSheet.create({
   inputRowError: {
     borderColor: colors.error,
   },
-  prefix: {
-    fontWeight: '500',
-    fontSize: 15,
-    color: colors.onSurface,
-  },
-  divider: {
-    width: 1,
-    height: 24,
-    backgroundColor: colors.outline,
-    marginHorizontal: 12,
+  phoneInput: {
+    marginLeft: 12,
   },
   textInput: {
     flex: 1,
@@ -271,11 +273,6 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-end',
     marginTop: -16,
   },
-  forgotText: {
-    fontSize: 13,
-    fontWeight: '600',
-    color: colors.primary,
-  },
   apiError: {
     textAlign: 'center',
     paddingHorizontal: 0,
@@ -290,29 +287,13 @@ const styles = StyleSheet.create({
   signInButtonDisabled: {
     opacity: 0.6,
   },
-  signInText: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: colors.onPrimary,
-  },
   footer: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
     gap: 4,
   },
-  noAccountText: {
-    fontSize: 14,
-    color: colors.onSurfaceVariant,
-  },
-  registerLink: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: colors.primary,
-  },
   termsText: {
-    fontSize: 11,
-    color: colors.textTertiary,
     textAlign: 'center',
     lineHeight: 16,
   },

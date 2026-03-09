@@ -1,6 +1,5 @@
 import { useState, useCallback, useMemo } from 'react';
 import { View, StyleSheet, FlatList, RefreshControl, Pressable, TextInput } from 'react-native';
-import { Text } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { useI18n } from '@/src/i18n';
@@ -10,6 +9,7 @@ import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { colors } from '@/src/theme/colors';
 import { CourseCard } from '@/src/components/CourseCard';
 import { SegmentedControl } from '@/src/components/SegmentedControl';
+import { Typography } from '@/src/components/Typography';
 
 export default function CoursesScreen() {
   const { t } = useI18n();
@@ -61,7 +61,9 @@ export default function CoursesScreen() {
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>{t('courses.myCourses')}</Text>
+        <Typography size={26} weight="600" style={styles.headerTitle}>
+          {t('courses.myCourses')}
+        </Typography>
         <Pressable style={styles.searchButton} onPress={() => setShowSearch(!showSearch)}>
           <MaterialCommunityIcons
             name={showSearch ? 'close' : 'magnify'}
@@ -97,7 +99,9 @@ export default function CoursesScreen() {
             !isLoading ? (
               <View style={styles.empty}>
                 <MaterialCommunityIcons name="book-search" size={48} color={colors.textTertiary} />
-                <Text style={styles.emptyText}>{t('common.noResults')}</Text>
+                <Typography size={14} color={colors.onSurfaceVariant}>
+                  {t('common.noResults')}
+                </Typography>
               </View>
             ) : null
           }
@@ -138,10 +142,7 @@ const styles = StyleSheet.create({
     paddingTop: 12,
   },
   headerTitle: {
-    fontSize: 26,
-    fontWeight: '600',
     letterSpacing: -0.5,
-    color: colors.onSurface,
   },
   searchButton: {
     width: 40,
@@ -169,5 +170,4 @@ const styles = StyleSheet.create({
   },
   list: { paddingBottom: 32 },
   empty: { alignItems: 'center', paddingVertical: 48, gap: 12 },
-  emptyText: { fontSize: 14, color: colors.onSurfaceVariant },
 });
