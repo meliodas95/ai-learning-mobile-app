@@ -120,6 +120,11 @@ export default {
     chat: 'Conversation',
     paragraph: 'Paragraph',
     video: 'Video',
+    totalHours: 'Total hours',
+    goodSpeaking: 'Good speaking',
+    weeklyStudyTime: 'Study time this week',
+    minutes: 'min',
+    newsFeed: 'New lessons',
   },
   profile: {
     settings: 'Settings',
@@ -176,6 +181,11 @@ export default {
     recentActivity: 'Recent activity',
     allTypes: 'All',
     score: 'Score',
+  },
+  search: {
+    popularKeywords: 'Popular keywords',
+    recentSearches: 'Recent searches',
+    clearAll: 'Clear all',
   },
   error: {
     somethingWentWrong: 'Something went wrong',

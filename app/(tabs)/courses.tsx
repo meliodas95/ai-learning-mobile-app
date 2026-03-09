@@ -1,5 +1,6 @@
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo, useRef } from 'react';
 import { View, StyleSheet, FlatList, RefreshControl, Pressable, TextInput } from 'react-native';
+import PagerView from 'react-native-pager-view';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { useI18n } from '@/src/i18n';
@@ -11,12 +12,15 @@ import { CourseCard } from '@/src/components/CourseCard';
 import { SegmentedControl } from '@/src/components/SegmentedControl';
 import { Typography } from '@/src/components/Typography';
 
+const SEGMENT_VALUES = ['all', 'inProgress', 'completed'] as const;
+
 export default function CoursesScreen() {
   const { t } = useI18n();
   const { data: courses, refetch, isRefetching, isLoading } = useCourses();
   const [search, setSearch] = useState('');
   const [showSearch, setShowSearch] = useState(false);
-  const [activeSegment, setActiveSegment] = useState('all');
+  const [activeIndex, setActiveIndex] = useState(0);
+  const pagerRef = useRef<PagerView>(null);
 
   const segments = useMemo(
     () => [
@@ -27,25 +31,32 @@ export default function CoursesScreen() {
     [t],
   );
 
-  const filtered = useMemo(() => {
-    let list = courses?.courses ?? [];
+  const searchFiltered = useMemo(() => {
+    const allCourses = courses?.courses ?? [];
+    if (!search) return allCourses;
+    const q = search.toLowerCase();
+    return allCourses.filter(
+      (c: CourseEntity) =>
+        c.title.toLowerCase().includes(q) || c.title_vi?.toLowerCase().includes(q),
+    );
+  }, [courses, search]);
 
-    if (search) {
-      const q = search.toLowerCase();
-      list = list.filter(
-        (c: CourseEntity) =>
-          c.title.toLowerCase().includes(q) || c.title_vi?.toLowerCase().includes(q),
-      );
+  const tabData = useMemo(
+    () => [
+      searchFiltered,
+      searchFiltered.filter((c: CourseEntity) => c.status === 1),
+      searchFiltered.filter((c: CourseEntity) => c.status === 2),
+    ],
+    [searchFiltered],
+  );
+
+  const handleSegmentChange = useCallback((value: string) => {
+    const index = SEGMENT_VALUES.indexOf(value as (typeof SEGMENT_VALUES)[number]);
+    if (index >= 0) {
+      setActiveIndex(index);
+      pagerRef.current?.setPage(index);
     }
-
-    if (activeSegment === 'inProgress') {
-      list = list.filter((c: CourseEntity) => c.status === 1);
-    } else if (activeSegment === 'completed') {
-      list = list.filter((c: CourseEntity) => c.status === 2);
-    }
-
-    return list;
-  }, [courses, search, activeSegment]);
+  }, []);
 
   const renderCourse = useCallback(
     ({ item }: { item: CourseEntity }) => (
@@ -56,6 +67,19 @@ export default function CoursesScreen() {
       />
     ),
     [],
+  );
+
+  const renderEmpty = useCallback(
+    () =>
+      !isLoading ? (
+        <View style={styles.empty}>
+          <MaterialCommunityIcons name="book-search" size={48} color={colors.textTertiary} />
+          <Typography size={14} color={colors.onSurfaceVariant}>
+            {t('common.noResults')}
+          </Typography>
+        </View>
+      ) : null,
+    [isLoading, t],
   );
 
   return (
@@ -83,29 +107,33 @@ export default function CoursesScreen() {
 
         <SegmentedControl
           segments={segments}
-          activeValue={activeSegment}
-          onValueChange={setActiveSegment}
+          activeValue={SEGMENT_VALUES[activeIndex]}
+          onValueChange={handleSegmentChange}
         />
 
-        <FlatList
-          data={filtered}
-          keyExtractor={(item) => String(item.id)}
-          renderItem={renderCourse}
-          contentContainerStyle={styles.list}
-          ItemSeparatorComponent={() => <View style={{ height: 16 }} />}
-          refreshControl={<RefreshControl refreshing={isRefetching} onRefresh={() => refetch()} />}
-          showsVerticalScrollIndicator={false}
-          ListEmptyComponent={
-            !isLoading ? (
-              <View style={styles.empty}>
-                <MaterialCommunityIcons name="book-search" size={48} color={colors.textTertiary} />
-                <Typography size={14} color={colors.onSurfaceVariant}>
-                  {t('common.noResults')}
-                </Typography>
-              </View>
-            ) : null
-          }
-        />
+        <PagerView
+          ref={pagerRef}
+          style={styles.pager}
+          initialPage={0}
+          onPageSelected={(e) => setActiveIndex(e.nativeEvent.position)}
+        >
+          {tabData.map((data, index) => (
+            <View key={SEGMENT_VALUES[index]} style={styles.page}>
+              <FlatList
+                data={data}
+                keyExtractor={(item) => String(item.id)}
+                renderItem={renderCourse}
+                contentContainerStyle={styles.list}
+                ItemSeparatorComponent={() => <View style={{ height: 16 }} />}
+                refreshControl={
+                  <RefreshControl refreshing={isRefetching} onRefresh={() => refetch()} />
+                }
+                showsVerticalScrollIndicator={false}
+                ListEmptyComponent={renderEmpty}
+              />
+            </View>
+          ))}
+        </PagerView>
       </View>
     </SafeAreaView>
   );
@@ -168,6 +196,8 @@ const styles = StyleSheet.create({
     color: colors.onSurface,
     height: 44,
   },
+  pager: { flex: 1 },
+  page: { flex: 1 },
   list: { paddingBottom: 32 },
   empty: { alignItems: 'center', paddingVertical: 48, gap: 12 },
 });

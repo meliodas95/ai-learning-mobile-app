@@ -44,6 +44,13 @@ export const Endpoints = {
   // Exercises
   EXERCISE_LIST: '/v1/api/config/account-exercises',
 
+  // News
+  NEWS_LIST: '/v1/api/transaction/news',
+
+  // Reports
+  REPORT_LEARNS: '/v1/api/transaction/report/report-learns',
+  REPORT_TOTAL_LEARNS: '/v1/api/transaction/report/report-total-learns',
+
   // Favourites
   FAVOURITE_ADD: '/v1/api/library/paragraphs/favourite',
   FAVOURITE_LIST: '/v1/api/library/paragraphs/favourites',

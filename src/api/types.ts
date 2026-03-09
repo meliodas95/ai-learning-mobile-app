@@ -361,6 +361,56 @@ export interface ExerciseAnswer {
   is_correct: boolean;
 }
 
+// === News Types ===
+
+export enum NewsType {
+  SENTENCE = 1,
+  CONVERSATION = 2,
+  ESSAY = 3,
+  GALLERY = 4,
+}
+
+export interface NewsItem {
+  id: number;
+  title: string;
+  item: string; // "paragraph" | "document" | "course"
+  tag_id: number;
+  object_id: number;
+  status: number;
+  type: NewsType;
+  paragraph?: ParagraphEntity;
+  document?: DocumentEntity;
+  course?: CourseEntity;
+  new_details?: Array<{ sentence?: SentenceEntity }>;
+}
+
+export interface NewsListResponse {
+  News: NewsItem[];
+  total: number;
+}
+
+// === Report Types ===
+
+export interface ReportTotalLearns {
+  continuous_day: number;
+  time_learn: number; // seconds
+  count_paragraph_finish: number;
+  total_word_good: number;
+  total_speak_good: number;
+}
+
+export interface ReportLearnItem {
+  id: number;
+  item: string;
+  object_id: number;
+  day: number; // unix day
+  status: number;
+  created_at: number;
+  amount: number; // seconds
+  point: number;
+  transaction_type: number; // 1=EARN, 2=BURN
+}
+
 // === Conversation grouping ===
 
 export interface ConversationGroup {

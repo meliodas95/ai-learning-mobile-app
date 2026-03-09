@@ -1,49 +1,67 @@
-import { useCallback } from 'react';
-import { View, StyleSheet, ScrollView, RefreshControl, Pressable } from 'react-native';
+import { useCallback, useMemo } from 'react';
+import {
+  View,
+  StyleSheet,
+  FlatList,
+  RefreshControl,
+  Pressable,
+  ActivityIndicator,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { useI18n } from '@/src/i18n';
 import { useAuthStore } from '@/src/store/authStore';
-import { useCourses } from '@/src/features/courses/hooks/useCourses';
+import { useNews } from '@/src/features/home/hooks/useNews';
+import { useHomeStats, useWeeklyLearns } from '@/src/features/home/hooks/useHomeStats';
+import { StatsGrid } from '@/src/features/home/components/StatsGrid';
+import { WeeklyChart } from '@/src/features/home/components/WeeklyChart';
+import { NewsFeedItem } from '@/src/features/home/components/NewsFeedItem';
 import { colors } from '@/src/theme/colors';
-import { CourseCard } from '@/src/components/CourseCard';
 import { Typography } from '@/src/components/Typography';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-
-const LESSON_TYPES = [
-  { key: 'image', icon: 'image' as const, color: colors.primaryLight },
-  { key: 'chat', icon: 'chat' as const, color: '#FDEEE6' },
-  { key: 'paragraph', icon: 'text-box' as const, color: '#FFF5E0' },
-  { key: 'video', icon: 'video' as const, color: '#E8F0FE' },
-];
-
-const LEARNING_MODES = [
-  { key: 'vocab', icon: 'book-open-variant' as const, color: colors.primary },
-  { key: 'listening', icon: 'headphones' as const, color: colors.coral },
-  { key: 'speaking', icon: 'microphone' as const, color: colors.primaryDark },
-];
+import type { NewsItem } from '@/src/api/types';
 
 export default function HomeScreen() {
   const { t } = useI18n();
   const user = useAuthStore((s) => s.user);
   const member = useAuthStore((s) => s.member);
-  const { data: courses, refetch, isRefetching } = useCourses();
+  const { data: stats } = useHomeStats();
+  const { data: weeklyData } = useWeeklyLearns();
+  const {
+    data: newsPages,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    refetch,
+    isRefetching,
+  } = useNews();
+
+  const newsItems = useMemo(
+    () => newsPages?.pages.flatMap((p) => p?.news ?? []) ?? [],
+    [newsPages],
+  );
+
+  const displayName = user?.fullname ?? member?.fullname ?? '';
+  const initial = displayName.charAt(0).toUpperCase() || '?';
 
   const onRefresh = useCallback(() => {
     refetch();
   }, [refetch]);
 
-  const displayName = user?.fullname ?? member?.fullname ?? '';
-  const initial = displayName.charAt(0).toUpperCase() || '?';
-  const firstCourse = courses?.courses?.[0];
+  const onEndReached = useCallback(() => {
+    if (hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
-  return (
-    <SafeAreaView style={styles.container}>
-      <ScrollView
-        contentContainerStyle={styles.scrollContent}
-        refreshControl={<RefreshControl refreshing={isRefetching} onRefresh={onRefresh} />}
-        showsVerticalScrollIndicator={false}
-      >
+  const renderNewsItem = useCallback(
+    ({ item }: { item: NewsItem }) => <NewsFeedItem item={item} />,
+    [],
+  );
+
+  const ListHeader = useMemo(
+    () => (
+      <View style={styles.headerContent}>
         {/* Greeting Header */}
         <View style={styles.greetingRow}>
           <View style={styles.greetingLeft}>
@@ -67,57 +85,47 @@ export default function HomeScreen() {
         </View>
 
         {/* Search Bar */}
-        <Pressable style={styles.searchBar}>
+        <Pressable style={styles.searchBar} onPress={() => router.push('/search')}>
           <MaterialCommunityIcons name="magnify" size={20} color={colors.textTertiary} />
           <Typography size={15} color={colors.textTertiary}>
             {t('home.searchPlaceholder')}
           </Typography>
         </Pressable>
 
-        {/* Lesson Types */}
-        <Typography size={18} weight="600" style={styles.sectionTitle}>
-          {t('home.lessonTypes')}
-        </Typography>
-        <View style={styles.lessonTypesRow}>
-          {LESSON_TYPES.map((item) => (
-            <Pressable
-              key={item.key}
-              style={[styles.lessonTypeCard, { backgroundColor: item.color }]}
-            >
-              <MaterialCommunityIcons name={item.icon} size={28} color={colors.primary} />
-              <Typography size={11} weight="600">
-                {t(`home.${item.key}` as `home.${typeof item.key}`)}
-              </Typography>
-            </Pressable>
-          ))}
-        </View>
+        {/* Stats Grid */}
+        <StatsGrid stats={stats} />
 
-        {/* Learning Modes */}
-        <Typography size={18} weight="600" style={styles.sectionTitle}>
-          {t('home.learningModes')}
-        </Typography>
-        <View style={styles.modesRow}>
-          {LEARNING_MODES.map((mode) => (
-            <Pressable key={mode.key} style={[styles.modePill, { backgroundColor: mode.color }]}>
-              <MaterialCommunityIcons name={mode.icon} size={18} color={colors.onPrimary} />
-              <Typography size={13} weight="600" color={colors.onPrimary}>
-                {t(`home.${mode.key}` as `home.${typeof mode.key}`)}
-              </Typography>
-            </Pressable>
-          ))}
-        </View>
+        {/* Weekly Chart */}
+        <WeeklyChart data={weeklyData} />
 
-        {/* Continue Learning */}
+        {/* News Feed Title */}
         <Typography size={18} weight="600" style={styles.sectionTitle}>
-          {t('home.continueLearning')}
+          {t('home.newsFeed')}
         </Typography>
-        {firstCourse ? (
-          <CourseCard
-            title={firstCourse.title}
-            subtitle={firstCourse.title_vi}
-            onPress={() => router.push(`/course/${firstCourse.id}`)}
-          />
-        ) : (
+      </View>
+    ),
+    [initial, displayName, t, stats, weeklyData],
+  );
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <FlatList
+        data={newsItems}
+        keyExtractor={(item) => String(item.id)}
+        renderItem={renderNewsItem}
+        contentContainerStyle={styles.list}
+        ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
+        ListHeaderComponent={ListHeader}
+        showsVerticalScrollIndicator={false}
+        onEndReached={onEndReached}
+        onEndReachedThreshold={0.5}
+        refreshControl={<RefreshControl refreshing={isRefetching} onRefresh={onRefresh} />}
+        ListFooterComponent={
+          isFetchingNextPage ? (
+            <ActivityIndicator style={styles.loader} color={colors.primary} />
+          ) : null
+        }
+        ListEmptyComponent={
           <View style={styles.empty}>
             <MaterialCommunityIcons
               name="book-open-page-variant"
@@ -128,8 +136,8 @@ export default function HomeScreen() {
               {t('common.noResults')}
             </Typography>
           </View>
-        )}
-      </ScrollView>
+        }
+      />
     </SafeAreaView>
   );
 }
@@ -139,17 +147,20 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.background,
   },
-  scrollContent: {
-    paddingHorizontal: 24,
+  list: {
+    paddingHorizontal: 20,
     paddingBottom: 32,
-    gap: 24,
   },
-  // Greeting Header
+  headerContent: {
+    gap: 20,
+    paddingTop: 8,
+    paddingBottom: 8,
+  },
+  // Greeting
   greetingRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingTop: 8,
   },
   greetingLeft: {
     flexDirection: 'row',
@@ -182,7 +193,7 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 1,
   },
-  // Search Bar
+  // Search
   searchBar: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -194,42 +205,15 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     gap: 12,
   },
-  // Section Title
+  // Section
   sectionTitle: {
     letterSpacing: -0.2,
+    marginTop: 4,
   },
-  // Lesson Types
-  lessonTypesRow: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 12,
-    marginTop: -12,
+  // Footer
+  loader: {
+    paddingVertical: 20,
   },
-  lessonTypeCard: {
-    flex: 1,
-    minWidth: 70,
-    height: 100,
-    borderRadius: 16,
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 8,
-  },
-  // Learning Modes
-  modesRow: {
-    flexDirection: 'row',
-    gap: 10,
-    marginTop: -12,
-  },
-  modePill: {
-    flex: 1,
-    height: 46,
-    borderRadius: 100,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 6,
-  },
-  // Empty
   empty: {
     alignItems: 'center',
     paddingVertical: 48,

@@ -120,6 +120,11 @@ export default {
     chat: 'Hội thoại',
     paragraph: 'Đoạn văn',
     video: 'Video',
+    totalHours: 'Tổng giờ học',
+    goodSpeaking: 'Lần nói tốt',
+    weeklyStudyTime: 'Thời gian học tuần này',
+    minutes: 'phút',
+    newsFeed: 'Bài học mới',
   },
   profile: {
     settings: 'Cài đặt',
@@ -176,6 +181,11 @@ export default {
     recentActivity: 'Hoạt động gần đây',
     allTypes: 'Tất cả',
     score: 'Điểm',
+  },
+  search: {
+    popularKeywords: 'Từ khóa phổ biến',
+    recentSearches: 'Đã tìm kiếm',
+    clearAll: 'Xóa tất cả',
   },
   error: {
     somethingWentWrong: 'Đã xảy ra lỗi',
